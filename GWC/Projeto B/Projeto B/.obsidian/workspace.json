@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "70ee919902da9338",
+        "id": "64bec2e402a197b2",
         "type": "tabs",
         "children": [
           {
-            "id": "0fa43c18581791db",
+            "id": "7170889de4c3ef2c",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -138,7 +138,7 @@
       "command-palette:Abrir paleta de comandos": false
     }
   },
-  "active": "0fa43c18581791db",
+  "active": "a5a9b579158935be",
   "lastOpenFiles": [
     "01Principal/World Building.md",
     "00Regras_de_Commit",
