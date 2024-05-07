@@ -8,12 +8,12 @@
         "type": "tabs",
         "children": [
           {
-            "id": "e76282711484f4f3",
+            "id": "97cb5b2bfeffad36",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Nando/Registos históricos.md",
+                "file": "Projeto B/01Principal/01 World Building.md",
                 "mode": "source",
                 "source": false
               }
@@ -38,7 +38,7 @@
             "state": {
               "type": "file-explorer",
               "state": {
-                "sortOrder": "alphabetical"
+                "sortOrder": "byModifiedTime"
               }
             }
           },
@@ -48,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "tag:#Geography",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -65,7 +65,8 @@
               "state": {}
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -85,7 +86,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Nando/Registos históricos.md",
+                "file": "Projeto B/01Principal/01 World Building.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +103,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Nando/Registos históricos.md",
+                "file": "Projeto B/01Principal/01 World Building.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +126,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Nando/Registos históricos.md"
+                "file": "Projeto B/01Principal/01 World Building.md"
               }
             }
           }
@@ -146,16 +147,25 @@
       "command-palette:Abrir paleta de comando": false
     }
   },
-  "active": "e76282711484f4f3",
+  "active": "c4e4510b06c17a81",
   "lastOpenFiles": [
-    "Nando/Prólogo 1.md",
-    "Nando/Registos históricos.md",
-    "Tomas/Sem título.md",
-    "01Principal/World Building.md",
-    "00Regras_de_Commit/Sem título.md",
-    "00Regras_de_Commit",
-    "Tomas",
-    "Nando",
-    "01Principal"
+    "Projeto B/Nando/Registos históricos.md",
+    "Projeto B/Anexos/WorldBuilding Esquema.png",
+    "Sem título",
+    "Projeto B/Anexos",
+    "Projeto B/01Principal/01 World Building.md",
+    "Projeto B/Nando 1/Registos históricos.md.meta",
+    "Projeto B/Nando 1/Prólogo 1.md.meta",
+    "Projeto B/Nando 1",
+    "Projeto B/01Principal/Geography.md",
+    "Projeto B",
+    "Nando/Sem título.canvas",
+    "Projeto B/Nando/Prólogo.md",
+    "Projeto B/Tomas/Sem título.md",
+    "Projeto B/00Regras_de_Commit/Sem título.md",
+    "Projeto B/00Regras_de_Commit",
+    "Projeto B/Tomas",
+    "Projeto B/Nando",
+    "Projeto B/01Principal"
   ]
 }
