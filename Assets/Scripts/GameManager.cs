@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
         Instance = this;
         
         DontDestroyOnLoad(this.gameObject);
+
+        isControlable = true;
     }
 
     // Update is called once per frame

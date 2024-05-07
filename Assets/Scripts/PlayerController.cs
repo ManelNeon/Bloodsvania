@@ -20,7 +20,6 @@ public class PlayerController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         playerCC = GetComponent<CharacterController>();
-        GameManager.Instance.isControlable = true;
     }
 
     void Update()
