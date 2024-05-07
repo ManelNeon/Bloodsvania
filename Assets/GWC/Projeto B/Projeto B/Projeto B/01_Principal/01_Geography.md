@@ -1,5 +1,3 @@
-![[WorldBuilding Esquema.png]]
-
 #Geography O mundo de Bloodsvânia é uma terra oca. A cave é tão grande que tem espaço para rios, lagoas, golfos, montanhas, vales, ilhas e afins. Temos 4 cidades principais. E 3 matadouros espalhados em zonas secretas do mapa.
 
 #Climate Bloodsvânia tem maioritariamente um clima tropical principalmente na zona interior.
@@ -13,4 +11,6 @@
 
 #Fantastical_Creatures Existe toda uma nova fauna e flora adaptada ao clima e a em caves subterrâneas.
 
-_Inserir imagens referências_
+_Referências no Pinterest_
+https://pin.it/4gOQYIUuh
+https://pin.it/7oW1q4J84

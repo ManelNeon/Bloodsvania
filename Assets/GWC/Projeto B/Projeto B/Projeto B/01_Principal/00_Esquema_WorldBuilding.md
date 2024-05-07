@@ -1,0 +1,10 @@
+![[WorldBuilding Esquema.png]]
+
+[[01_Geography]]
+[[02_Language]]
+[[03_Magic]]
+[[04_Culture]]
+[[05_Politics_Government]]
+[[06_Economy]]
+[[07_Education]]
+[[08_History]]
