@@ -13,17 +13,33 @@ public class PlayerController : MonoBehaviour
     float targetAngle;
     float angle;
     Vector3 moveDir;
-
+    int layerMask;
     void Start()
     {
         //temporary, for build tests
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         playerCC = GetComponent<CharacterController>();
+        layerMask = 1 << 6;
     }
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.F) && direction.magnitude == 0)
+        {
+            RaycastHit hit;
+
+            if (Physics.Raycast(transform.position + new Vector3(0,1,0), transform.TransformDirection(Vector3.forward * 2), out hit, Mathf.Infinity, layerMask))
+            {
+                NPC character = hit.collider.GetComponent<NPC>();
+
+                if (character != null)
+                {
+                    character.StartDialogue();
+                }
+            }
+        }
+
         Movement();
     }
 
