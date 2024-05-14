@@ -8,23 +8,30 @@
   "collapse-color-groups": false,
   "colorGroups": [
     {
-      "query": "Projeto B",
+      "query": "WorldBuilding_Topicos",
       "color": {
         "a": 1,
-        "rgb": 16711680
+        "rgb": 14069084
+      }
+    },
+    {
+      "query": "WorldBuilding",
+      "color": {
+        "a": 1,
+        "rgb": 14048348
       }
     }
   ],
   "collapse-display": false,
   "showArrow": false,
-  "textFadeMultiplier": 0,
-  "nodeSizeMultiplier": 1.99989604989605,
-  "lineSizeMultiplier": 1.53128898128898,
+  "textFadeMultiplier": -0.8,
+  "nodeSizeMultiplier": 2.28513513513514,
+  "lineSizeMultiplier": 1.71465696465696,
   "collapse-forces": false,
   "centerStrength": 0.518713248970312,
   "repelStrength": 10,
   "linkStrength": 1,
   "linkDistance": 250,
-  "scale": 1,
+  "scale": 0.49463636100664743,
   "close": false
 }

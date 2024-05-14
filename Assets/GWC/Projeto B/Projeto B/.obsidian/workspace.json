@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Projeto B/01_Principal/04_Culture.md",
+                "file": "Projeto B/02_Nando/1º Ato.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Projeto B/01_Principal/04_Culture.md",
+                "file": "Projeto B/02_Nando/1º Ato.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Projeto B/01_Principal/04_Culture.md",
+                "file": "Projeto B/02_Nando/1º Ato.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Projeto B/01_Principal/04_Culture.md"
+                "file": "Projeto B/02_Nando/1º Ato.md"
               }
             }
           }
@@ -138,41 +138,44 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:Open quick switcher": false,
-      "graph:Open graph view": false,
-      "daily-notes:Open today's daily note": false,
-      "templates:Insert template": false,
-      "command-palette:Open command palette": false,
+      "switcher:Abrir Quick Switcher": false,
+      "graph:Abrir Visualização de diagrama de grafo": false,
+      "daily-notes:Abrir nota de hoje": false,
+      "templates:Inserir templates": false,
+      "command-palette:Abrir paleta de comando": false,
       "canvas:Create new canvas": false
     }
   },
   "active": "44b6a5e7fcda1202",
   "lastOpenFiles": [
-    "Projeto B/01_Principal/00_Esquema_WorldBuilding.md",
+    "Projeto B/02_Nando/Prólogo.md",
+    "Projeto B/01_Principal/08_History.md",
+    "Projeto B/01_Principal/07_Education.md",
+    "Projeto B/01_Principal/06_Economy.md",
     "Projeto B/01_Principal/04_Culture.md",
+    "Projeto B/01_Principal/05_Politics_Government.md",
     "Projeto B/01_Principal/03_Magic.md",
     "Projeto B/01_Principal/02_Language.md",
     "Projeto B/01_Principal/01_Geography.md",
-    "Projeto B/01_Principal/07_Education.md",
-    "Projeto B/01_Principal/08_History.md",
-    "Projeto B/02_Nando/Prólogo.md",
+    "Projeto B/01_Principal/00_Esquema_WorldBuilding.md",
+    "Projeto B/01_Principal/Sem título 1.canvas",
+    "Projeto B/01_Principal/Sem título.canvas",
+    "Projeto B/99_Anexos/WorldBuilding Esquema.png.meta",
+    "Projeto B/99_Anexos.meta",
+    "Projeto B/03_Tomas.meta",
+    "Projeto B/02_Nando/Registos históricos.md.meta",
+    "Projeto B/02_Nando/Prólogo.md.meta",
+    "Projeto B/02_Nando.meta",
+    "Projeto B/01_Principal/08_History.md.meta",
+    "Projeto B/01_Principal/07_Education.md.meta",
+    "Projeto B/01_Principal/06_Economy.md.meta",
+    "Projeto B/01_Principal/05_Politics_Government.md.meta",
+    "Projeto B/02_Nando/1º Ato.md",
     "Projeto B/02_Nando/Registos históricos.md",
     "Projeto B/03_Tomas/Sem título.md",
-    "Projeto B/01_Principal/06_Economy.md",
-    "Projeto B/01_Principal/05_Politics_Government.md",
     "Projeto B/99_Anexos/WorldBuilding Esquema.png",
-    "Sem título",
-    "Projeto B/99_Anexos",
-    "Projeto B/Nando 1/Registos históricos.md.meta",
-    "Projeto B/Nando 1/Prólogo 1.md.meta",
-    "Projeto B/Nando 1",
     "Projeto B/01Principal/Geography.md",
-    "Projeto B",
     "Nando/Sem título.canvas",
-    "Projeto B/00_Regras_de_Commit/Sem título.md",
-    "Projeto B/00_Regras_de_Commit",
-    "Projeto B/03_Tomas",
-    "Projeto B/02_Nando",
-    "Projeto B/01_Principal"
+    "Projeto B/00_Regras_de_Commit/Sem título.md"
   ]
 }

@@ -1,0 +1,2 @@
+	Ok começamos com o player a acordar na câmara. Normalmente  existem sempre dois guardas a tagarelar no lado de fora da câmara onde ele está preso, mas eles já não se ouvem. Agora só se ouve uma agitação muito mais longe e por isso seria seguro para o protagonista sair.
+	
