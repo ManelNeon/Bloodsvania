@@ -2,10 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+public class CombatController : MonoBehaviour
 {
-    [SerializeField] float currentHealth;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -16,15 +14,5 @@ public class EnemyController : MonoBehaviour
     void Update()
     {
         
-    }
-
-    public bool IsAttackable()
-    {
-        if (currentHealth > 0)
-        {
-            return true;
-        }
-
-        return false;
     }
 }

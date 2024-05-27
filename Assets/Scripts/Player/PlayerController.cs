@@ -1,39 +1,108 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     CharacterController playerCC;
+
     [SerializeField] Transform mainCam;
+
     [SerializeField] float speed = 6f;
+
     [SerializeField] float turnSmoothTime = .1f;
-    [SerializeField] ParticleSystem slashEffect;
+
+    [SerializeField] Animator playerAnimator;
+
     float turnSmoothVelocity;
+
     Vector3 direction;
+
     float targetAngle;
+
     float angle;
+
+    public bool canAttack;
+
+    [SerializeField] float attackCooldown = .7f;
+
     Vector3 moveDir;
-    int layerMask;
-    
+
+    [SerializeField] LayerMask npcLayerMask;
+
+    [SerializeField] LayerMask enemyLayerMask;
+
+    EnemyController currentTarget;
+
+    RaycastHit hit;
+
     void Start()
     {
         //temporary, for build tests
         Cursor.lockState = CursorLockMode.Locked;
+
         Cursor.visible = false;
+
         playerCC = GetComponent<CharacterController>();
-        layerMask = 1 << 6;
+
+        canAttack = true;
     }
 
     void Update()
+    {
+        if (Input.GetMouseButtonDown(0) && canAttack)
+        {
+            if (currentTarget != null)
+            {
+                transform.DOLookAt(currentTarget.transform.position, .2f);
+                transform.DOMove(TargetOffset(currentTarget.transform), .8f);
+                playerAnimator.Play("Attack");
+            }
+            canAttack = false;
+            Debug.Log("Attacked");
+        }
+
+        EnemyRaycast();
+
+        NPCRaycast();
+
+        playerAnimator.SetFloat("Blend", direction.magnitude);
+    }
+
+    public Vector3 TargetOffset(Transform target)
+    {
+        Vector3 position;
+        position = target.position;
+        return Vector3.MoveTowards(position, transform.position, .95f);
+    }
+
+    private void LateUpdate()
+    {
+        Movement();
+    }
+
+    void EnemyRaycast()
+    {
+        if (Physics.SphereCast(transform.position, 3f, Camera.main.transform.forward, out hit, 10, enemyLayerMask))
+        {
+            if (hit.collider.transform.GetComponent<EnemyController>().IsAttackable())
+            {
+                currentTarget = hit.collider.transform.GetComponent<EnemyController>();
+
+                Debug.Log("Acertou");
+            }
+        }
+    }
+
+    void NPCRaycast()
     {
         if (Input.GetKeyDown(KeyCode.F) && direction.magnitude == 0)
         {
             Debug.Log("F Pressed");
 
-            RaycastHit hit;
-
-            if (Physics.Raycast(transform.position + new Vector3(0,1,0), transform.TransformDirection(Vector3.forward * 2), out hit, 1, layerMask))
+            if (Physics.Raycast(transform.position + new Vector3(0, 1, 0), transform.TransformDirection(Vector3.forward * 2), out hit, 1, npcLayerMask))
             {
                 Debug.Log("Hit Something");
                 NPC character = hit.collider.GetComponent<NPC>();
@@ -45,13 +114,6 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            slashEffect.Play();
-        }
-
-        Movement();
     }
 
     void Movement()

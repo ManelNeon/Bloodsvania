@@ -31,7 +31,16 @@ public class GameManager : MonoBehaviour
 
         m_Timer = fadeDuraction;
 
+        StartCoroutine(Wait());
+    }
+
+    IEnumerator Wait()
+    {
+        yield return new WaitForSeconds(.3f);
+
         isFading = true;
+
+        yield break;
     }
 
     // Update is called once per frame

@@ -88,7 +88,7 @@ public class MainMenuManager : MonoBehaviour
             {
                 isFading = false;
 
-                m_Timer = 1;
+                m_Timer = fadeDuraction;
             }
         }
 
@@ -118,7 +118,7 @@ public class MainMenuManager : MonoBehaviour
             {
                 isFading = false;
 
-                m_Timer = 1;
+                m_Timer = fadeDuraction;
             }
         }
 
@@ -171,7 +171,7 @@ public class MainMenuManager : MonoBehaviour
     {
         if (!isFading && !isFadingBack && mainMenu.alpha == 1)
         {
-            UnityEditor.EditorApplication.isPlaying = false;
+            //UnityEditor.EditorApplication.isPlaying = false;
 
             Application.Quit();
         }
