@@ -8,12 +8,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Transform mainCam;
     [SerializeField] float speed = 6f;
     [SerializeField] float turnSmoothTime = .1f;
+    [SerializeField] ParticleSystem slashEffect;
     float turnSmoothVelocity;
     Vector3 direction;
     float targetAngle;
     float angle;
     Vector3 moveDir;
     int layerMask;
+    
     void Start()
     {
         //temporary, for build tests
@@ -27,17 +29,26 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F) && direction.magnitude == 0)
         {
+            Debug.Log("F Pressed");
+
             RaycastHit hit;
 
-            if (Physics.Raycast(transform.position + new Vector3(0,1,0), transform.TransformDirection(Vector3.forward * 2), out hit, Mathf.Infinity, layerMask))
+            if (Physics.Raycast(transform.position + new Vector3(0,1,0), transform.TransformDirection(Vector3.forward * 2), out hit, 1, layerMask))
             {
+                Debug.Log("Hit Something");
                 NPC character = hit.collider.GetComponent<NPC>();
 
                 if (character != null)
                 {
+                    Debug.Log("Hit NPC");
                     character.StartDialogue();
                 }
             }
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            slashEffect.Play();
         }
 
         Movement();
