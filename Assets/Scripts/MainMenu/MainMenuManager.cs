@@ -12,11 +12,17 @@ public class MainMenuManager : MonoBehaviour
 
     [SerializeField] CanvasGroup background;
 
+    [SerializeField] CanvasGroup firstFade;
+
+    [SerializeField] Animator logoAnimator;
+
     //[SerializeField] Slider musicSlider;
 
     //[SerializeField] Slider sfxSlider;
 
     bool isFading;
+
+    bool isFirstFade;
 
     bool isChangingColor;
 
@@ -30,11 +36,19 @@ public class MainMenuManager : MonoBehaviour
 
     private void Start()
     {
+        m_Timer = fadeDuraction;
+
         StartCoroutine(StartScreen());
     }
 
     IEnumerator StartScreen()
     {
+        isFirstFade = true;
+
+        yield return new WaitForSeconds(1f);
+
+        logoAnimator.Play("LogoAnimation");
+
         yield return new WaitForSeconds(4.2f);
 
         isChangingColor = true;
@@ -66,6 +80,20 @@ public class MainMenuManager : MonoBehaviour
 
     void Fades()
     {
+        if (isFirstFade)
+        {
+            m_Timer -= Time.deltaTime;
+
+            firstFade.alpha = m_Timer / fadeDuraction;
+
+            if (firstFade.alpha == 0)
+            {
+                isFirstFade = false;
+
+                m_Timer = 0;
+            }
+        }
+
         if (isChangingColor)
         {
             m_Timer += Time.deltaTime;
