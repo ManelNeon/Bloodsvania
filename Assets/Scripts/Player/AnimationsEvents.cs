@@ -6,15 +6,16 @@ public class AnimationsEvents : MonoBehaviour
 {
     [SerializeField] ParticleSystem attackParticles;
 
-    [SerializeField] PlayerController playerController;
+    [SerializeField] CombatController playerCombatController;
 
     public void AttackEvent()
     {
         attackParticles.Play();
+        playerCombatController.Attack();
     }
 
     public void AttackEnded()
     {
-        playerController.canAttack = true;
+        playerCombatController.AttackEnd();
     }
 }
