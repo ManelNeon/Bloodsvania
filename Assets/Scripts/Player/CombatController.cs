@@ -16,6 +16,8 @@ public class CombatController : MonoBehaviour
 
     [HideInInspector] public bool canAttack;
 
+    [HideInInspector] public bool isCountering;
+
     // Start is called before the first frame update
     void Start()
     {
