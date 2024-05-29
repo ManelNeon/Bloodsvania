@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (Instance != null)
+        if (Instance != null && Instance != this)
         {
             Destroy(this.gameObject);
 
@@ -29,13 +30,13 @@ public class GameManager : MonoBehaviour
 
         isControlable = true;
 
-        m_Timer = fadeDuraction;
-
         StartCoroutine(Wait());
     }
 
     IEnumerator Wait()
     {
+        m_Timer = fadeDuraction;
+
         yield return new WaitForSeconds(.3f);
 
         isFading = true;
@@ -46,6 +47,12 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            StartCoroutine(Wait());
+            SceneManager.LoadScene(1);
+        }
+
         if (isFading)
         {
             GameObject blackScreen = GameObject.Find("BlackScreen");
