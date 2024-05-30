@@ -235,6 +235,8 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
+            enemyManager.DeleteEnemy(this);
+
             currentHealth = 0;
 
             Destroy(gameObject);
