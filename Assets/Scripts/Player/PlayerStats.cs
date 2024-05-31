@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
-    [SerializeField] int hpValue;
+    int level;
 
-    [SerializeField] int bloodValue;
+    public int hpValue;
 
-    [SerializeField] int fulguriteValue;
+    public int bloodValue;
 
-    [SerializeField] int compositionValue;
+    public int fulguriteValue;
+
+    public int compositionValue;
+
+    [HideInInspector] public int fulguriteToLevel;
 
     int currentHP;
 
@@ -20,6 +24,18 @@ public class PlayerStats : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        level = 1;
+
+        hpValue = 100;
+
+        bloodValue = 100;
+
+        compositionValue = 100;
+
+        fulguriteValue = 0;
+
+        FulguriteNeeded();
+
         currentHP = hpValue;
 
         currentBlood = bloodValue;
@@ -29,28 +45,41 @@ public class PlayerStats : MonoBehaviour
     {
         hpValue += healthToAdd;
 
-        Debug.Log(hpValue);
+        level++;
+
+        FulguriteNeeded();
     }
 
     public void AddBlood(int bloodToAdd)
     {
         bloodValue += bloodToAdd;
 
-        Debug.Log(bloodValue);
+        level++;
+
+        FulguriteNeeded();
     }
 
     public void AddFulgurite(int fulguriteToAdd)
     {
         fulguriteValue += fulguriteToAdd;
 
-        Debug.Log(fulguriteValue);
+        level++;
+
+        FulguriteNeeded();
     }
 
     public void AddComposition(int compositionToAdd)
     {
         compositionValue += compositionToAdd;
 
-        Debug.Log(compositionValue);
+        level++;
+
+        FulguriteNeeded();
+    }
+
+    public void FulguriteNeeded() 
+    {
+        fulguriteToLevel = (level * 60 + level + 356);
     }
 
     // Update is called once per frame

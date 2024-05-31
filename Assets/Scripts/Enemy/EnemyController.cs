@@ -182,10 +182,11 @@ public class EnemyController : MonoBehaviour
             if (!playerCombat.isCountering && playerCombat.canAttack)
             {
                 Attack();
+                Counter(false);
             }
             else
             {
-                Counter(false);
+                isMoving = true;
             }
         }
     }
@@ -238,6 +239,8 @@ public class EnemyController : MonoBehaviour
             enemyManager.DeleteEnemy(this);
 
             currentHealth = 0;
+
+            FindAnyObjectByType<PlayerStats>().fulguriteValue += 1000;
 
             Destroy(gameObject);
         }

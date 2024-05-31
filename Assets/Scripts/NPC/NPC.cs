@@ -6,12 +6,15 @@ using UnityEngine;
 
 public class NPC : MonoBehaviour
 {
-    [TextArea][SerializeField] string[] dialogues;
-    [SerializeField] GameObject npcTextBox;
-    [SerializeField] TextMeshProUGUI displayText;
-    [SerializeField] float textSpeed;
-    int index;
-    bool isPlaying;
+    [TextArea] public string[] dialogues;
+
+    public  GameObject npcTextBox;
+
+    public TextMeshProUGUI displayText;
+
+    [HideInInspector] public int index;
+
+    [HideInInspector] public bool isPlaying;
 
     void Start()
     {
@@ -53,27 +56,14 @@ public class NPC : MonoBehaviour
 
         GameObject.Find("Player").GetComponent<PlayerController>().enabled = false;
 
-        StartCoroutine(TypeLine());
     }
 
-    IEnumerator TypeLine()
-    {
-        foreach(char c in dialogues[index].ToCharArray())
-        {
-            displayText.text += c;
-
-            yield return new WaitForSeconds(textSpeed);
-        }
-        yield break;
-    }
-
-    void NextLine()
+    public virtual void NextLine()
     {
         if (index < dialogues.Length - 1)
         {
             index++;
             displayText.text = "";
-            StartCoroutine(TypeLine());
         }
         else
         {
