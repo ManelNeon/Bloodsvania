@@ -75,7 +75,7 @@ public class EnemyManager : MonoBehaviour
 
     EnemyController RandomEnemy()
     {
-        if (AvailableEnemyCount() == 0)
+        if (enemiesList.Count == 0)
         {
             return null;
         }
@@ -94,19 +94,5 @@ public class EnemyManager : MonoBehaviour
         return randomEnemy;
     }
 
-    int AvailableEnemyCount()
-    {
-        int count = 0;
-
-        for (int i = 0; i < enemiesList.Count; i++)
-        {
-            if (enemies[i] != null)
-            {
-                count++;
-            }
-        }
-
-        return count;
-    }
 
 }

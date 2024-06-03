@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
 
     float turnSmoothVelocity;
 
-    Vector3 direction;
+    [HideInInspector] public Vector3 direction;
 
     float targetAngle;
 

@@ -10,6 +10,8 @@ public class EnemyController : MonoBehaviour
 
     [SerializeField] GameObject selectedArrowParticle;
 
+    [SerializeField] GameObject counterParticle;
+
     EnemyManager enemyManager;
 
     CharacterController enemyCharacterController;
@@ -46,29 +48,7 @@ public class EnemyController : MonoBehaviour
         playerCombat = FindAnyObjectByType<CombatController>();
 
         EnemyDirection();
-
-        //StartCoroutine(EnemyMovement());
     }
-
-    /*
-    IEnumerator EnemyMovement()
-    {
-        int randomDir = Random.Range(0, 2);
-
-        if (randomDir == 0)
-        {
-            moveDirection = Vector3.right;
-        }
-        else
-        {
-            moveDirection = Vector3.left;
-        }
-
-        isMoving = true;
-
-        yield break;
-    }
-    */
 
     void EnemyDirection()
     {
@@ -173,16 +153,15 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
-        Counter(true);
-
         if (Vector3.Distance(transform.position, playerCombat.transform.position) < 2)
         {
-            StopMoving();
+            Counter(true);
+
+            isMoving = false;
 
             if (!playerCombat.isCountering && playerCombat.canAttack)
             {
                 Attack();
-                Counter(false);
             }
             else
             {
@@ -191,41 +170,37 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    public void Countered()
+    {
+        Counter(false);
+        isMoving = false;
+    }
+
     void Counter(bool active)
     {
         if (active)
         {
-            //counterParticle.Play();
+            counterParticle.SetActive(true);
         }
         else
         {
-            StopMoving();
-            //counterParticle.Clear();
-            //counterParticle.Stop();
+            counterParticle.SetActive(false);
         }
     }
 
     private void Attack()
     {
+        playerCombat.currentTarget = this;
+
         transform.DOMove(transform.position + (transform.forward / 1), .5f);
 
         enemyAnimator.SetTrigger("AirPunch");
     }
 
-    public void StopMoving()
-    {
-        isMoving = false;
-
-        moveDirection = Vector3.zero;
-
-        if (enemyCharacterController.enabled)
-        {
-            enemyCharacterController.Move(moveDirection);
-        }
-    }
-
     public void TakeDamage(int damage)
     {
+        Counter(false);
+
         if (currentHealth - damage > 0)
         {
             currentHealth -= damage;
@@ -278,8 +253,11 @@ public class EnemyController : MonoBehaviour
 
     public void AttackEvent()
     {
+        Debug.Log("Attacked");
+
+        Counter(false);
+
         isPreparingAttack = false;
-        //Enemy Attacks
     }
 
     public void AttackEndEvent()
@@ -314,5 +292,10 @@ public class EnemyController : MonoBehaviour
         enemyManager.StartingAI();
 
         yield break;
+    }
+
+    public void GettingCountered()
+    {
+        enemyAnimator.Play("");
     }
 }

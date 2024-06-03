@@ -171,7 +171,7 @@ public class MainMenuManager : MonoBehaviour
     {
         if (!isFading && !isFadingBack && mainMenu.alpha == 1)
         {
-            SceneManager.LoadScene("Game");
+            SceneManager.LoadScene("Blocking");
         }
     }
 

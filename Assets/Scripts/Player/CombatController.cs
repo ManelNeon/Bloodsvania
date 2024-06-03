@@ -33,16 +33,46 @@ public class CombatController : MonoBehaviour
             {
                 transform.DOLookAt(currentTarget.transform.position, .2f);
                 transform.DOMove(TargetOffset(currentTarget.transform), .8f);
+
                 playerController.enabled = false;
-                int number = Random.Range(1,3);
-                if (number == 1)
+
+                if (!currentTarget.isPreparingAttack)
                 {
-                    playerAnimator.Play("Attack");
+                    int number = Random.Range(1, 3);
+                    if (number == 1)
+                    {
+                        playerAnimator.Play("Attack");
+                    }
+                    else
+                    {
+                        playerAnimator.Play("SecondAttack");
+                    }
                 }
                 else
                 {
-                    playerAnimator.Play("SecondAttack");
+                    playerAnimator.Play("Counter");
                 }
+
+
+                canAttack = false;
+            }
+        }
+
+        if (Input.GetMouseButtonDown(1) && canAttack)
+        {
+            if (currentTarget != null && currentTarget.isPreparingAttack)
+            {
+                transform.DOLookAt(currentTarget.transform.position, .2f);
+                transform.DOMove(TargetOffset(currentTarget.transform), .8f);
+
+                isCountering = true;
+
+                playerController.enabled = false;
+
+                currentTarget.GettingCountered();
+
+                playerAnimator.Play("Counter");
+
                 canAttack = false;
             }
         }
@@ -52,6 +82,11 @@ public class CombatController : MonoBehaviour
 
     public void AttackEnd()
     {
+        if (isCountering)
+        {
+            isCountering = false;
+        }
+
         canAttack = true;
         playerController.enabled = true;
     }
