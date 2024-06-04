@@ -126,6 +126,8 @@ public class MaidenController : NPC
 
     void ExitMenu()
     {
+        Time.timeScale = 1;
+
         maidenScreen.SetActive(false);
 
         Cursor.lockState = CursorLockMode.Locked;

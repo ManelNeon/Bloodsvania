@@ -18,6 +18,8 @@ public class EnemyController : MonoBehaviour
 
     CombatController playerCombat;
 
+    PlayerStats playerStats;
+
     float moveSpeed = 1;
 
     Animator enemyAnimator;
@@ -35,6 +37,8 @@ public class EnemyController : MonoBehaviour
 
     public bool isWaiting;
 
+    public bool isDead;
+
     Vector3 moveDirection;
 
     private void Start()
@@ -46,6 +50,8 @@ public class EnemyController : MonoBehaviour
         enemyManager = GetComponentInParent<EnemyManager>();
 
         playerCombat = FindAnyObjectByType<CombatController>();
+
+        playerStats = FindAnyObjectByType<PlayerStats>();
 
         EnemyDirection();
     }
@@ -80,11 +86,19 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Constantly look at player
-        transform.LookAt(new Vector3(playerCombat.transform.position.x, transform.position.y, playerCombat.transform.position.z));
+        if (!isDead)
+        {
+            if (counterParticle.activeInHierarchy)
+            {
+                selectedArrowParticle.SetActive(false);
+            }
 
-        //Only moves if the direction is set
-        MoveEnemy(moveDirection);
+            //Constantly look at player
+            transform.LookAt(new Vector3(playerCombat.transform.position.x, transform.position.y, playerCombat.transform.position.z));
+
+            //Only moves if the direction is set
+            MoveEnemy(moveDirection);
+        }   
     }
 
     void MoveEnemy(Vector3 direction)
@@ -170,34 +184,28 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    public void Countered()
-    {
-        Counter(false);
-        isMoving = false;
-    }
-
     void Counter(bool active)
     {
         if (active)
         {
+            playerCombat.enemyAttacking = this;
             counterParticle.SetActive(true);
         }
         else
         {
+            playerCombat.enemyAttacking = null;
             counterParticle.SetActive(false);
         }
     }
 
     private void Attack()
     {
-        playerCombat.currentTarget = this;
-
         transform.DOMove(transform.position + (transform.forward / 1), .5f);
 
         enemyAnimator.SetTrigger("AirPunch");
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         Counter(false);
 
@@ -211,14 +219,34 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
+            currentHealth -= damage;
+
             enemyManager.DeleteEnemy(this);
 
-            currentHealth = 0;
+            int random = Random.Range(634, 1024);
 
-            FindAnyObjectByType<PlayerStats>().fulguriteValue += 1000;
+            playerStats.AddFulgurite(random);
 
-            Destroy(gameObject);
+            isDead = true;
+
+            if (!enemyManager.RandomEnemy())
+            {
+                playerCombat.currentTarget = null;
+            }
+
+            enemyAnimator.Play("Death");
+
+            StartCoroutine(DeathTimer());
         }
+    }
+
+    IEnumerator DeathTimer()
+    {
+        yield return new WaitForSeconds(5);
+
+        Destroy(gameObject);
+
+        yield break;
     }
 
     public void NoLongerSelected()
@@ -228,6 +256,10 @@ public class EnemyController : MonoBehaviour
 
     IEnumerator GotPunch()
     {
+        isPreparingAttack = false;
+
+        enemyManager.StartingAI();
+
         isMoving = false;
 
         enemyAnimator.SetTrigger("Hit");
@@ -256,6 +288,10 @@ public class EnemyController : MonoBehaviour
         Debug.Log("Attacked");
 
         Counter(false);
+
+        float random = Random.Range(20,40);
+
+        playerStats.TakeDamage(random);
 
         isPreparingAttack = false;
     }

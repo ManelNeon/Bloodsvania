@@ -70,10 +70,10 @@ public class EnemyManager : MonoBehaviour
     {
         enemiesList.Remove(enemy);
 
-        AttackingAI();
+        StartingAI();
     }
 
-    EnemyController RandomEnemy()
+    public EnemyController RandomEnemy()
     {
         if (enemiesList.Count == 0)
         {
@@ -85,8 +85,6 @@ public class EnemyManager : MonoBehaviour
         while (randomEnemy == null)
         {
             int randomNumber = Random.Range(0, enemiesList.Count);
-
-            Debug.Log(randomNumber);
 
             randomEnemy = enemiesList[randomNumber];
         }

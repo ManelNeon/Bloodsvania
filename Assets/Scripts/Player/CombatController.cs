@@ -1,18 +1,23 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 public class CombatController : MonoBehaviour
 {
-    [SerializeField] PlayerController playerController;
+    PlayerStats playerStats;
+
+    PlayerController playerController;
 
     public EnemyController currentTarget;
 
+    public EnemyController enemyAttacking;
+
     [SerializeField] LayerMask enemyLayerMask;
 
-    [SerializeField] Animator playerAnimator;
+    Animator playerAnimator;
 
     [HideInInspector] public bool canAttack;
 
@@ -21,57 +26,52 @@ public class CombatController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerStats = GetComponent<PlayerStats>();
+
+        playerController = GetComponent<PlayerController>();
+
+        playerAnimator = GetComponentInChildren<Animator>();
+
         canAttack = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && canAttack)
+        if (GameManager.Instance.isControlable)
         {
-            if (currentTarget != null)
+            if (Input.GetMouseButtonDown(0) && canAttack && currentTarget != null)
             {
                 transform.DOLookAt(currentTarget.transform.position, .2f);
                 transform.DOMove(TargetOffset(currentTarget.transform), .8f);
 
                 playerController.enabled = false;
 
-                if (!currentTarget.isPreparingAttack)
+                int number = Random.Range(1, 3);
+                if (number == 1)
                 {
-                    int number = Random.Range(1, 3);
-                    if (number == 1)
-                    {
-                        playerAnimator.Play("Attack");
-                    }
-                    else
-                    {
-                        playerAnimator.Play("SecondAttack");
-                    }
+                    playerAnimator.Play("Attack");
                 }
                 else
                 {
-                    playerAnimator.Play("Counter");
+                    playerAnimator.Play("SecondAttack");
                 }
-
 
                 canAttack = false;
             }
-        }
 
-        if (Input.GetMouseButtonDown(1) && canAttack)
-        {
-            if (currentTarget != null && currentTarget.isPreparingAttack)
+            if (Input.GetMouseButton(1) && canAttack && enemyAttacking)
             {
-                transform.DOLookAt(currentTarget.transform.position, .2f);
-                transform.DOMove(TargetOffset(currentTarget.transform), .8f);
-
-                isCountering = true;
+                transform.DOLookAt(enemyAttacking.transform.position, .2f);
+                transform.DOMove(TargetOffset(enemyAttacking.transform), .8f);
 
                 playerController.enabled = false;
 
-                currentTarget.GettingCountered();
-
                 playerAnimator.Play("Counter");
+
+                isCountering = true;
+
+                Attack();
 
                 canAttack = false;
             }
@@ -93,7 +93,13 @@ public class CombatController : MonoBehaviour
 
     public void Attack()
     {
-        currentTarget.TakeDamage(1);
+        if (isCountering)
+        {
+            enemyAttacking.TakeDamage(playerStats.damageValue * .75f);
+            return;
+        }
+
+        currentTarget.TakeDamage(playerStats.damageValue * .75f);
     }
 
     Vector3 TargetOffset(Transform target)

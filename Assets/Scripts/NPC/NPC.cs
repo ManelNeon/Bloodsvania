@@ -42,6 +42,8 @@ public class NPC : MonoBehaviour
 
     public void StartDialogue()
     {
+        Time.timeScale = 0;
+
         index = 0;
 
         isPlaying = true;

@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("F Pressed");
 
-            if (Physics.Raycast(transform.position + new Vector3(0, 1, 0), Vector3.forward.normalized, out hit, 2, npcLayerMask))
+            if (Physics.Raycast(transform.position + new Vector3(0, 1, 0), Camera.main.transform.forward, out hit, 2, npcLayerMask))
             {
                 Debug.Log("Hit Something");
                 NPC character = hit.collider.GetComponent<NPC>();
