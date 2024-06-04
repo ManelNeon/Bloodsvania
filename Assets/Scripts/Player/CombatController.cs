@@ -7,18 +7,21 @@ using UnityEngine;
 
 public class CombatController : MonoBehaviour
 {
+    [Header("References to other Scripts")]
     PlayerStats playerStats;
 
     PlayerController playerController;
+
+    Animator playerAnimator;
 
     public EnemyController currentTarget;
 
     public EnemyController enemyAttacking;
 
+    [Header("Enemy's Layer Mask")]
     [SerializeField] LayerMask enemyLayerMask;
 
-    Animator playerAnimator;
-
+    [Header("States")]
     [HideInInspector] public bool canAttack;
 
     [HideInInspector] public bool isCountering;
@@ -40,13 +43,16 @@ public class CombatController : MonoBehaviour
     {
         if (GameManager.Instance.isControlable)
         {
+            //if the player left clicks and if he has a current target
             if (Input.GetMouseButtonDown(0) && canAttack && currentTarget != null)
             {
+                //we rotate the player towards the enemy he's currently attacking and then we move towards him
                 transform.DOLookAt(currentTarget.transform.position, .2f);
                 transform.DOMove(TargetOffset(currentTarget.transform), .8f);
 
                 playerController.enabled = false;
 
+                //randomizing between the two animations
                 int number = Random.Range(1, 3);
                 if (number == 1)
                 {
@@ -57,9 +63,11 @@ public class CombatController : MonoBehaviour
                     playerAnimator.Play("SecondAttack");
                 }
 
+                //the player cant attack now
                 canAttack = false;
             }
 
+            //if the player right clicks, he can attack and there's an enemy attacking
             if (Input.GetMouseButton(1) && canAttack && enemyAttacking)
             {
                 transform.DOLookAt(enemyAttacking.transform.position, .2f);
@@ -69,6 +77,7 @@ public class CombatController : MonoBehaviour
 
                 playerAnimator.Play("Counter");
 
+                //he is countering now
                 isCountering = true;
 
                 Attack();
@@ -80,6 +89,7 @@ public class CombatController : MonoBehaviour
         EnemyRaycast();
     }
 
+    //event that plays when the attack ends, if he's countering, hes nolonger countering, he can attack and he can move again
     public void AttackEnd()
     {
         if (isCountering)
@@ -91,6 +101,7 @@ public class CombatController : MonoBehaviour
         playerController.enabled = true;
     }
 
+    //event that plays when player makes contact, except in counter because we want the enemy to stop moving immeaditly on button press
     public void Attack()
     {
         SFXManager.Instance.PlayPunch();
@@ -104,6 +115,7 @@ public class CombatController : MonoBehaviour
         currentTarget.TakeDamage(playerStats.damageValue * .75f);
     }
 
+    //getting the offset between the player and the targets position
     Vector3 TargetOffset(Transform target)
     {
         Vector3 position;
@@ -111,6 +123,7 @@ public class CombatController : MonoBehaviour
         return Vector3.MoveTowards(position, transform.position, .95f);
     }
 
+    //the enemy's raycast, in case he can attack he will store the enemy he's looking at in the current target variable
     void EnemyRaycast()
     {
         RaycastHit hit;

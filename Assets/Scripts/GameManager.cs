@@ -7,12 +7,14 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    //this bool controls either if the player can or cannot control
     public bool isControlable;
 
     // Start is called before the first frame update
     void Start()
     {
-        if (Instance != null && Instance != this)
+        //setting the Instnace
+        if (Instance != null)
         {
             Destroy(this.gameObject);
 
@@ -29,6 +31,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Debugging only
         if (Input.GetKeyDown(KeyCode.X))
         {
             SceneManager.LoadScene(1);

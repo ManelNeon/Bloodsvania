@@ -6,12 +6,19 @@ using UnityEngine.EventSystems;
 
 public class EnemyController : MonoBehaviour
 {
+    [Header("Enemy Stats")]
     [SerializeField] float currentHealth;
 
+    float moveSpeed = 1;
+
+    Vector3 moveDirection;
+
+    [Header("Particles Objects")]
     [SerializeField] GameObject selectedArrowParticle;
 
     [SerializeField] GameObject counterParticle;
 
+    [Header("References to other scritps")]
     EnemyManager enemyManager;
 
     CharacterController enemyCharacterController;
@@ -19,8 +26,6 @@ public class EnemyController : MonoBehaviour
     CombatController playerCombat;
 
     PlayerStats playerStats;
-
-    float moveSpeed = 1;
 
     Animator enemyAnimator;
 
@@ -39,8 +44,6 @@ public class EnemyController : MonoBehaviour
 
     public bool isDead;
 
-    Vector3 moveDirection;
-
     private void Start()
     {
         enemyAnimator = GetComponent<Animator>();
@@ -49,13 +52,16 @@ public class EnemyController : MonoBehaviour
 
         enemyManager = GetComponentInParent<EnemyManager>();
 
+        //for both the player combat and the player stats there will only be one instance of them so we can use the FindAnyObjectByType
         playerCombat = FindAnyObjectByType<CombatController>();
 
         playerStats = FindAnyObjectByType<PlayerStats>();
 
+        //we do the enemy direction function to set his direction
         EnemyDirection();
     }
 
+    //in here we check if the enemy isnt preparing an attack or retreating and then we randomize if he goes left or right
     void EnemyDirection()
     {
         if (!isPreparingAttack && !isRetreating)
@@ -79,7 +85,8 @@ public class EnemyController : MonoBehaviour
         {
             moveDirection = -Vector3.forward;
         }
-
+        
+        //we set the ismoving to true, because the enemy is moving
         isMoving = true;
     }
 
@@ -88,6 +95,7 @@ public class EnemyController : MonoBehaviour
     {
         if (!isDead)
         {
+            //in case the counter particle is activated, we deactivate the arrow particle so that it doesnt collid with each other
             if (counterParticle.activeInHierarchy)
             {
                 selectedArrowParticle.SetActive(false);
@@ -129,7 +137,7 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
-        Vector3 dir = (playerCombat.transform.position - transform.position).normalized;
+        Vector3 dir = (playerCombat.transform.position - transform.position).normalized; //the direction is always to the player's
 
         Vector3 pDir = Quaternion.AngleAxis(90, Vector3.up) * dir; //Vector perpendicular to direction
 
@@ -137,23 +145,23 @@ public class EnemyController : MonoBehaviour
 
         Vector3 finalDirection = Vector3.zero;
 
-        if (direction == Vector3.forward)
+        if (direction == Vector3.forward) //if the direction is forward (towards the player) then it's final direction is towards him
         {
             finalDirection = dir;
         }
 
-        if (direction == Vector3.right || direction == Vector3.left)
+        if (direction == Vector3.right || direction == Vector3.left) //if the direction is left or right, he's strafing, so we use the perpendicular direction
         {
             finalDirection = (pDir * direction.normalized.x);
         }
 
-        if (direction == -Vector3.forward)
+        if (direction == -Vector3.forward) //if its negative the forward direction, hes retreating
         {
             finalDirection = -transform.forward;
         }
 
 
-        if (direction == Vector3.right || direction == Vector3.left)
+        if (direction == Vector3.right || direction == Vector3.left) //in case the direction is left or right we make the enemy slower
         {
             moveSpeed /= 1.5f;
         }
@@ -162,28 +170,32 @@ public class EnemyController : MonoBehaviour
 
         enemyCharacterController.Move(movedir);
 
-        if (!isPreparingAttack)
+        if (!isPreparingAttack) //if he's not preparing an attack, the next code isnt played
         {
             return;
         }
 
-        if (Vector3.Distance(transform.position, playerCombat.transform.position) < 2)
+        if (Vector3.Distance(transform.position, playerCombat.transform.position) < 2) //we check if the enemy is close to the player, if he is we then
         {
+            //activate the counter
             Counter(true);
 
+            //deactivate the ismoving
             isMoving = false;
 
+            //if the player isnt countering or attacking, we attack
             if (!playerCombat.isCountering && playerCombat.canAttack)
             {
                 Attack();
             }
-            else
-            {
-                isMoving = true;
-            }
+        }
+        else
+        {
+            isMoving = true;
         }
     }
 
+    //we have the Counter Function where in case it's active we set the enemy attacking to this and we activate the counter particle, if not we deactivate it
     void Counter(bool active)
     {
         if (active)
@@ -198,6 +210,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    //the attack function, where we move the enemy towards the player and we set the airpunch trigger where we start the animation
     private void Attack()
     {
         transform.DOMove(transform.position + (transform.forward / 1), .5f);
@@ -205,10 +218,13 @@ public class EnemyController : MonoBehaviour
         enemyAnimator.SetTrigger("AirPunch");
     }
 
+    //in this function the player takes damage
     public void TakeDamage(float damage)
     {
+        //we set the counter to false
         Counter(false);
 
+        //if the player wont die we start the gotpunch courotine
         if (currentHealth - damage > 0)
         {
             currentHealth -= damage;
@@ -223,17 +239,22 @@ public class EnemyController : MonoBehaviour
 
             enemyManager.DeleteEnemy(this);
 
+            //getting a random number between these values
             int random = Random.Range(634, 1024);
 
+            //adding fulgurite to these stats
             playerStats.AddFulgurite(random);
 
+            //the enmey is now dead
             isDead = true;
 
+            //if there are no longer any enemies, the player's current target is null
             if (!enemyManager.RandomEnemy())
             {
                 playerCombat.currentTarget = null;
             }
 
+            //we play the death animation and then we set a timer to destroy the object
             enemyAnimator.Play("Death");
 
             StartCoroutine(DeathTimer());
@@ -249,11 +270,13 @@ public class EnemyController : MonoBehaviour
         yield break;
     }
 
+    //if no longet selected, we then set the arrow particle to false (function so that the player can access it)
     public void NoLongerSelected()
     {
         selectedArrowParticle.SetActive(false);
     }
 
+    //when the enemy gets punch we start the AI again to set a new attacker, and set a new direction
     IEnumerator GotPunch()
     {
         isPreparingAttack = false;
@@ -271,6 +294,7 @@ public class EnemyController : MonoBehaviour
         yield break;
     }
 
+    //if the enemy is attackable we return true and set the arrow particle to true
     public bool IsAttackable()
     {
         if (currentHealth > 0)
@@ -283,10 +307,9 @@ public class EnemyController : MonoBehaviour
         return false;
     }
 
+    //the event that plays when the enemy makes contact with the player when attacking
     public void AttackEvent()
     {
-        Debug.Log("Attacked");
-
         Counter(false);
 
         float random = Random.Range(20,40);
@@ -296,11 +319,13 @@ public class EnemyController : MonoBehaviour
         isPreparingAttack = false;
     }
 
+    //event that plays when the enemy finishes the attacking animation
     public void AttackEndEvent()
     {
         Retreating();
     }
 
+    //function that plays when preparing the attack
     public void PreparingAttack()
     {
         isPreparingAttack = true;
@@ -308,6 +333,7 @@ public class EnemyController : MonoBehaviour
         EnemyDirection();
     }
 
+    //function that plays when the enemy is retreating
     public void Retreating()
     {
         isRetreating = true;
@@ -317,6 +343,7 @@ public class EnemyController : MonoBehaviour
         EnemyDirection();
     }
 
+    //coroutine to stop the AI from retreating and then starting the AI again
     IEnumerator StopRetreating()
     {
         yield return new WaitForSeconds(1.5f);
@@ -328,10 +355,5 @@ public class EnemyController : MonoBehaviour
         enemyManager.StartingAI();
 
         yield break;
-    }
-
-    public void GettingCountered()
-    {
-        enemyAnimator.Play("");
     }
 }

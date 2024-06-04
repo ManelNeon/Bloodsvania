@@ -6,8 +6,7 @@ using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour
 {
-    int level;
-
+    [Header("Players Stats Variables")]
     public float hpValue;
 
     public float bloodValue;
@@ -20,22 +19,25 @@ public class PlayerStats : MonoBehaviour
 
     public int fulguriteValue;
 
+    int level;
+
+    float currentHP;
+
+    //for each 100 blood there's 1 bar
+    float currentBlood;
+
     [HideInInspector] public int fulguriteToLevel;
 
+    [Header("References")]
     Animator playerAnimator;
 
     PlayerController playerController;
 
     CombatController playerCombat;
 
-    float currentHP;
-
     TextMeshProUGUI fulguriteSlot;
 
     Image healthBarSprite;
-
-    //for each 100 blood there's 1 bar
-    float currentBlood;
     
     // Start is called before the first frame update
     void Start()
@@ -50,6 +52,7 @@ public class PlayerStats : MonoBehaviour
 
         healthBarSprite = GameObject.Find("HealthBar").GetComponent<Image>();
 
+        //setting the stats to these values for protyping purposes
         level = 1;
 
         hpValue = 100;
@@ -67,8 +70,10 @@ public class PlayerStats : MonoBehaviour
         currentBlood = bloodValue;
     }
 
+    //taking damage function
     public void TakeDamage(float damage)
     {
+        //we play the punch sfx
         SFXManager.Instance.PlayPunched();
 
         if (currentHP - damage > 0)
@@ -89,10 +94,11 @@ public class PlayerStats : MonoBehaviour
 
             playerAnimator.Play("Death");
 
-            Debug.Log("Dead");
+            playerController.enabled = false;
         }
     }
 
+    //the GotHit sequence
     IEnumerator GotHit()
     {
         playerController.enabled = false;
@@ -104,6 +110,7 @@ public class PlayerStats : MonoBehaviour
         playerController.enabled = true;
     }
 
+    //Adding Health Function
     public void AddHealth(int healthToAdd)
     {
         hpValue += healthToAdd;
@@ -113,6 +120,7 @@ public class PlayerStats : MonoBehaviour
         FulguriteNeeded();
     }
 
+    //adding Blood Function
     public void AddBlood(int bloodToAdd)
     {
         bloodValue += bloodToAdd;
@@ -122,6 +130,7 @@ public class PlayerStats : MonoBehaviour
         FulguriteNeeded();
     }
 
+    //Adding Fulgurite Function
     public void AddFulgurite(int fulguriteToAdd)
     {
         fulguriteValue += fulguriteToAdd;
@@ -129,6 +138,7 @@ public class PlayerStats : MonoBehaviour
         fulguriteSlot.text = fulguriteValue.ToString();
     }
 
+    //Adding Compostion Function
     public void AddComposition(int compositionToAdd)
     {
         compositionValue += compositionToAdd;
@@ -138,6 +148,7 @@ public class PlayerStats : MonoBehaviour
         FulguriteNeeded();
     }
 
+    //Code that checks how much fulgurite is needed to level and also updates the value on the text
     public void FulguriteNeeded() 
     {
         fulguriteToLevel = (level * 60 + level + 356);

@@ -8,6 +8,7 @@ public class NPC : MonoBehaviour
 {
     [TextArea] public string[] dialogues;
 
+    [Header("UI References")]
     public  GameObject npcTextBox;
 
     public TextMeshProUGUI displayText;
@@ -16,13 +17,9 @@ public class NPC : MonoBehaviour
 
     [HideInInspector] public bool isPlaying;
 
-    void Start()
-    {
-
-    }
-
     void Update()
     {
+        //if the player left clicks he gets the next line
         if (Input.GetMouseButtonDown(0))
         {
             if (isPlaying)
@@ -31,15 +28,11 @@ public class NPC : MonoBehaviour
                 {
                     NextLine();
                 }
-                else 
-                {
-                    StopAllCoroutines();
-                    displayText.text = dialogues[index];
-                }
             }
         }
     }
 
+    //function that starts the dialogue, is called when raycasted
     public void StartDialogue()
     {
         Time.timeScale = 0;
@@ -60,15 +53,18 @@ public class NPC : MonoBehaviour
 
     }
 
+    //function for the next line, that also deactivates the UI
     public virtual void NextLine()
     {
         if (index < dialogues.Length - 1)
         {
             index++;
-            displayText.text = "";
+            displayText.text = dialogues[index];
         }
         else
         {
+            Time.timeScale = 1;
+
             npcTextBox.SetActive(false);
 
             Cursor.lockState = CursorLockMode.Locked;
