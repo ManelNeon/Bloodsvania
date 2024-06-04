@@ -5,8 +5,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MaidenController : NPC
+public class MaidenController : NPC //it is a children of the NPC script
 {
+    [Header("Buttons")]
     [SerializeField] Button hpButton;
 
     [SerializeField] Button bloodButton;
@@ -15,8 +16,10 @@ public class MaidenController : NPC
 
     [SerializeField] Button exitButton;
 
+    [Header("Maiden Screen Object")]
     [SerializeField] GameObject maidenScreen;
 
+    [Header("Stats Text Values")]
     [SerializeField] TextMeshProUGUI hpValue;
 
     [SerializeField] TextMeshProUGUI bloodValue;
@@ -27,20 +30,23 @@ public class MaidenController : NPC
 
     [SerializeField] TextMeshProUGUI fulguriteNeededText;
 
+    [Header("Players Stats")]
     PlayerStats playerStats;
 
     // Start is called before the first frame update
     void Start()
     {
+        //because there will ever only be one Player Stats we can use the FindObjectOfType function
         playerStats = FindObjectOfType<PlayerStats>();
     }
 
+    //we override the NextLine function, the difference is that when the dialogue ends, we activate the maiden screen and do the ChangeStats() and AddingListeners()
     public override void NextLine()
     {
         if (index < dialogues.Length - 1)
         {
             index++;
-            displayText.text = "";
+            displayText.text = dialogues[index];
         }
         else
         {
@@ -56,6 +62,7 @@ public class MaidenController : NPC
         }
     }
 
+    //we change the stats on the maiden screen to the one that player has
     void ChangeStats()
     {
         hpValue.text = "HP: " + playerStats.hpValue;
@@ -69,6 +76,7 @@ public class MaidenController : NPC
         fulguriteNeededText.text = playerStats.fulguriteToLevel + " Fulgurite to Level Up";
     }
 
+    //we firstly remove the listeners and then add them again (so that there isnt two listeners on the same button)
     void AddingListeners()
     {
         hpButton.onClick.RemoveAllListeners();
@@ -82,6 +90,7 @@ public class MaidenController : NPC
         exitButton.onClick.AddListener(ExitMenu);
     }
 
+    //adding health stat
     void AddingHealth()
     {
         if (playerStats.fulguriteValue > playerStats.fulguriteToLevel)
@@ -96,6 +105,7 @@ public class MaidenController : NPC
         }
     }
 
+    //adding blood stat
     void AddingBlood()
     {
         if (playerStats.fulguriteValue > playerStats.fulguriteToLevel)
@@ -110,6 +120,7 @@ public class MaidenController : NPC
         }
     }
 
+    //adding composition stat
     void AddingComposition()
     {
         if (playerStats.fulguriteValue > playerStats.fulguriteToLevel)
@@ -124,6 +135,7 @@ public class MaidenController : NPC
         }
     }
 
+    //adding exit menu stat
     void ExitMenu()
     {
         Time.timeScale = 1;

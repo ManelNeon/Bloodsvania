@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
+    [Header("Canvas Groups")] //canvas groups to fade the specific parts
     [SerializeField] CanvasGroup mainMenu;
 
     [SerializeField] CanvasGroup options;
@@ -14,33 +15,42 @@ public class MainMenuManager : MonoBehaviour
 
     [SerializeField] CanvasGroup firstFade;
 
+    [Header("Animators")]
     [SerializeField] Animator logoAnimator;
 
+    [Header("Sliders")]
     [SerializeField] Slider musicSlider;
 
     [SerializeField] Slider sfxSlider;
 
-    bool isFading;
+    [Header("Fading Bools")]
+    bool isFading; //bool to see if it's fading in
 
-    bool isFirstFade;
+    bool isFirstFade; //bool to see if it's the first fade, going from the black screen to the white screen
 
-    bool isChangingColor;
+    bool isChangingColor; //bool to change the color of the background, when going from the white screen to the black screen
 
-    bool isFadingBack;
+    bool isFadingBack; //bool to see if it's fading fading out
 
-    bool isOptions;
+    bool isOptions; //bool to see if it's affecting the options
 
-    float m_Timer;
+    bool isExiting; //bool to see if we're exiting the main menu to the game
+
+    [Header("Timers Fade")]
+    float m_Timer; 
 
     [SerializeField] float fadeDuraction = 1f;
 
     private void Start()
     {
+        //setting the timer to the fade duraction, so that we fade out
         m_Timer = fadeDuraction;
 
+        //starting the coroutine to start the screen
         StartCoroutine(StartScreen());
     }
 
+    //Coroutine to start the screen
     IEnumerator StartScreen()
     {
         isFirstFade = true;
@@ -78,6 +88,7 @@ public class MainMenuManager : MonoBehaviour
         Fades();
     }
 
+    //All the fades
     void Fades()
     {
         if (isFirstFade)
@@ -165,26 +176,62 @@ public class MainMenuManager : MonoBehaviour
                 m_Timer = 0;
             }
         }
+
+        if (isExiting)
+        {
+            m_Timer -= Time.deltaTime;
+
+            mainMenu.alpha = m_Timer / fadeDuraction;
+
+            if (mainMenu.alpha == 0)
+            {
+                isExiting = false;
+            }
+        }
     }
 
+    //when clicking on the play button we play this
+    IEnumerator Playing(bool isDemo)
+    {
+        m_Timer = fadeDuraction;
+
+        isExiting = true;
+
+        yield return new WaitForSeconds(1);
+
+        if (isDemo)
+        {
+            SceneManager.LoadScene("Blocking");
+        }
+        else
+        {
+            SceneManager.LoadScene("SampleScene");
+        }
+
+        yield break;
+    }
+
+    //function when clicking the play demo button
     public void ButtonPlayDemo()
     {
         if (!isFading && !isFadingBack && mainMenu.alpha == 1)
         {
             SFXManager.Instance.PlayButtonClicked();
-            SceneManager.LoadScene("Blocking");
+            StartCoroutine(Playing(true));
         }
     }
 
+    //function when clicking the combat demo button
     public void ButtonPlayTechDemo()
     {
         if (!isFading && !isFadingBack && mainMenu.alpha == 1)
         {
             SFXManager.Instance.PlayButtonClicked();
-            SceneManager.LoadScene("SampleScene");
+            StartCoroutine(Playing(false));
         }
     }
 
+    //function when clicking the options demo
     public void ButtonOptions()
     {
         if (!isFading && !isFadingBack && mainMenu.alpha == 1)
@@ -199,6 +246,7 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
+    //functionw hen playing the exit game button
     public void ButtonExitGame()
     {
         if (!isFading && !isFadingBack && mainMenu.alpha == 1)
@@ -209,6 +257,7 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
+    //function when playing the back button on the options page
     public void ButtonBackOptions()
     {
         if (!isFading && !isFadingBack && options.alpha == 1)
@@ -219,6 +268,7 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
+    //function for the music slider
     public void SliderMusic()
     {
         if (!isFading && !isFadingBack && options.alpha == 1)
@@ -227,6 +277,7 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
+    //function for the sfx slider
     public void SliderSFX()
     {
         if (!isFading && !isFadingBack && options.alpha == 1)

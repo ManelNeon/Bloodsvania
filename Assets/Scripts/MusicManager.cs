@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MusicManager : MonoBehaviour
 {
+    //music managers Instance
     public static MusicManager Instance;
 
     [HideInInspector] public AudioSource musicSource;
@@ -11,6 +12,7 @@ public class MusicManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //setting the Instance
         if (Instance != null)
         {
             Destroy(gameObject);

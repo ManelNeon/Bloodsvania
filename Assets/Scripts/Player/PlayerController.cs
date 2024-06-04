@@ -8,17 +8,24 @@ public class PlayerController : MonoBehaviour
 {
     CharacterController playerCC;
 
+    [Header("Main Camera Transform")]
     [SerializeField] Transform mainCam;
 
+    [Header("Movement Variables")]
     [SerializeField] float speed = 6f;
 
     [SerializeField] float turnSmoothTime = .1f;
 
+    [Header("Player Animator")]
     [SerializeField] Animator playerAnimator;
 
-    float turnSmoothVelocity;
+    [Header("NPC's Layer Mask")]
+    [SerializeField] LayerMask npcLayerMask;
 
     [HideInInspector] public Vector3 direction;
+
+    [Header("Rotation and Movement Hidden Variables")]
+    float turnSmoothVelocity;
 
     float targetAngle;
 
@@ -26,8 +33,7 @@ public class PlayerController : MonoBehaviour
 
     Vector3 moveDir;
 
-    [SerializeField] LayerMask npcLayerMask;
-
+    [Header("Raycast")]
     RaycastHit hit;
 
     void Start()
@@ -44,41 +50,44 @@ public class PlayerController : MonoBehaviour
     {
         NPCRaycast();
 
+        //setting the blend tree to the direction maginute, to see if the player is moving and animating them
         playerAnimator.SetFloat("Blend", direction.magnitude);
 
+        //if the direction magnitude is different than 0 we play the footsteps sound
         if (direction.magnitude != 0)
         {
             SFXManager.Instance.PlayFootstep();
         }
     }
 
+    //putting the movement on the late update
     private void LateUpdate()
     {
         Movement();
     }
 
+    //The raycast for the npc function
     void NPCRaycast()
     {
+        //the player can only talk if he is not moving
         if (Input.GetKeyDown(KeyCode.F) && direction.magnitude == 0)
         {
-            Debug.Log("F Pressed");
-
             if (Physics.Raycast(transform.position + new Vector3(0, 1, 0), Camera.main.transform.forward, out hit, 2, npcLayerMask))
             {
-                Debug.Log("Hit Something");
                 NPC character = hit.collider.GetComponent<NPC>();
 
                 if (character != null)
                 {
-                    Debug.Log("Hit NPC");
                     character.StartDialogue();
                 }
             }
         }
     }
 
+    //function for the movement
     void Movement()
     {
+        //the game manager has to let the player control
         if (GameManager.Instance.isControlable)
         {
             direction = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
