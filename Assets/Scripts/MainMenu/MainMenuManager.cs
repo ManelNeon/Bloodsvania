@@ -16,9 +16,9 @@ public class MainMenuManager : MonoBehaviour
 
     [SerializeField] Animator logoAnimator;
 
-    //[SerializeField] Slider musicSlider;
+    [SerializeField] Slider musicSlider;
 
-    //[SerializeField] Slider sfxSlider;
+    [SerializeField] Slider sfxSlider;
 
     bool isFading;
 
@@ -187,9 +187,9 @@ public class MainMenuManager : MonoBehaviour
     {
         if (!isFading && !isFadingBack && mainMenu.alpha == 1)
         {
-            //musicSlider.value = MusicManager.Instance.musicSource.volume;
+            musicSlider.value = MusicManager.Instance.musicSource.volume;
 
-            //sfxSlider.value = SoundManager.Instance.soundSource.volume;
+            sfxSlider.value = SFXManager.Instance.sfxAudioSoruce.volume;
 
             isFadingBack = true;
         }
@@ -217,7 +217,7 @@ public class MainMenuManager : MonoBehaviour
     {
         if (!isFading && !isFadingBack && options.alpha == 1)
         {
-            //MusicManager.Instance.musicSource.volume = musicSlider.value;
+            MusicManager.Instance.musicSource.volume = musicSlider.value;
         }
     }
 
@@ -225,7 +225,7 @@ public class MainMenuManager : MonoBehaviour
     {
         if (!isFading && !isFadingBack && options.alpha == 1)
         {
-            //SoundManager.Instance.soundSource.volume = sfxSlider.value;
+            SFXManager.Instance.sfxAudioSoruce.volume = sfxSlider.value;
         }
     }
 

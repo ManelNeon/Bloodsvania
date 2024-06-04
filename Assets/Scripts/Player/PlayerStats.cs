@@ -26,6 +26,8 @@ public class PlayerStats : MonoBehaviour
 
     PlayerController playerController;
 
+    CombatController playerCombat;
+
     float currentHP;
 
     TextMeshProUGUI fulguriteSlot;
@@ -41,6 +43,8 @@ public class PlayerStats : MonoBehaviour
         playerAnimator = GetComponentInChildren<Animator>();
 
         playerController = GetComponent<PlayerController>();
+
+        playerCombat = GetComponent<CombatController>();
 
         fulguriteSlot = GameObject.Find("FulguriteValue").GetComponent<TextMeshProUGUI>();
 
@@ -92,6 +96,8 @@ public class PlayerStats : MonoBehaviour
         playerController.enabled = false;
 
         yield return new WaitForSeconds(1);
+
+        playerCombat.canAttack = true;
 
         playerController.enabled = true;
     }
