@@ -18,6 +18,8 @@ public class MusicManager : MonoBehaviour
             return;
         }
 
+        DontDestroyOnLoad(gameObject);
+
         Instance = this;
 
         musicSource = GetComponent<AudioSource>();

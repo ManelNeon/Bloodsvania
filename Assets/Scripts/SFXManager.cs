@@ -8,6 +8,14 @@ public class SFXManager : MonoBehaviour
 
     [HideInInspector] public AudioSource sfxAudioSoruce;
 
+    [SerializeField] AudioClip punchSound;
+
+    [SerializeField] AudioClip footstepSound;
+
+    [SerializeField] AudioClip punchedSound;
+
+    [SerializeField] AudioClip buttonSound;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -18,14 +26,33 @@ public class SFXManager : MonoBehaviour
             return;
         }
 
+        DontDestroyOnLoad(gameObject);
+
         Instance = this;
 
         sfxAudioSoruce = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void PlayPunch()
     {
-        
+        sfxAudioSoruce.PlayOneShot(punchSound);
+    }
+
+    public void PlayFootstep()
+    {
+        if (!sfxAudioSoruce.isPlaying)
+        {
+            sfxAudioSoruce.PlayOneShot(footstepSound);
+        }
+    }
+
+    public void PlayPunched()
+    {
+        sfxAudioSoruce.PlayOneShot(punchedSound);
+    }
+
+    public void PlayButtonClicked()
+    {
+        sfxAudioSoruce.PlayOneShot(buttonSound);
     }
 }

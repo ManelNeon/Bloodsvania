@@ -45,6 +45,11 @@ public class PlayerController : MonoBehaviour
         NPCRaycast();
 
         playerAnimator.SetFloat("Blend", direction.magnitude);
+
+        if (direction.magnitude != 0)
+        {
+            SFXManager.Instance.PlayFootstep();
+        }
     }
 
     private void LateUpdate()

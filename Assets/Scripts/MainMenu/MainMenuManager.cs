@@ -171,6 +171,7 @@ public class MainMenuManager : MonoBehaviour
     {
         if (!isFading && !isFadingBack && mainMenu.alpha == 1)
         {
+            SFXManager.Instance.PlayButtonClicked();
             SceneManager.LoadScene("Blocking");
         }
     }
@@ -179,6 +180,7 @@ public class MainMenuManager : MonoBehaviour
     {
         if (!isFading && !isFadingBack && mainMenu.alpha == 1)
         {
+            SFXManager.Instance.PlayButtonClicked();
             SceneManager.LoadScene("SampleScene");
         }
     }
@@ -187,6 +189,8 @@ public class MainMenuManager : MonoBehaviour
     {
         if (!isFading && !isFadingBack && mainMenu.alpha == 1)
         {
+            SFXManager.Instance.PlayButtonClicked();
+
             musicSlider.value = MusicManager.Instance.musicSource.volume;
 
             sfxSlider.value = SFXManager.Instance.sfxAudioSoruce.volume;
@@ -209,6 +213,8 @@ public class MainMenuManager : MonoBehaviour
     {
         if (!isFading && !isFadingBack && options.alpha == 1)
         {
+            SFXManager.Instance.PlayButtonClicked();
+
             isFadingBack = true;
         }
     }

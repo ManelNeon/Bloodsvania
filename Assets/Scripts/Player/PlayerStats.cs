@@ -69,6 +69,8 @@ public class PlayerStats : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        SFXManager.Instance.PlayPunched();
+
         if (currentHP - damage > 0)
         {
             playerAnimator.Play("Punched");

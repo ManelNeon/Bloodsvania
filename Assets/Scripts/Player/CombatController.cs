@@ -93,6 +93,8 @@ public class CombatController : MonoBehaviour
 
     public void Attack()
     {
+        SFXManager.Instance.PlayPunch();
+
         if (isCountering)
         {
             enemyAttacking.TakeDamage(playerStats.damageValue * .75f);
