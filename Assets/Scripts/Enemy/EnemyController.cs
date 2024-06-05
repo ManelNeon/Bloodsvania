@@ -245,11 +245,12 @@ public class EnemyController : MonoBehaviour
             //adding fulgurite to these stats
             playerStats.AddFulgurite(random);
 
+            NoLongerSelected();
+
             //the enmey is now dead
             isDead = true;
 
-            //if there are no longer any enemies, the player's current target is null
-            if (!enemyManager.RandomEnemy())
+            if (playerCombat.currentTarget == this)
             {
                 playerCombat.currentTarget = null;
             }
@@ -283,15 +284,13 @@ public class EnemyController : MonoBehaviour
     {
         isPreparingAttack = false;
 
-        enemyManager.StartingAI();
-
         isMoving = false;
 
         enemyAnimator.SetTrigger("Hit");
 
         yield return new WaitForSeconds(1.2f);
 
-        EnemyDirection();
+        Retreating();
 
         yield break;
     }

@@ -43,7 +43,7 @@ public class NPC : MonoBehaviour
 
         npcTextBox.SetActive(true);
 
-        displayText.text = "";
+        displayText.text = dialogues[index];
 
         Cursor.lockState = CursorLockMode.None;
 

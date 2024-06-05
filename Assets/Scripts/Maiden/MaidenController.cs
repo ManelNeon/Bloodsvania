@@ -97,6 +97,8 @@ public class MaidenController : NPC //it is a children of the NPC script
         {
             playerStats.AddHealth(25);
 
+            playerStats.currentHP = playerStats.hpValue;
+
             playerStats.fulguriteValue -= playerStats.fulguriteToLevel;
 
             playerStats.FulguriteNeeded();

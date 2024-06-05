@@ -17,7 +17,7 @@ public class TriggerLights : MonoBehaviour
         if (other.CompareTag("Player") && !light1.activeInHierarchy)
         {
             other.GetComponent<PlayerController>().direction = Vector3.zero;
-            Debug.Log("Passed");
+
             StartCoroutine(LightShowcase());
         }
     }

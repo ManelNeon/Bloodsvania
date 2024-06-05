@@ -34,7 +34,6 @@ public class FadeManager : MonoBehaviour
 
         m_Timer = fadeDuraction;
         
-
         isFading = true;
     }
 
@@ -78,6 +77,11 @@ public class FadeManager : MonoBehaviour
     {
         StartCoroutine(FadeOutAndInCoroutine());
 
+        isFading = true;
+    }
+
+    public void StartFadeOut()
+    {
         isFading = true;
     }
 

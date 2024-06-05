@@ -209,8 +209,8 @@ CanvasGroup:
   m_GameObject: {fileID: 23318656}
   m_Enabled: 1
   m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!1 &212304262
 GameObject:
@@ -473,7 +473,7 @@ CanvasGroup:
   m_Enabled: 1
   m_Alpha: 0
   m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!1 &385552541
 GameObject:
@@ -1175,8 +1175,8 @@ CanvasGroup:
   m_GameObject: {fileID: 741977616}
   m_Enabled: 1
   m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!114 &741977619
 MonoBehaviour:
@@ -1267,7 +1267,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1301,8 +1301,8 @@ CanvasGroup:
   m_GameObject: {fileID: 818981653}
   m_Enabled: 1
   m_Alpha: 0
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!1 &858568343
 GameObject:
@@ -3250,7 +3250,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8d3450210bd943b4791c29949c1e1e58, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 32163218e995e0e4498fb36752faaaaf, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3814,6 +3814,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   musicSource: {fileID: 0}
+  mainMenuMusic: {fileID: 8300000, guid: d123d2b472396ed49be974dd04683b9d, type: 3}
+  inGameMusic: {fileID: 8300000, guid: cd35aeeca9bfcad4baa99d0d8cd9e5af, type: 3}
+  fadingDuraction: 1
 --- !u!82 &2140071768
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3825,7 +3828,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: cd35aeeca9bfcad4baa99d0d8cd9e5af, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 1

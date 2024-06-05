@@ -68,7 +68,7 @@ public class CombatController : MonoBehaviour
             }
 
             //if the player right clicks, he can attack and there's an enemy attacking
-            if (Input.GetMouseButton(1) && canAttack && enemyAttacking)
+            if (Input.GetMouseButton(1) && enemyAttacking)
             {
                 transform.DOLookAt(enemyAttacking.transform.position, .2f);
                 transform.DOMove(TargetOffset(enemyAttacking.transform), .8f);
@@ -98,6 +98,7 @@ public class CombatController : MonoBehaviour
         }
 
         canAttack = true;
+
         playerController.enabled = true;
     }
 
@@ -119,7 +120,9 @@ public class CombatController : MonoBehaviour
     Vector3 TargetOffset(Transform target)
     {
         Vector3 position;
+
         position = target.position;
+
         return Vector3.MoveTowards(position, transform.position, .95f);
     }
 

@@ -21,7 +21,7 @@ public class PlayerStats : MonoBehaviour
 
     int level;
 
-    float currentHP;
+    [HideInInspector] public float currentHP;
 
     //for each 100 blood there's 1 bar
     float currentBlood;

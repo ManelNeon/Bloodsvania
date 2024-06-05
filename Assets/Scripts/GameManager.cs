@@ -32,9 +32,24 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         //Debugging only
-        if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            SceneManager.LoadScene(1);
+            StartCoroutine(MainMenuSequence());
         }
+    }
+
+    IEnumerator MainMenuSequence()
+    {
+        FadeManager.Instance.StartFadeOut();
+
+        MusicManager.Instance.PlayMenuMusic();
+
+        yield return new WaitForSeconds(1.5f);
+
+        isControlable = true;
+
+        SceneManager.LoadScene(0);
+
+        yield break;
     }
 }

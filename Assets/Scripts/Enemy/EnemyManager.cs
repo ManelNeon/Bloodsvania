@@ -8,7 +8,7 @@ public class EnemyManager : MonoBehaviour
     [Header("Event Variables")]
     [SerializeField] bool hasEvent;
 
-    [SerializeField] GameObject eventObject;
+    [SerializeField] GameObject[] eventObject;
 
     [SerializeField] bool hasFade;
 
@@ -133,7 +133,10 @@ public class EnemyManager : MonoBehaviour
             yield return new WaitForSeconds(1.7f);
         }
 
-        eventObject.SetActive(!eventObject.activeInHierarchy);
+        for (int i = 0; i < eventObject.Length; i++)
+        {
+            eventObject[i].SetActive(!eventObject[i].activeInHierarchy);
+        }
 
         yield break;
     }

@@ -43,6 +43,10 @@ public class MainMenuManager : MonoBehaviour
 
     private void Start()
     {
+        Cursor.lockState = CursorLockMode.None;
+
+        Cursor.visible = true;
+
         //setting the timer to the fade duraction, so that we fade out
         m_Timer = fadeDuraction;
 
@@ -157,6 +161,8 @@ public class MainMenuManager : MonoBehaviour
             {
                 isFading = false;
 
+                options.blocksRaycasts = true;
+
                 m_Timer = fadeDuraction;
             }
         }
@@ -170,6 +176,8 @@ public class MainMenuManager : MonoBehaviour
             if (options.alpha == 0)
             {
                 isFadingBack = false;
+
+                options.blocksRaycasts = false;
 
                 StartCoroutine(Wait());
 
@@ -217,6 +225,7 @@ public class MainMenuManager : MonoBehaviour
         if (!isFading && !isFadingBack && mainMenu.alpha == 1)
         {
             SFXManager.Instance.PlayButtonClicked();
+            MusicManager.Instance.PlayInGameMusic();
             StartCoroutine(Playing(true));
         }
     }

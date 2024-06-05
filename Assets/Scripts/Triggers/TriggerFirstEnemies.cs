@@ -18,6 +18,10 @@ public class TriggerFirstEnemies : MonoBehaviour
         {
             hasPlayed = true;
 
+            GameManager.Instance.isControlable = false;
+
+            other.GetComponent<PlayerController>().direction = Vector3.zero;
+
             StartCoroutine(EventCoroutine(other.transform));
         }
     }
@@ -27,8 +31,6 @@ public class TriggerFirstEnemies : MonoBehaviour
         doorIn.SetActive(true);
 
         FadeManager.Instance.StartFadeOutAndIn();
-
-        playerPosition.GetComponent<PlayerController>().enabled = false;
 
         yield return new WaitForSeconds(1.5f);
 
@@ -47,7 +49,7 @@ public class TriggerFirstEnemies : MonoBehaviour
 
         playerPosition.GetComponent<CharacterController>().enabled = true;
 
-        playerPosition.GetComponent<PlayerController>().enabled = true;
+        GameManager.Instance.isControlable = true;
 
         yield break;
     }
