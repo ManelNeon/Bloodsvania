@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
+    //this bool will see if this group of enemies will have an event when they are all killed
+    [Header("Event Variables")]
+    [SerializeField] bool hasEvent;
+
+    [SerializeField] GameObject eventObject;
+
+    [SerializeField] bool hasFade;
+
     //the array with the enemies
     [SerializeField] EnemyController[] enemies;
 
@@ -14,7 +22,7 @@ public class EnemyManager : MonoBehaviour
     public EnemyController tempEnemy;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         //we add the enemies to the list
         for (int i = 0; i < enemies.Length; i++)
@@ -106,5 +114,27 @@ public class EnemyManager : MonoBehaviour
         return randomEnemy;
     }
 
+    public void EventAllEnemiesDead()
+    {
+        if (enemiesList.Count != 0)
+        {
+            return;
+        }
 
+        StartCoroutine(EventCoroutine());
+    }
+
+    IEnumerator EventCoroutine()
+    {
+        if (hasFade)
+        {
+            FadeManager.Instance.StartFadeOutAndIn();
+
+            yield return new WaitForSeconds(1.7f);
+        }
+
+        eventObject.SetActive(!eventObject.activeInHierarchy);
+
+        yield break;
+    }
 }

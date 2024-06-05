@@ -47,7 +47,7 @@ public class SFXManager : MonoBehaviour
     {
         if (!sfxAudioSoruce.isPlaying)
         {
-            sfxAudioSoruce.PlayOneShot(footstepSound);
+            //sfxAudioSoruce.PlayOneShot(footstepSound);
         }
     }
 

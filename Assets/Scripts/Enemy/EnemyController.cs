@@ -44,7 +44,7 @@ public class EnemyController : MonoBehaviour
 
     public bool isDead;
 
-    private void Start()
+    private void Awake()
     {
         enemyAnimator = GetComponent<Animator>();
 
@@ -183,8 +183,8 @@ public class EnemyController : MonoBehaviour
             //deactivate the ismoving
             isMoving = false;
 
-            //if the player isnt countering or attacking, we attack
-            if (!playerCombat.isCountering && playerCombat.canAttack)
+            //if the player isnt countering, we attack
+            if (!playerCombat.isCountering)
             {
                 Attack();
             }
@@ -257,6 +257,8 @@ public class EnemyController : MonoBehaviour
             //we play the death animation and then we set a timer to destroy the object
             enemyAnimator.Play("Death");
 
+            enemyManager.EventAllEnemiesDead();
+
             StartCoroutine(DeathTimer());
         }
     }
@@ -314,7 +316,10 @@ public class EnemyController : MonoBehaviour
 
         float random = Random.Range(20,40);
 
-        playerStats.TakeDamage(random);
+        if (Vector3.Distance(transform.position, playerCombat.transform.position) < 2)
+        {
+            playerStats.TakeDamage(random);
+        }
 
         isPreparingAttack = false;
     }

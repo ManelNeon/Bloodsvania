@@ -405,10 +405,10 @@ MonoBehaviour:
   speed: 5
   turnSmoothTime: 0.1
   playerAnimator: {fileID: 3166231813647037441}
-  direction: {x: 0, y: 0, z: 0}
   npcLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  direction: {x: 0, y: 0, z: 0}
 --- !u!143 &191776700
 CharacterController:
   m_ObjectHideFlags: 0
@@ -517,6 +517,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62289229a6878ec43a4348725397fde4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sfxAudioSoruce: {fileID: 0}
+  punchSound: {fileID: 0}
+  footstepSound: {fileID: 0}
+  punchedSound: {fileID: 0}
+  buttonSound: {fileID: 0}
 --- !u!1 &325251093
 GameObject:
   m_ObjectHideFlags: 0
@@ -7200,7 +7205,7 @@ GameObject:
   - component: {fileID: 907387247}
   - component: {fileID: 907387248}
   m_Layer: 0
-  m_Name: Enemies
+  m_Name: Group1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7236,6 +7241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 337cfa62b77535c48a25e5c49273341d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasEvent: 0
   enemies:
   - {fileID: 2002633581}
   - {fileID: 1108975428}
@@ -8907,7 +8913,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1583194447}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.019016529, y: -0.00000002158822, z: 5.4440223e-11, w: 0.99981916}
+  m_LocalRotation: {x: 0.019016529, y: 0.000000012767957, z: 1.0912303e-10, w: 0.99981916}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
