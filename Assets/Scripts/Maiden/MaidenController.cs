@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class MaidenController : NPC //it is a children of the NPC script
 {
+    [SerializeField] bool willEndDemo;
+
     [Header("Buttons")]
     [SerializeField] Button hpButton;
 
@@ -50,15 +52,31 @@ public class MaidenController : NPC //it is a children of the NPC script
         }
         else
         {
-            npcTextBox.SetActive(false);
+            if (!willEndDemo)
+            {
+                npcTextBox.SetActive(false);
 
-            ChangeStats();
+                ChangeStats();
 
-            AddingListeners();
+                playerStats.currentHP = playerStats.hpValue;
 
-            maidenScreen.SetActive(true);
+                playerStats.ChangingHPUI();
 
-            isPlaying = false;
+                AddingListeners();
+
+                maidenScreen.SetActive(true);
+
+                isPlaying = false;
+            }
+            else
+            {
+                npcTextBox.SetActive(false);
+
+                Time.timeScale = 1;
+
+                GameManager.Instance.MainMenuSequenceFunction();
+            }
+            
         }
     }
 
@@ -96,8 +114,6 @@ public class MaidenController : NPC //it is a children of the NPC script
         if (playerStats.fulguriteValue > playerStats.fulguriteToLevel)
         {
             playerStats.AddHealth(25);
-
-            playerStats.currentHP = playerStats.hpValue;
 
             playerStats.fulguriteValue -= playerStats.fulguriteToLevel;
 

@@ -34,8 +34,13 @@ public class GameManager : MonoBehaviour
         //Debugging only
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            StartCoroutine(MainMenuSequence());
+            MainMenuSequenceFunction();
         }
+    }
+
+    public void MainMenuSequenceFunction()
+    {
+        StartCoroutine(MainMenuSequence());
     }
 
     IEnumerator MainMenuSequence()

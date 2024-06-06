@@ -65,9 +65,14 @@ public class PlayerStats : MonoBehaviour
 
         currentHP = hpValue;
 
-        healthBarSprite.fillAmount = currentHP / hpValue;
+        ChangingHPUI();
 
         currentBlood = bloodValue;
+    }
+
+    public void ChangingHPUI() 
+    {
+        healthBarSprite.fillAmount = currentHP / hpValue;
     }
 
     //taking damage function
@@ -84,18 +89,30 @@ public class PlayerStats : MonoBehaviour
 
             currentHP -= damage;
 
-            healthBarSprite.fillAmount = currentHP / hpValue;
+            ChangingHPUI();
+
         }
         else
         {
             currentHP = 0;
 
-            healthBarSprite.fillAmount = currentHP / hpValue;
+            ChangingHPUI();
 
             playerAnimator.Play("Death");
 
             playerController.enabled = false;
+
+            StartCoroutine(Death());
         }
+    }
+
+    IEnumerator Death()
+    {
+        yield return new WaitForSeconds(2);
+
+        GameManager.Instance.MainMenuSequenceFunction();
+
+        yield break;
     }
 
     //the GotHit sequence

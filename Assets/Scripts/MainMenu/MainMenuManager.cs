@@ -236,6 +236,7 @@ public class MainMenuManager : MonoBehaviour
         if (!isFading && !isFadingBack && mainMenu.alpha == 1)
         {
             SFXManager.Instance.PlayButtonClicked();
+            MusicManager.Instance.PlayInGameMusic();
             StartCoroutine(Playing(false));
         }
     }

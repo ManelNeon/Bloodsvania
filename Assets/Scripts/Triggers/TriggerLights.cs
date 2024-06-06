@@ -10,8 +10,6 @@ public class TriggerLights : MonoBehaviour
 
     [SerializeField] GameObject light3;
 
-    [SerializeField] GameObject secondRoomLights;
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && !light1.activeInHierarchy)
@@ -41,10 +39,6 @@ public class TriggerLights : MonoBehaviour
         yield return new WaitForSeconds(1);
 
         GameManager.Instance.isControlable = true;
-
-        yield return new WaitForSeconds(1.5f);
-
-        secondRoomLights.SetActive(true);
 
         yield break;
     }
