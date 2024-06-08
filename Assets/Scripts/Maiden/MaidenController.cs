@@ -76,7 +76,6 @@ public class MaidenController : NPC //it is a children of the NPC script
 
                 GameManager.Instance.MainMenuSequenceFunction();
             }
-            
         }
     }
 
