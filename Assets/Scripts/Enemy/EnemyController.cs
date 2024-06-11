@@ -25,8 +25,6 @@ public class EnemyController : MonoBehaviour
 
     CombatController playerCombat;
 
-    PlayerStats playerStats;
-
     Animator enemyAnimator;
 
     [Header("States")]
@@ -54,8 +52,6 @@ public class EnemyController : MonoBehaviour
 
         //for both the player combat and the player stats there will only be one instance of them so we can use the FindAnyObjectByType
         playerCombat = FindAnyObjectByType<CombatController>();
-
-        playerStats = FindAnyObjectByType<PlayerStats>();
 
         //we do the enemy direction function to set his direction
         EnemyDirection();
@@ -93,7 +89,7 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!isDead)
+        if (!isDead && GameManager.Instance.isControlable)
         {
             //in case the counter particle is activated, we deactivate the arrow particle so that it doesnt collid with each other
             if (counterParticle.activeInHierarchy)
@@ -243,7 +239,7 @@ public class EnemyController : MonoBehaviour
             int random = Random.Range(634, 1024);
 
             //adding fulgurite to these stats
-            playerStats.AddFulgurite(random);
+            GameManager.Instance.AddFulgurite(random);
 
             NoLongerSelected();
 
@@ -313,11 +309,11 @@ public class EnemyController : MonoBehaviour
     {
         Counter(false);
 
-        float random = Random.Range(20,40);
+        float random = Random.Range(20,30);
 
         if (Vector3.Distance(transform.position, playerCombat.transform.position) < 2)
         {
-            playerStats.TakeDamage(random);
+            playerCombat.TakeDamage(random);
         }
 
         isPreparingAttack = false;

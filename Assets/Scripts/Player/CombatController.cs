@@ -8,8 +8,6 @@ using UnityEngine;
 public class CombatController : MonoBehaviour
 {
     [Header("References to other Scripts")]
-    PlayerStats playerStats;
-
     PlayerController playerController;
 
     Animator playerAnimator;
@@ -26,16 +24,23 @@ public class CombatController : MonoBehaviour
 
     [HideInInspector] public bool isCountering;
 
+    bool isOnRage;
+
+    [Header("References")]
+    [SerializeField] ParticleSystem healParticles;
+
+    [SerializeField] GameObject rageVignette;
+
     // Start is called before the first frame update
     void Start()
     {
-        playerStats = GetComponent<PlayerStats>();
-
         playerController = GetComponent<PlayerController>();
 
         playerAnimator = GetComponentInChildren<Animator>();
 
         canAttack = true;
+
+        StartCoroutine(RageMode());
     }
 
     // Update is called once per frame
@@ -84,9 +89,73 @@ public class CombatController : MonoBehaviour
 
                 canAttack = false;
             }
+
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                if (!isOnRage)
+                {
+                    if (GameManager.Instance.currentRage >= 50)
+                    {
+                        rageVignette.SetActive(true);
+
+                        isOnRage = true;
+                    }
+                }
+                else
+                {
+                    rageVignette.SetActive(false);
+
+                    isOnRage = false;
+                }
+                
+            }
+
+            if (Input.GetKeyDown(KeyCode.E) && GameManager.Instance.currentRage >= 1)
+            {
+                //Heal
+                if (GameManager.Instance.currentHP != GameManager.Instance.hpValue)
+                {
+                    GameManager.Instance.HealFunction();
+
+                    healParticles.Play();
+                }
+            }
         }
 
         EnemyRaycast();
+    }
+
+    IEnumerator RageMode()
+    {
+        while (true)
+        {
+            if (isOnRage)
+            {
+                if (GameManager.Instance.currentHP > 1 && GameManager.Instance.currentRage > 0)
+                {
+                    yield return new WaitForSeconds(.1f);
+
+                    GameManager.Instance.currentHP -= 2;
+
+                    GameManager.Instance.currentRage -= .5f;
+
+                    GameManager.Instance.ChangingHPUI();
+
+                    GameManager.Instance.ChangingRageUI();
+                }
+                else
+                {
+                    rageVignette.SetActive(false);
+
+                    isOnRage = false;
+                }
+                
+            }
+            else
+            {
+                yield return null;
+            }
+        }
     }
 
     //event that plays when the attack ends, if he's countering, hes nolonger countering, he can attack and he can move again
@@ -109,11 +178,11 @@ public class CombatController : MonoBehaviour
 
         if (isCountering)
         {
-            enemyAttacking.TakeDamage(playerStats.damageValue * .75f);
+            enemyAttacking.TakeDamage(GameManager.Instance.dmgValue * .05f);
             return;
         }
 
-        currentTarget.TakeDamage(playerStats.damageValue * .75f);
+        currentTarget.TakeDamage(GameManager.Instance.dmgValue * .05f);
     }
 
     //getting the offset between the player and the targets position
@@ -143,5 +212,60 @@ public class CombatController : MonoBehaviour
                 currentTarget = hit.collider.transform.GetComponent<EnemyController>();
             }
         }
+    }
+
+    public void TakeDamage(float damage)
+    {
+        //we play the punch sfx
+        SFXManager.Instance.PlayPunched();
+
+        float damageCalculated = damage / (GameManager.Instance.compositionValue * 0.03f);
+
+        if (GameManager.Instance.currentHP - damageCalculated > 0)
+        {
+            playerAnimator.Play("Punched");
+
+            StartCoroutine(GotHit());
+
+            GameManager.Instance.currentHP -= damageCalculated;
+
+            GameManager.Instance.ChangingHPUI();
+
+        }
+        else
+        {
+            GameManager.Instance.currentHP = 0;
+
+            GameManager.Instance.ChangingHPUI();
+
+            playerAnimator.Play("Death");
+
+            playerController.enabled = false;
+
+            StartCoroutine(Death());
+        }
+    }
+
+    //the GotHit sequence
+    IEnumerator GotHit()
+    {
+        canAttack = false;
+
+        playerController.enabled = false;
+
+        yield return new WaitForSeconds(1);
+
+        canAttack = true;
+
+        playerController.enabled = true;
+    }
+
+    IEnumerator Death()
+    {
+        yield return new WaitForSeconds(2);
+
+        GameManager.Instance.MainMenuSequenceFunction();
+
+        yield break;
     }
 }

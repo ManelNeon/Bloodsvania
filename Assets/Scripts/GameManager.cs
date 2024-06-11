@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,6 +11,34 @@ public class GameManager : MonoBehaviour
 
     //this bool controls either if the player can or cannot control
     public bool isControlable;
+
+    [Header("Player Stats")]
+    [HideInInspector] public float hpValue;
+
+    [HideInInspector] public float bloodValue;
+
+    [HideInInspector] public float dmgValue;
+
+    [HideInInspector] public float compositionValue;
+
+    [HideInInspector] public float reflexValue;
+
+    [HideInInspector] public int fulguriteValue;
+
+    [HideInInspector] public int level;
+
+    public float currentHP;
+
+    [HideInInspector] public float currentRage;
+
+    [HideInInspector] public int fulguriteToLevel;
+
+    [Header("References")]
+    public Image healthBarSprite;
+
+    public Image rageBarSprite;
+
+    public TextMeshProUGUI fulguriteSlot;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +55,8 @@ public class GameManager : MonoBehaviour
         
         DontDestroyOnLoad(this.gameObject);
 
+        ResetStats();
+
         isControlable = true;
     }
 
@@ -36,13 +68,20 @@ public class GameManager : MonoBehaviour
         {
             MainMenuSequenceFunction();
         }
+        
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            FindAnyObjectByType<CombatController>().TakeDamage(1);
+        }
     }
 
+    //function to fade back to the Main Menu
     public void MainMenuSequenceFunction()
     {
         StartCoroutine(MainMenuSequence());
     }
 
+    //Coroutine to fade back to the Main Menu
     IEnumerator MainMenuSequence()
     {
         FadeManager.Instance.StartFadeOut();
@@ -53,8 +92,140 @@ public class GameManager : MonoBehaviour
 
         isControlable = true;
 
+        ResetStats();
+
         SceneManager.LoadScene(0);
 
         yield break;
+    }
+
+
+    void ResetStats()
+    {
+        //Initial Values
+        hpValue = 100;
+
+        bloodValue = 50;
+
+        dmgValue = 50;
+
+        compositionValue = 35;
+
+        reflexValue = 50;
+
+        fulguriteValue = 0;
+
+        level = 1;
+
+        currentHP = hpValue;
+
+        currentRage = bloodValue;
+
+        //fulguriteSlot = null;
+
+        FulguriteNeeded();
+    }
+
+    public void HealFunction()
+    {
+        if (hpValue - currentHP > currentRage)
+        {
+            currentHP += currentRage;
+
+            currentRage = 0;
+        }
+        else
+        {
+            currentRage -= (hpValue - currentHP);
+
+            currentHP = hpValue;
+        }
+
+        ChangingHPUI();
+
+        ChangingRageUI();
+    }
+
+    public void ChangingHPUI()
+    {
+        healthBarSprite.fillAmount = (currentHP / hpValue);
+    }
+
+    public void ChangingRageUI()
+    {
+        rageBarSprite.fillAmount = currentRage / bloodValue;
+    }
+
+    //Adding Health Function
+    public void AddHealth(int healthToAdd)
+    {
+        hpValue += healthToAdd;
+
+        currentHP = hpValue;
+
+        level++;
+
+        FulguriteNeeded();
+    }
+
+    //adding Blood Function
+    public void AddBlood(int bloodToAdd)
+    {
+        bloodValue += bloodToAdd;
+
+        currentRage = bloodValue;
+
+        level++;
+
+        FulguriteNeeded();
+    }
+
+    public void AddDamage(int damageToAdd)
+    {
+        dmgValue += damageToAdd;
+
+        level++;
+
+        FulguriteNeeded();
+    }
+
+    //Adding Compostion Function
+    public void AddComposition(int compositionToAdd)
+    {
+        compositionValue += compositionToAdd;
+
+        level++;
+
+        FulguriteNeeded();
+    }
+
+    public void AddReflex(int reflexToAdd)
+    {
+        reflexValue += reflexToAdd;
+
+        level++;
+
+        FulguriteNeeded();
+    }
+
+    //Adding Fulgurite Function
+    public void AddFulgurite(int fulguriteToAdd)
+    {
+        fulguriteValue += fulguriteToAdd;
+
+        fulguriteSlot.text = fulguriteValue.ToString();
+    }
+
+    
+
+    //Code that checks how much fulgurite is needed to level and also updates the value on the text
+    public void FulguriteNeeded()
+    {
+        fulguriteToLevel = (level * 60 + level + 356);
+
+        if (fulguriteSlot != null)
+        {
+            fulguriteSlot.text = fulguriteValue.ToString();
+        }
     }
 }

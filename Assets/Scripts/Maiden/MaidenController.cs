@@ -14,7 +14,11 @@ public class MaidenController : NPC //it is a children of the NPC script
 
     [SerializeField] Button bloodButton;
 
+    [SerializeField] Button dmgButton;
+
     [SerializeField] Button compositionButton;
+
+    [SerializeField] Button reflexButton;
 
     [SerializeField] Button exitButton;
 
@@ -26,21 +30,15 @@ public class MaidenController : NPC //it is a children of the NPC script
 
     [SerializeField] TextMeshProUGUI bloodValue;
 
+    [SerializeField] TextMeshProUGUI dmgValue;
+
     [SerializeField] TextMeshProUGUI compositionValue;
+
+    [SerializeField] TextMeshProUGUI reflexValue;
 
     [SerializeField] TextMeshProUGUI fulguriteAvailableText;
 
     [SerializeField] TextMeshProUGUI fulguriteNeededText;
-
-    [Header("Players Stats")]
-    PlayerStats playerStats;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        //because there will ever only be one Player Stats we can use the FindObjectOfType function
-        playerStats = FindObjectOfType<PlayerStats>();
-    }
 
     //we override the NextLine function, the difference is that when the dialogue ends, we activate the maiden screen and do the ChangeStats() and AddingListeners()
     public override void NextLine()
@@ -58,9 +56,13 @@ public class MaidenController : NPC //it is a children of the NPC script
 
                 ChangeStats();
 
-                playerStats.currentHP = playerStats.hpValue;
+                GameManager.Instance.currentHP = GameManager.Instance.hpValue;
 
-                playerStats.ChangingHPUI();
+                GameManager.Instance.currentRage = GameManager.Instance.bloodValue;
+
+                GameManager.Instance.ChangingHPUI();
+
+                GameManager.Instance.ChangingRageUI();
 
                 AddingListeners();
 
@@ -82,15 +84,19 @@ public class MaidenController : NPC //it is a children of the NPC script
     //we change the stats on the maiden screen to the one that player has
     void ChangeStats()
     {
-        hpValue.text = "HP: " + playerStats.hpValue;
+        hpValue.text = "HP: " + GameManager.Instance.hpValue;
 
-        bloodValue.text = "Blood: " + playerStats.bloodValue;
+        bloodValue.text = "Blood: " + GameManager.Instance.bloodValue;
 
-        compositionValue.text = "Composition: " + playerStats.compositionValue;
+        dmgValue.text = "Damage: " + GameManager.Instance.dmgValue;
 
-        fulguriteAvailableText.text = "Fulgurite: " + playerStats.fulguriteValue;
+        compositionValue.text = "Composition: " + GameManager.Instance.compositionValue;
 
-        fulguriteNeededText.text = playerStats.fulguriteToLevel + " Fulgurite to Level Up";
+        reflexValue.text = "Reflex: " + GameManager.Instance.reflexValue;
+
+        fulguriteAvailableText.text = "Fulgurite: " + GameManager.Instance.fulguriteValue;
+
+        fulguriteNeededText.text = GameManager.Instance.fulguriteToLevel + " Fulgurite to Level Up";
     }
 
     //we firstly remove the listeners and then add them again (so that there isnt two listeners on the same button)
@@ -98,25 +104,29 @@ public class MaidenController : NPC //it is a children of the NPC script
     {
         hpButton.onClick.RemoveAllListeners();
         bloodButton.onClick.RemoveAllListeners();
+        dmgButton.onClick.RemoveAllListeners();
         compositionButton.onClick.RemoveAllListeners();
+        reflexButton.onClick.RemoveAllListeners();
         exitButton.onClick.RemoveAllListeners();
 
         hpButton.onClick.AddListener(AddingHealth);
         bloodButton.onClick.AddListener(AddingBlood);
+        dmgButton.onClick.AddListener(AddingDamage);
         compositionButton.onClick.AddListener(AddingComposition);
+        reflexButton.onClick.AddListener(AddingReflex);
         exitButton.onClick.AddListener(ExitMenu);
     }
 
     //adding health stat
     void AddingHealth()
     {
-        if (playerStats.fulguriteValue > playerStats.fulguriteToLevel)
+        if (GameManager.Instance.fulguriteValue > GameManager.Instance.fulguriteToLevel)
         {
-            playerStats.AddHealth(25);
+            GameManager.Instance.AddHealth(25);
 
-            playerStats.fulguriteValue -= playerStats.fulguriteToLevel;
+            GameManager.Instance.fulguriteValue -= GameManager.Instance.fulguriteToLevel;
 
-            playerStats.FulguriteNeeded();
+            GameManager.Instance.FulguriteNeeded();
 
             ChangeStats();
         }
@@ -125,13 +135,27 @@ public class MaidenController : NPC //it is a children of the NPC script
     //adding blood stat
     void AddingBlood()
     {
-        if (playerStats.fulguriteValue > playerStats.fulguriteToLevel)
+        if (GameManager.Instance.fulguriteValue > GameManager.Instance.fulguriteToLevel)
         {
-            playerStats.AddBlood(25);
+            GameManager.Instance.AddBlood(25);
 
-            playerStats.fulguriteValue -= playerStats.fulguriteToLevel;
+            GameManager.Instance.fulguriteValue -= GameManager.Instance.fulguriteToLevel;
 
-            playerStats.FulguriteNeeded();
+            GameManager.Instance.FulguriteNeeded();
+
+            ChangeStats();
+        }
+    }
+
+    void AddingDamage()
+    {
+        if (GameManager.Instance.fulguriteValue > GameManager.Instance.fulguriteToLevel)
+        {
+            GameManager.Instance.AddDamage(5);
+
+            GameManager.Instance.fulguriteValue -= GameManager.Instance.fulguriteToLevel;
+
+            GameManager.Instance.FulguriteNeeded();
 
             ChangeStats();
         }
@@ -140,13 +164,27 @@ public class MaidenController : NPC //it is a children of the NPC script
     //adding composition stat
     void AddingComposition()
     {
-        if (playerStats.fulguriteValue > playerStats.fulguriteToLevel)
+        if (GameManager.Instance.fulguriteValue > GameManager.Instance.fulguriteToLevel)
         {
-            playerStats.AddComposition(25);
+            GameManager.Instance.AddComposition(1);
 
-            playerStats.fulguriteValue -= playerStats.fulguriteToLevel;
+            GameManager.Instance.fulguriteValue -= GameManager.Instance.fulguriteToLevel;
 
-            playerStats.FulguriteNeeded();
+            GameManager.Instance.FulguriteNeeded();
+
+            ChangeStats();
+        }
+    }
+
+    void AddingReflex()
+    {
+        if (GameManager.Instance.fulguriteValue > GameManager.Instance.fulguriteToLevel)
+        {
+            GameManager.Instance.AddReflex(5);
+
+            GameManager.Instance.fulguriteValue -= GameManager.Instance.fulguriteToLevel;
+
+            GameManager.Instance.FulguriteNeeded();
 
             ChangeStats();
         }
