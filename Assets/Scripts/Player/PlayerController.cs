@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Transform mainCam;
 
     [Header("Movement Variables")]
-    [SerializeField] float speed = 6f;
+    public float speed = 6f;
 
     [SerializeField] float turnSmoothTime = .1f;
 

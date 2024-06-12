@@ -27,18 +27,27 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector] public int level;
 
-    public float currentHP;
+    //Somehow increase the scale of the HP in the UI???
+    [HideInInspector]public float currentHP;
 
+    //Somehow increase the scale of the rageBar in the UI??
     [HideInInspector] public float currentRage;
 
     [HideInInspector] public int fulguriteToLevel;
 
-    [Header("References")]
+    [Header("ReferencesHealthBar")]
     public Image healthBarSprite;
 
+    public RectTransform healthBarMaskTransform;
+
+    public RectTransform healthBarDividerTransform;
+
+    [Header("ReferencesRageBar")]
     public Image rageBarSprite;
 
     public TextMeshProUGUI fulguriteSlot;
+
+    float barMaskWidth;
 
     // Start is called before the first frame update
     void Start()
@@ -72,6 +81,8 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.X))
         {
             FindAnyObjectByType<CombatController>().TakeDamage(1);
+
+            AddFulgurite(100000);
         }
     }
 
@@ -123,6 +134,8 @@ public class GameManager : MonoBehaviour
 
         //fulguriteSlot = null;
 
+        barMaskWidth = healthBarMaskTransform.sizeDelta.x;
+
         FulguriteNeeded();
     }
 
@@ -148,7 +161,13 @@ public class GameManager : MonoBehaviour
 
     public void ChangingHPUI()
     {
-        healthBarSprite.fillAmount = (currentHP / hpValue);
+        //healthBarSprite.fillAmount = (currentHP / hpValue);
+
+        Vector2 barMaskSizeDelta = healthBarMaskTransform.sizeDelta;
+
+        barMaskSizeDelta.x = (currentHP / hpValue) * barMaskWidth;
+
+        healthBarMaskTransform.sizeDelta = barMaskSizeDelta;
     }
 
     public void ChangingRageUI()
@@ -163,6 +182,16 @@ public class GameManager : MonoBehaviour
 
         currentHP = hpValue;
 
+        //healthBarSprite.transform.localScale = new Vector3(healthBarSprite.transform.localScale.x + .03f, healthBarSprite.transform.localScale.y, healthBarSprite.transform.localScale.z);
+
+        healthBarMaskTransform.sizeDelta = new Vector2(barMaskWidth + 15f, healthBarMaskTransform.sizeDelta.y);
+
+        healthBarSprite.rectTransform.sizeDelta = new Vector2(barMaskWidth + 15f, healthBarMaskTransform.sizeDelta.y);
+
+        healthBarDividerTransform.sizeDelta = new Vector2(healthBarDividerTransform.sizeDelta.x + 43f, healthBarDividerTransform.sizeDelta.y);
+
+        barMaskWidth = healthBarMaskTransform.sizeDelta.x;
+
         level++;
 
         FulguriteNeeded();
@@ -174,6 +203,8 @@ public class GameManager : MonoBehaviour
         bloodValue += bloodToAdd;
 
         currentRage = bloodValue;
+
+        rageBarSprite.transform.localScale = new Vector3(rageBarSprite.transform.localScale.x + .01f, rageBarSprite.transform.localScale.y, rageBarSprite.transform.localScale.z);
 
         level++;
 

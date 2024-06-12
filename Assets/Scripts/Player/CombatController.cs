@@ -24,7 +24,7 @@ public class CombatController : MonoBehaviour
 
     [HideInInspector] public bool isCountering;
 
-    bool isOnRage;
+    [HideInInspector] public bool isOnRage;
 
     [Header("References")]
     [SerializeField] ParticleSystem healParticles;
@@ -98,6 +98,12 @@ public class CombatController : MonoBehaviour
                     {
                         rageVignette.SetActive(true);
 
+                        GameManager.Instance.dmgValue *= 2;
+
+                        playerController.speed *= 2;
+
+                        playerAnimator.speed *= 2;
+
                         isOnRage = true;
                     }
                 }
@@ -105,9 +111,14 @@ public class CombatController : MonoBehaviour
                 {
                     rageVignette.SetActive(false);
 
+                    GameManager.Instance.dmgValue /= 2;
+
+                    playerController.speed /= 2;
+
+                    playerAnimator.speed /= 2;
+
                     isOnRage = false;
                 }
-                
             }
 
             if (Input.GetKeyDown(KeyCode.E) && GameManager.Instance.currentRage >= 1)
@@ -146,6 +157,12 @@ public class CombatController : MonoBehaviour
                 else
                 {
                     rageVignette.SetActive(false);
+
+                    GameManager.Instance.dmgValue /= 2;
+
+                    playerController.speed /= 2;
+
+                    playerAnimator.speed /= 2;
 
                     isOnRage = false;
                 }
