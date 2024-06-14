@@ -146,7 +146,7 @@ public class CombatController : MonoBehaviour
                 {
                     yield return new WaitForSeconds(.1f);
 
-                    GameManager.Instance.currentHP -= 2;
+                    GameManager.Instance.currentHP -= 2 / (GameManager.Instance.compositionValue * 0.03f);
 
                     GameManager.Instance.currentRage -= .5f;
 
@@ -191,7 +191,7 @@ public class CombatController : MonoBehaviour
     //event that plays when player makes contact, except in counter because we want the enemy to stop moving immeaditly on button press
     public void Attack()
     {
-        SFXManager.Instance.PlayPunch();
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.punchSound);
 
         if (isCountering)
         {
@@ -234,7 +234,7 @@ public class CombatController : MonoBehaviour
     public void TakeDamage(float damage)
     {
         //we play the punch sfx
-        SFXManager.Instance.PlayPunched();
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.punchedSound);
 
         float damageCalculated = damage / (GameManager.Instance.compositionValue * 0.03f);
 

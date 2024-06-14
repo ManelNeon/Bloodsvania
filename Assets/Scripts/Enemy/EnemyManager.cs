@@ -12,14 +12,16 @@ public class EnemyManager : MonoBehaviour
 
     [SerializeField] bool hasFade;
 
-    //the array with the enemies
-    [SerializeField] EnemyController[] enemies;
+    [Header("Enemy Listing")]
+    [SerializeField] EnemyController[] enemies;     //the array with the enemies
 
     //a list where we will store the enemies
     public List<EnemyController> enemiesList = new List<EnemyController>(); 
 
     //a variable where we store the attacking enemy
-    public EnemyController tempEnemy;
+    EnemyController tempEnemy;
+
+    bool hasPassed;
 
     // Start is called before the first frame update
     void Awake()
@@ -29,9 +31,6 @@ public class EnemyManager : MonoBehaviour
         {
             enemiesList.Add(enemies[i]);
         }
-
-        //start the AI
-        StartingAI();
     }
 
     //in here we start the coroutine
@@ -139,5 +138,21 @@ public class EnemyManager : MonoBehaviour
         }
 
         yield break;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player") && !hasPassed)
+        {
+            hasPassed = true;
+
+            for (int i = 0; i < enemiesList.Count; i++)
+            {
+                enemiesList[i].EnemyDirection();
+
+                //start the AI
+                StartingAI();
+            }
+        }
     }
 }

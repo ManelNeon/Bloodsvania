@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine.Audio;
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -20,9 +21,13 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] Animator logoAnimator;
 
     [Header("Sliders")]
+    [SerializeField] Slider masterSlider;
+
     [SerializeField] Slider musicSlider;
 
     [SerializeField] Slider sfxSlider;
+
+    [SerializeField] AudioMixer audioMixer;
 
     [Header("Fading Bools")]
     bool isFading; //bool to see if it's fading in
@@ -237,8 +242,8 @@ public class MainMenuManager : MonoBehaviour
     {
         if (!isFading && !isFadingBack && mainMenu.alpha == 1)
         {
-            SFXManager.Instance.PlayButtonClicked();
-            MusicManager.Instance.PlayInGameMusic();
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.buttonSound);
+            AudioManager.Instance.PlayMusic(AudioManager.Instance.inGameMusic);
             StartCoroutine(Playing(true));
         }
     }
@@ -248,8 +253,8 @@ public class MainMenuManager : MonoBehaviour
     {
         if (!isFading && !isFadingBack && mainMenu.alpha == 1)
         {
-            SFXManager.Instance.PlayButtonClicked();
-            MusicManager.Instance.PlayInGameMusic();
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.buttonSound);
+            AudioManager.Instance.PlayMusic(AudioManager.Instance.inGameMusic);
             StartCoroutine(Playing(false));
         }
     }
@@ -259,11 +264,33 @@ public class MainMenuManager : MonoBehaviour
     {
         if (!isFading && !isFadingBack && mainMenu.alpha == 1)
         {
-            SFXManager.Instance.PlayButtonClicked();
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.buttonSound);
 
-            musicSlider.value = MusicManager.Instance.musicSource.volume;
+            float temporary = 0;
 
-            sfxSlider.value = SFXManager.Instance.sfxAudioSoruce.volume;
+            audioMixer.GetFloat("Master", out temporary);
+
+            temporary /= 20;
+
+            temporary = Mathf.Pow(10, temporary);
+
+            masterSlider.value = temporary;
+
+            audioMixer.GetFloat("Music", out temporary);
+
+            temporary /= 20;
+
+            temporary = Mathf.Pow(10, temporary);
+
+            musicSlider.value = temporary;
+
+            audioMixer.GetFloat("SFX", out temporary);
+
+            temporary /= 20;
+
+            temporary = Mathf.Pow(10, temporary);
+
+            sfxSlider.value = temporary;
 
             isFadingBack = true;
         }
@@ -285,9 +312,17 @@ public class MainMenuManager : MonoBehaviour
     {
         if (!isFading && !isFadingBack && options.alpha == 1)
         {
-            SFXManager.Instance.PlayButtonClicked();
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.buttonSound);
 
             isFadingBack = true;
+        }
+    }
+
+    public void SliderMaster()
+    {
+        if (!isFading && !isFadingBack && options.alpha == 1)
+        {
+            audioMixer.SetFloat("Master", Mathf.Log10(masterSlider.value) * 20);
         }
     }
 
@@ -296,7 +331,8 @@ public class MainMenuManager : MonoBehaviour
     {
         if (!isFading && !isFadingBack && options.alpha == 1)
         {
-            MusicManager.Instance.musicSource.volume = musicSlider.value;
+            audioMixer.SetFloat("Music", Mathf.Log10(musicSlider.value) * 20);
+
         }
     }
 
@@ -305,8 +341,7 @@ public class MainMenuManager : MonoBehaviour
     {
         if (!isFading && !isFadingBack && options.alpha == 1)
         {
-            SFXManager.Instance.sfxAudioSoruce.volume = sfxSlider.value;
+            audioMixer.SetFloat("SFX", Mathf.Log10(sfxSlider.value) * 20);
         }
     }
-
 }

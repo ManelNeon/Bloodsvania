@@ -42,12 +42,25 @@ public class GameManager : MonoBehaviour
 
     public RectTransform healthBarDividerTransform;
 
+    public RectTransform damageBarMaskTransform;
+
+    public RectTransform damageBarTransform;
+
+    [SerializeField] float lerpSpeed = 0.05f;
+
     [Header("ReferencesRageBar")]
     public Image rageBarSprite;
 
+    public RectTransform rageBarMaskTransform;
+
+    public RectTransform rageBarDividerTransform;
+
+    [Header("ReferencesFulgurite")]
     public TextMeshProUGUI fulguriteSlot;
 
-    float barMaskWidth;
+    float healthBarMaskWidth;
+
+    float rageBarMaskWidth;
 
     // Start is called before the first frame update
     void Start()
@@ -80,9 +93,14 @@ public class GameManager : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.X))
         {
-            FindAnyObjectByType<CombatController>().TakeDamage(1);
+            FindAnyObjectByType<CombatController>().TakeDamage(25);
 
             AddFulgurite(100000);
+        }
+
+        if (damageBarMaskTransform != null && damageBarMaskTransform.sizeDelta.x != healthBarMaskTransform.sizeDelta.x)
+        {
+            damageBarMaskTransform.sizeDelta = new Vector2(Mathf.Lerp(damageBarMaskTransform.sizeDelta.x, (currentHP / hpValue) * healthBarMaskWidth, lerpSpeed), damageBarMaskTransform.sizeDelta.y );
         }
     }
 
@@ -97,7 +115,7 @@ public class GameManager : MonoBehaviour
     {
         FadeManager.Instance.StartFadeOut();
 
-        MusicManager.Instance.PlayMenuMusic();
+        AudioManager.Instance.PlayMusic(AudioManager.Instance.mainMenuMusic);
 
         yield return new WaitForSeconds(1.5f);
 
@@ -132,11 +150,35 @@ public class GameManager : MonoBehaviour
 
         currentRage = bloodValue;
 
-        //fulguriteSlot = null;
+        //Find and Establishing Hud
+        FindHUD();
 
-        barMaskWidth = healthBarMaskTransform.sizeDelta.x;
+        healthBarMaskWidth = healthBarMaskTransform.sizeDelta.x;
+
+        rageBarMaskWidth = rageBarMaskTransform.sizeDelta.x;
 
         FulguriteNeeded();
+    }
+
+    void FindHUD()
+    {
+        healthBarSprite = GameObject.Find("HealthBar").GetComponent<Image>();
+
+        healthBarMaskTransform = GameObject.Find("HealthBarMask").GetComponent<RectTransform>();
+
+        healthBarDividerTransform = GameObject.Find("DividerHealth").GetComponent<RectTransform>();
+
+        damageBarMaskTransform = GameObject.Find("DamageBarMask").GetComponent<RectTransform>();
+
+        damageBarTransform = GameObject.Find("DamageBar").GetComponent<RectTransform>();
+
+        rageBarSprite = GameObject.Find("RageBar").GetComponent<Image>();
+
+        rageBarMaskTransform = GameObject.Find("RageBarMask").GetComponent<RectTransform>();
+
+        rageBarDividerTransform = GameObject.Find("DividerRage").GetComponent<RectTransform>();
+
+        fulguriteSlot = GameObject.Find("FulguriteValue").GetComponent<TextMeshProUGUI>();
     }
 
     public void HealFunction()
@@ -161,18 +203,20 @@ public class GameManager : MonoBehaviour
 
     public void ChangingHPUI()
     {
-        //healthBarSprite.fillAmount = (currentHP / hpValue);
-
         Vector2 barMaskSizeDelta = healthBarMaskTransform.sizeDelta;
 
-        barMaskSizeDelta.x = (currentHP / hpValue) * barMaskWidth;
+        barMaskSizeDelta.x = (currentHP / hpValue) * healthBarMaskWidth;
 
         healthBarMaskTransform.sizeDelta = barMaskSizeDelta;
     }
 
     public void ChangingRageUI()
     {
-        rageBarSprite.fillAmount = currentRage / bloodValue;
+        Vector2 barMaskSizeDelta = rageBarMaskTransform.sizeDelta;
+
+        barMaskSizeDelta.x = (currentRage / bloodValue) * rageBarMaskWidth;
+
+        rageBarMaskTransform.sizeDelta = barMaskSizeDelta;
     }
 
     //Adding Health Function
@@ -182,15 +226,17 @@ public class GameManager : MonoBehaviour
 
         currentHP = hpValue;
 
-        //healthBarSprite.transform.localScale = new Vector3(healthBarSprite.transform.localScale.x + .03f, healthBarSprite.transform.localScale.y, healthBarSprite.transform.localScale.z);
+        healthBarMaskTransform.sizeDelta = new Vector2(healthBarMaskWidth + 15f, healthBarMaskTransform.sizeDelta.y);
 
-        healthBarMaskTransform.sizeDelta = new Vector2(barMaskWidth + 15f, healthBarMaskTransform.sizeDelta.y);
+        healthBarSprite.rectTransform.sizeDelta = new Vector2(healthBarMaskWidth + 15f, healthBarMaskTransform.sizeDelta.y);
 
-        healthBarSprite.rectTransform.sizeDelta = new Vector2(barMaskWidth + 15f, healthBarMaskTransform.sizeDelta.y);
+        healthBarDividerTransform.sizeDelta = new Vector2(healthBarDividerTransform.sizeDelta.x + 14f, healthBarDividerTransform.sizeDelta.y);
 
-        healthBarDividerTransform.sizeDelta = new Vector2(healthBarDividerTransform.sizeDelta.x + 43f, healthBarDividerTransform.sizeDelta.y);
+        damageBarMaskTransform.sizeDelta = new Vector2(healthBarMaskWidth + 15f, damageBarMaskTransform.sizeDelta.y);
 
-        barMaskWidth = healthBarMaskTransform.sizeDelta.x;
+        damageBarTransform.sizeDelta = new Vector2(healthBarMaskWidth + 15f, damageBarTransform.sizeDelta.y);
+
+        healthBarMaskWidth = healthBarMaskTransform.sizeDelta.x;
 
         level++;
 
@@ -204,7 +250,13 @@ public class GameManager : MonoBehaviour
 
         currentRage = bloodValue;
 
-        rageBarSprite.transform.localScale = new Vector3(rageBarSprite.transform.localScale.x + .01f, rageBarSprite.transform.localScale.y, rageBarSprite.transform.localScale.z);
+        rageBarMaskTransform.sizeDelta = new Vector2(rageBarMaskWidth + 25f, rageBarMaskTransform.sizeDelta.y);
+
+        rageBarSprite.rectTransform.sizeDelta = new Vector2(rageBarMaskWidth + 25f, rageBarMaskTransform.sizeDelta.y);
+
+        rageBarDividerTransform.sizeDelta = new Vector2(rageBarDividerTransform.sizeDelta.x + 23.5f, rageBarDividerTransform.sizeDelta.y);
+
+        rageBarMaskWidth = rageBarMaskTransform.sizeDelta.x;
 
         level++;
 

@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
         //if the direction magnitude is different than 0 we play the footsteps sound
         if (direction.magnitude != 0)
         {
-            SFXManager.Instance.PlayFootstep();
+            //SFXManager.Instance.PlayFootstep();
         }
     }
 

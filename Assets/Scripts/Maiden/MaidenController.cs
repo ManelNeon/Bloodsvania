@@ -137,7 +137,7 @@ public class MaidenController : NPC //it is a children of the NPC script
     {
         if (GameManager.Instance.fulguriteValue > GameManager.Instance.fulguriteToLevel)
         {
-            GameManager.Instance.AddBlood(25);
+            GameManager.Instance.AddBlood(10);
 
             GameManager.Instance.fulguriteValue -= GameManager.Instance.fulguriteToLevel;
 

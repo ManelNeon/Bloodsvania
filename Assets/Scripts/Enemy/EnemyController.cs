@@ -53,13 +53,14 @@ public class EnemyController : MonoBehaviour
         //for both the player combat and the player stats there will only be one instance of them so we can use the FindAnyObjectByType
         playerCombat = FindAnyObjectByType<CombatController>();
 
-        //we do the enemy direction function to set his direction
-        EnemyDirection();
+        isWaiting = true;
     }
 
     //in here we check if the enemy isnt preparing an attack or retreating and then we randomize if he goes left or right
-    void EnemyDirection()
+    public void EnemyDirection()
     {
+        isWaiting = false;
+
         if (!isPreparingAttack && !isRetreating)
         {
             int randomDir = Random.Range(0, 2);
@@ -97,8 +98,11 @@ public class EnemyController : MonoBehaviour
                 selectedArrowParticle.SetActive(false);
             }
 
-            //Constantly look at player
-            transform.LookAt(new Vector3(playerCombat.transform.position.x, transform.position.y, playerCombat.transform.position.z));
+            if (!isWaiting)
+            {
+                //Constantly look at player
+                transform.LookAt(new Vector3(playerCombat.transform.position.x, transform.position.y, playerCombat.transform.position.z));
+            }
 
             //Only moves if the direction is set
             MoveEnemy(moveDirection);
@@ -107,6 +111,13 @@ public class EnemyController : MonoBehaviour
 
     void MoveEnemy(Vector3 direction)
     {
+        if (isWaiting)
+        {
+            enemyAnimator.SetFloat("InputMagnitude", 0);
+
+            return;
+        }
+
         //Set movespeed based on direction
         moveSpeed = 1;
 
@@ -294,7 +305,7 @@ public class EnemyController : MonoBehaviour
     //if the enemy is attackable we return true and set the arrow particle to true
     public bool IsAttackable()
     {
-        if (currentHealth > 0)
+        if (currentHealth > 0 && !isWaiting)
         {
             selectedArrowParticle.SetActive(true);
 
