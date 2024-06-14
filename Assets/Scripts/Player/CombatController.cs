@@ -142,7 +142,7 @@ public class CombatController : MonoBehaviour
         {
             if (isOnRage)
             {
-                if (GameManager.Instance.currentHP > 1 && GameManager.Instance.currentRage > 0)
+                if (GameManager.Instance.currentHP > 10 && GameManager.Instance.currentRage > 0)
                 {
                     yield return new WaitForSeconds(.1f);
 

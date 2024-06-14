@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Rotation and Movement Hidden Variables")]
     float turnSmoothVelocity;
-
+        
     float targetAngle;
 
     float angle;

@@ -226,15 +226,15 @@ public class GameManager : MonoBehaviour
 
         currentHP = hpValue;
 
-        healthBarMaskTransform.sizeDelta = new Vector2(healthBarMaskWidth + 15f, healthBarMaskTransform.sizeDelta.y);
+        healthBarMaskTransform.sizeDelta = new Vector2(healthBarMaskWidth + 150f, healthBarMaskTransform.sizeDelta.y);
 
-        healthBarSprite.rectTransform.sizeDelta = new Vector2(healthBarMaskWidth + 15f, healthBarMaskTransform.sizeDelta.y);
+        healthBarSprite.rectTransform.sizeDelta = new Vector2(healthBarMaskWidth + 150f, healthBarMaskTransform.sizeDelta.y);
 
-        healthBarDividerTransform.sizeDelta = new Vector2(healthBarDividerTransform.sizeDelta.x + 14f, healthBarDividerTransform.sizeDelta.y);
+        healthBarDividerTransform.sizeDelta = new Vector2(healthBarDividerTransform.sizeDelta.x + 140f, healthBarDividerTransform.sizeDelta.y);
 
-        damageBarMaskTransform.sizeDelta = new Vector2(healthBarMaskWidth + 15f, damageBarMaskTransform.sizeDelta.y);
+        damageBarMaskTransform.sizeDelta = new Vector2(healthBarMaskWidth + 150f, damageBarMaskTransform.sizeDelta.y);
 
-        damageBarTransform.sizeDelta = new Vector2(healthBarMaskWidth + 15f, damageBarTransform.sizeDelta.y);
+        damageBarTransform.sizeDelta = new Vector2(healthBarMaskWidth + 150f, damageBarTransform.sizeDelta.y);
 
         healthBarMaskWidth = healthBarMaskTransform.sizeDelta.x;
 
@@ -250,11 +250,11 @@ public class GameManager : MonoBehaviour
 
         currentRage = bloodValue;
 
-        rageBarMaskTransform.sizeDelta = new Vector2(rageBarMaskWidth + 25f, rageBarMaskTransform.sizeDelta.y);
+        rageBarMaskTransform.sizeDelta = new Vector2(rageBarMaskWidth + 60f, rageBarMaskTransform.sizeDelta.y);
 
-        rageBarSprite.rectTransform.sizeDelta = new Vector2(rageBarMaskWidth + 25f, rageBarMaskTransform.sizeDelta.y);
+        rageBarSprite.rectTransform.sizeDelta = new Vector2(rageBarMaskWidth + 60f, rageBarMaskTransform.sizeDelta.y);
 
-        rageBarDividerTransform.sizeDelta = new Vector2(rageBarDividerTransform.sizeDelta.x + 23.5f, rageBarDividerTransform.sizeDelta.y);
+        rageBarDividerTransform.sizeDelta = new Vector2(rageBarDividerTransform.sizeDelta.x + 56f, rageBarDividerTransform.sizeDelta.y);
 
         rageBarMaskWidth = rageBarMaskTransform.sizeDelta.x;
 

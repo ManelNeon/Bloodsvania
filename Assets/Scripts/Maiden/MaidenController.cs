@@ -74,7 +74,7 @@ public class MaidenController : NPC //it is a children of the NPC script
             {
                 npcTextBox.SetActive(false);
 
-                Time.timeScale = 1;
+                GameManager.Instance.isControlable = true;
 
                 GameManager.Instance.MainMenuSequenceFunction();
             }
@@ -193,7 +193,7 @@ public class MaidenController : NPC //it is a children of the NPC script
     //adding exit menu stat
     void ExitMenu()
     {
-        Time.timeScale = 1;
+        GameManager.Instance.isControlable = true;
 
         maidenScreen.SetActive(false);
 

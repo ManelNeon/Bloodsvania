@@ -35,7 +35,7 @@ public class NPC : MonoBehaviour
     //function that starts the dialogue, is called when raycasted
     public void StartDialogue()
     {
-        Time.timeScale = 0;
+        GameManager.Instance.isControlable = false;
 
         index = 0;
 
@@ -63,7 +63,7 @@ public class NPC : MonoBehaviour
         }
         else
         {
-            Time.timeScale = 1;
+            GameManager.Instance.isControlable = true;
 
             npcTextBox.SetActive(false);
 
