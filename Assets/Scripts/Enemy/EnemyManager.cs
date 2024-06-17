@@ -113,28 +113,33 @@ public class EnemyManager : MonoBehaviour
         return randomEnemy;
     }
 
-    public void EventAllEnemiesDead()
+    public void EventAllEnemiesDead(CombatController playerCombat)
     {
         if (enemiesList.Count != 0)
         {
             return;
         }
 
+        playerCombat.DisableFighting();
+
         StartCoroutine(EventCoroutine());
     }
 
     IEnumerator EventCoroutine()
     {
-        if (hasFade)
+        if (hasEvent)
         {
-            FadeManager.Instance.StartFadeOutAndIn();
+            if (hasFade)
+            {
+                FadeManager.Instance.StartFadeOutAndIn();
 
-            yield return new WaitForSeconds(1.7f);
-        }
+                yield return new WaitForSeconds(1.7f);
+            }
 
-        for (int i = 0; i < eventObject.Length; i++)
-        {
-            eventObject[i].SetActive(!eventObject[i].activeInHierarchy);
+            for (int i = 0; i < eventObject.Length; i++)
+            {
+                eventObject[i].SetActive(!eventObject[i].activeInHierarchy);
+            }
         }
 
         yield break;
@@ -144,6 +149,8 @@ public class EnemyManager : MonoBehaviour
     {
         if (other.CompareTag("Player") && !hasPassed)
         {
+            other.GetComponent<CombatController>().EnableFighting();
+
             hasPassed = true;
 
             for (int i = 0; i < enemiesList.Count; i++)

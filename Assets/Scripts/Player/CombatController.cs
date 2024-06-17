@@ -1,3 +1,4 @@
+using Cinemachine;
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,10 +27,18 @@ public class CombatController : MonoBehaviour
 
     [HideInInspector] public bool isOnRage;
 
+    [HideInInspector] public bool isFighting;
+
     [Header("References")]
     [SerializeField] ParticleSystem healParticles;
 
     [SerializeField] GameObject rageVignette;
+
+    [Header("Cameras")]
+    [SerializeField] GameObject combatCamera;
+
+    [SerializeField] GameObject normalCamera;
+
 
     // Start is called before the first frame update
     void Start()
@@ -41,6 +50,60 @@ public class CombatController : MonoBehaviour
         canAttack = true;
 
         StartCoroutine(RageMode());
+
+        StartCoroutine(RageGain());
+    }
+
+    IEnumerator RageGain()
+    {
+        while (true)
+        {
+            if (!isFighting && !isOnRage)
+            {
+                if (GameManager.Instance.currentRage != GameManager.Instance.bloodValue)
+                {
+                    yield return new WaitForSeconds(.1F);
+
+                    GameManager.Instance.currentRage += .5f;
+
+                    GameManager.Instance.ChangingRageUI();
+                }
+                else
+                {
+                    yield return null;
+                }
+            }
+            else
+            {
+                yield return null;
+            }
+        }
+    }
+
+    public void EnableFighting()
+    {
+        isFighting = true;
+
+        combatCamera.GetComponent<CinemachineFreeLook>().m_YAxis = normalCamera.GetComponent<CinemachineFreeLook>().m_YAxis;
+
+        combatCamera.GetComponent<CinemachineFreeLook>().m_XAxis = normalCamera.GetComponent<CinemachineFreeLook>().m_XAxis;
+
+        combatCamera.SetActive(true);
+
+        normalCamera.SetActive(false);
+    }
+
+    public void DisableFighting()
+    {
+        isFighting = false;
+
+        normalCamera.GetComponent<CinemachineFreeLook>().m_YAxis = combatCamera.GetComponent<CinemachineFreeLook>().m_YAxis;
+
+        normalCamera.GetComponent<CinemachineFreeLook>().m_XAxis = combatCamera.GetComponent<CinemachineFreeLook>().m_XAxis;
+
+        normalCamera.SetActive(true);
+
+        combatCamera.SetActive(false);
     }
 
     // Update is called once per frame
@@ -49,7 +112,7 @@ public class CombatController : MonoBehaviour
         if (GameManager.Instance.isControlable)
         {
             //if the player left clicks and if he has a current target
-            if (Input.GetMouseButtonDown(0) && canAttack && currentTarget != null)
+            if (Input.GetMouseButtonDown(0) && canAttack && currentTarget != null && isFighting)
             {
                 //we rotate the player towards the enemy he's currently attacking and then we move towards him
                 transform.DOLookAt(currentTarget.transform.position, .2f);
@@ -59,6 +122,9 @@ public class CombatController : MonoBehaviour
 
                 //randomizing between the two animations
                 int number = Random.Range(1, 3);
+
+                GetComponent<CharacterController>().enabled = false;
+
                 if (number == 1)
                 {
                     playerAnimator.Play("Attack");
@@ -73,7 +139,7 @@ public class CombatController : MonoBehaviour
             }
 
             //if the player right clicks, he can attack and there's an enemy attacking
-            if (Input.GetMouseButton(1) && enemyAttacking)
+            if (Input.GetMouseButton(1) && enemyAttacking && isFighting)
             {
                 transform.DOLookAt(enemyAttacking.transform.position, .2f);
                 transform.DOMove(TargetOffset(enemyAttacking.transform), .8f);
@@ -183,6 +249,8 @@ public class CombatController : MonoBehaviour
             isCountering = false;
         }
 
+        GetComponent<CharacterController>().enabled = true;
+
         canAttack = true;
 
         playerController.enabled = true;
@@ -192,6 +260,8 @@ public class CombatController : MonoBehaviour
     public void Attack()
     {
         AudioManager.Instance.PlaySFX(AudioManager.Instance.punchSound);
+
+        GameManager.Instance.GainRage(Random.Range(10, 20));
 
         if (isCountering)
         {
@@ -237,6 +307,8 @@ public class CombatController : MonoBehaviour
         AudioManager.Instance.PlaySFX(AudioManager.Instance.punchedSound);
 
         float damageCalculated = damage / (GameManager.Instance.compositionValue * 0.03f);
+
+        GameManager.Instance.GainRage(Random.Range(10,20));
 
         if (GameManager.Instance.currentHP - damageCalculated > 0)
         {

@@ -265,7 +265,7 @@ public class EnemyController : MonoBehaviour
             //we play the death animation and then we set a timer to destroy the object
             enemyAnimator.Play("Death");
 
-            enemyManager.EventAllEnemiesDead();
+            enemyManager.EventAllEnemiesDead(playerCombat);
 
             StartCoroutine(DeathTimer());
         }

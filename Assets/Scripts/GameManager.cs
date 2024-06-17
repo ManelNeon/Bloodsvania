@@ -48,6 +48,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] float lerpSpeed = 0.05f;
 
+    bool isHealing;
+
     [Header("ReferencesRageBar")]
     public Image rageBarSprite;
 
@@ -77,8 +79,6 @@ public class GameManager : MonoBehaviour
         
         DontDestroyOnLoad(this.gameObject);
 
-        ResetStats();
-
         isControlable = true;
     }
 
@@ -102,6 +102,15 @@ public class GameManager : MonoBehaviour
         {
             damageBarMaskTransform.sizeDelta = new Vector2(Mathf.Lerp(damageBarMaskTransform.sizeDelta.x, (currentHP / hpValue) * healthBarMaskWidth, lerpSpeed), damageBarMaskTransform.sizeDelta.y );
         }
+
+        if (damageBarMaskTransform != null && healthBarMaskTransform.sizeDelta.x != damageBarMaskTransform.sizeDelta.x & isHealing)
+        {
+            healthBarMaskTransform.sizeDelta = new Vector2(Mathf.Lerp(healthBarMaskTransform.sizeDelta.x, (currentHP / hpValue) * healthBarMaskWidth, lerpSpeed), healthBarMaskTransform.sizeDelta.y);
+        }
+        else if (damageBarMaskTransform != null && healthBarMaskTransform.sizeDelta.x == damageBarMaskTransform.sizeDelta.x & isHealing)
+        {
+            isHealing = false;
+        }
     }
 
     //function to fade back to the Main Menu
@@ -121,15 +130,13 @@ public class GameManager : MonoBehaviour
 
         isControlable = true;
 
-        ResetStats();
-
         SceneManager.LoadScene(0);
 
         yield break;
     }
 
 
-    void ResetStats()
+    public void ResetStats()
     {
         //Initial Values
         hpValue = 100;
@@ -196,7 +203,13 @@ public class GameManager : MonoBehaviour
             currentHP = hpValue;
         }
 
-        ChangingHPUI();
+        isHealing = true;
+
+        Vector2 barMaskSizeDelta = damageBarMaskTransform.sizeDelta;
+
+        barMaskSizeDelta.x = (currentHP / hpValue) * healthBarMaskWidth;
+
+        damageBarMaskTransform.sizeDelta = barMaskSizeDelta;
 
         ChangingRageUI();
     }
@@ -310,5 +323,19 @@ public class GameManager : MonoBehaviour
         {
             fulguriteSlot.text = fulguriteValue.ToString();
         }
+    }
+
+    public void GainRage(float rageToAdd)
+    {
+        if (currentRage + rageToAdd > bloodValue)
+        {
+            currentRage = bloodValue;
+        }
+        else
+        {
+            currentRage += rageToAdd;
+        }
+
+        ChangingRageUI();
     }
 }

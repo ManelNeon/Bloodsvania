@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -17,6 +18,8 @@ public class NPC : MonoBehaviour
 
     [HideInInspector] public bool isPlaying;
 
+    public GameObject[] cameras;
+
     void Update()
     {
         //if the player left clicks he gets the next line
@@ -35,6 +38,21 @@ public class NPC : MonoBehaviour
     //function that starts the dialogue, is called when raycasted
     public void StartDialogue()
     {
+        for (int i = 0; i < cameras.Length; i++)
+        {
+            if (cameras[i].name != "FocusCamera")
+            {
+                cameras[i].GetComponent<CinemachineFreeLook>().enabled = false;
+                cameras[i].SetActive(false);
+            }
+            else
+            {
+                cameras[i].GetComponent<CinemachineVirtualCamera>().Follow = this.transform;
+
+                cameras[i].SetActive(true);
+            }
+        }
+
         GameManager.Instance.isControlable = false;
 
         index = 0;
@@ -63,6 +81,20 @@ public class NPC : MonoBehaviour
         }
         else
         {
+            for (int i = 0; i < cameras.Length; i++)
+            {
+                if (cameras[i].name != "FocusCamera")
+                {
+                    cameras[i].GetComponent<CinemachineFreeLook>().enabled = true;
+                    cameras[i].SetActive(true);
+                }
+                else
+                {
+                    cameras[i].SetActive(false);
+                }
+                
+            }
+
             GameManager.Instance.isControlable = true;
 
             npcTextBox.SetActive(false);

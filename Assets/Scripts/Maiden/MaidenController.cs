@@ -1,3 +1,4 @@
+using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -193,6 +194,19 @@ public class MaidenController : NPC //it is a children of the NPC script
     //adding exit menu stat
     void ExitMenu()
     {
+        for (int i = 0; i < cameras.Length; i++)
+        {
+            if (cameras[i].name != "FocusCamera")
+            {
+                cameras[i].GetComponent<CinemachineFreeLook>().enabled = true;
+                cameras[i].SetActive(true);
+            }
+            else
+            {
+                cameras[i].SetActive(false);
+            }
+        }
+
         GameManager.Instance.isControlable = true;
 
         maidenScreen.SetActive(false);

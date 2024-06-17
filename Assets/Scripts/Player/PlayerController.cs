@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
     void NPCRaycast()
     {
         //the player can only talk if he is not moving
-        if (Input.GetKeyDown(KeyCode.F) && direction.magnitude == 0)
+        if (Input.GetKeyDown(KeyCode.F) && direction.magnitude == 0 && !GetComponent<CombatController>().isFighting)
         {
             if (Physics.Raycast(transform.position + new Vector3(0, 1, 0), Camera.main.transform.forward, out hit, 2, npcLayerMask))
             {

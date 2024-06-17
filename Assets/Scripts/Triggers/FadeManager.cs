@@ -6,6 +6,8 @@ public class FadeManager : MonoBehaviour
 {
     public static FadeManager Instance;
 
+    [SerializeField] bool wontResetStats;
+
     //if it's fading, we do the fade
     bool isFading;
 
@@ -33,7 +35,12 @@ public class FadeManager : MonoBehaviour
         isBlack = true;
 
         m_Timer = fadeDuraction;
-        
+
+        if (!wontResetStats)
+        {
+            GameManager.Instance.ResetStats();
+        }
+
         isFading = true;
     }
 

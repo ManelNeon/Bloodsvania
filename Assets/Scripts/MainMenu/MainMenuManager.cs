@@ -200,6 +200,8 @@ public class MainMenuManager : MonoBehaviour
             if (mainMenu.alpha == 0)
             {
                 isExiting = false;
+
+                m_Timer = 0;
             }
         }
     }
@@ -211,27 +213,15 @@ public class MainMenuManager : MonoBehaviour
 
         isExiting = true;
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(fadeDuraction);
 
         if (isDemo)
         {
             SceneManager.LoadScene("Blocking");
-
-            GameManager.Instance.healthBarSprite = GameObject.Find("HealthBar").GetComponent<Image>();
-
-            GameManager.Instance.rageBarSprite = GameObject.Find("RageBar").GetComponent<Image>();
-
-            GameManager.Instance.fulguriteSlot = GameObject.Find("FulguriteValue").GetComponent<TextMeshProUGUI>();
         }
         else
         {
             SceneManager.LoadScene("SampleScene");
-
-            GameManager.Instance.healthBarSprite = GameObject.Find("HealthBar").GetComponent<Image>();
-
-            GameManager.Instance.rageBarSprite = GameObject.Find("RageBar").GetComponent<Image>();
-
-            GameManager.Instance.fulguriteSlot = GameObject.Find("FulguriteValue").GetComponent<TextMeshProUGUI>();
         }
 
         yield break;
