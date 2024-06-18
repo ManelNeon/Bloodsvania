@@ -13,24 +13,22 @@ public class GameManager : MonoBehaviour
     public bool isControlable;
 
     [Header("Player Stats")]
-    [HideInInspector] public float hpValue;
+    public float hpValue;
 
-    [HideInInspector] public float bloodValue;
+    public float bloodValue;
 
-    [HideInInspector] public float dmgValue;
+    public float dmgValue;
 
-    [HideInInspector] public float compositionValue;
+    public float compositionValue;
 
-    [HideInInspector] public float reflexValue;
+    public float reflexValue;
 
-    [HideInInspector] public int fulguriteValue;
+    public int fulguriteValue;
 
-    [HideInInspector] public int level;
+    public int level;
 
-    //Somehow increase the scale of the HP in the UI???
     [HideInInspector]public float currentHP;
 
-    //Somehow increase the scale of the rageBar in the UI??
     [HideInInspector] public float currentRage;
 
     [HideInInspector] public int fulguriteToLevel;
@@ -78,6 +76,15 @@ public class GameManager : MonoBehaviour
         Instance = this;
         
         DontDestroyOnLoad(this.gameObject);
+
+        //for debugging test
+        currentHP = hpValue;
+
+        currentRage = bloodValue;
+
+        healthBarMaskWidth = healthBarMaskTransform.sizeDelta.x;
+
+        rageBarMaskWidth = rageBarMaskTransform.sizeDelta.x;
 
         isControlable = true;
     }
@@ -198,7 +205,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            currentRage -= (hpValue - currentHP);
+            currentRage -= Mathf.Round(hpValue - currentHP);
 
             currentHP = hpValue;
         }
@@ -210,8 +217,6 @@ public class GameManager : MonoBehaviour
         barMaskSizeDelta.x = (currentHP / hpValue) * healthBarMaskWidth;
 
         damageBarMaskTransform.sizeDelta = barMaskSizeDelta;
-
-        ChangingRageUI();
     }
 
     public void ChangingHPUI()

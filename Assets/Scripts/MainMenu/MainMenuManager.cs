@@ -15,7 +15,7 @@ public class MainMenuManager : MonoBehaviour
 
     [SerializeField] CanvasGroup background;
 
-    [SerializeField] CanvasGroup firstFade;
+    [SerializeField] CanvasGroup logoCanvas;
 
     [Header("Animators")]
     [SerializeField] Animator logoAnimator;
@@ -31,8 +31,6 @@ public class MainMenuManager : MonoBehaviour
 
     [Header("Fading Bools")]
     bool isFading; //bool to see if it's fading in
-
-    bool isFirstFade; //bool to see if it's the first fade, going from the black screen to the white screen
 
     bool isChangingColor; //bool to change the color of the background, when going from the white screen to the black screen
 
@@ -63,13 +61,13 @@ public class MainMenuManager : MonoBehaviour
     //Coroutine to start the screen
     IEnumerator StartScreen()
     {
-        isFirstFade = true;
+        yield return new WaitForSeconds(1);
 
-        yield return new WaitForSeconds(1f);
+        logoCanvas.gameObject.SetActive(true);
 
         logoAnimator.Play("LogoAnimation");
 
-        yield return new WaitForSeconds(4.2f);
+        yield return new WaitForSeconds(3f);
 
         isChangingColor = true;
 
@@ -101,27 +99,13 @@ public class MainMenuManager : MonoBehaviour
     //All the fades
     void Fades()
     {
-        if (isFirstFade)
+        if (isChangingColor)
         {
             m_Timer -= Time.deltaTime;
 
-            firstFade.alpha = m_Timer / fadeDuraction;
+            logoCanvas.alpha = m_Timer / fadeDuraction;
 
-            if (firstFade.alpha == 0)
-            {
-                isFirstFade = false;
-
-                m_Timer = 0;
-            }
-        }
-
-        if (isChangingColor)
-        {
-            m_Timer += Time.deltaTime;
-
-            background.alpha = m_Timer / fadeDuraction;
-
-            if (background.alpha == 1)
+            if (logoCanvas.alpha == 0)
             {
                 m_Timer = 0;
             }

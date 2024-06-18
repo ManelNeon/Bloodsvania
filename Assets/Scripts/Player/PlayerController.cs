@@ -36,6 +36,24 @@ public class PlayerController : MonoBehaviour
     [Header("Raycast")]
     RaycastHit hit;
 
+    [Header("Jump Variables")]
+    [SerializeField] float gravityMultiplier = 3.0f;
+
+    [SerializeField] Transform groundCheck;
+
+    [SerializeField] float groundDistance = 0.4f;
+
+    [SerializeField] LayerMask groundMask;
+
+    [SerializeField] float jumpHeight = 3f;
+
+    bool isGrounded;
+
+    Vector3 velocity;
+
+    float gravity = -9.81f;
+
+
     void Start()
     {
         //temporary, for build tests
@@ -48,6 +66,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+
         NPCRaycast();
 
         //setting the blend tree to the direction maginute, to see if the player is moving and animating them
@@ -60,9 +80,32 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void ApplyGravity()
+    {
+        if (GameManager.Instance.isControlable)
+        {
+            if (isGrounded && velocity.y < 0)
+            {
+                velocity.y = -2f;
+            }
+
+            velocity.y += gravity * Time.deltaTime * gravityMultiplier;
+
+            if (Input.GetButtonDown("Jump") && isGrounded)
+            {
+                velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            }
+
+            playerCC.Move(velocity * Time.deltaTime);
+        }
+        
+    }
+
     //putting the movement on the late update
     private void LateUpdate()
     {
+        ApplyGravity();
+
         Movement();
     }
 

@@ -8,8 +8,6 @@ using UnityEngine.UI;
 
 public class MaidenController : NPC //it is a children of the NPC script
 {
-    [SerializeField] bool willEndDemo;
-
     [Header("Buttons")]
     [SerializeField] Button hpButton;
 
@@ -51,34 +49,23 @@ public class MaidenController : NPC //it is a children of the NPC script
         }
         else
         {
-            if (!willEndDemo)
-            {
-                npcTextBox.SetActive(false);
+            npcTextBox.SetActive(false);
 
-                ChangeStats();
+            ChangeStats();
 
-                GameManager.Instance.currentHP = GameManager.Instance.hpValue;
+            GameManager.Instance.currentHP = GameManager.Instance.hpValue;
 
-                GameManager.Instance.currentRage = GameManager.Instance.bloodValue;
+            GameManager.Instance.currentRage = GameManager.Instance.bloodValue;
 
-                GameManager.Instance.ChangingHPUI();
+            GameManager.Instance.ChangingHPUI();
 
-                GameManager.Instance.ChangingRageUI();
+            GameManager.Instance.ChangingRageUI();
 
-                AddingListeners();
+            AddingListeners();
 
-                maidenScreen.SetActive(true);
+            maidenScreen.SetActive(true);
 
-                isPlaying = false;
-            }
-            else
-            {
-                npcTextBox.SetActive(false);
-
-                GameManager.Instance.isControlable = true;
-
-                GameManager.Instance.MainMenuSequenceFunction();
-            }
+            isPlaying = false;
         }
     }
 

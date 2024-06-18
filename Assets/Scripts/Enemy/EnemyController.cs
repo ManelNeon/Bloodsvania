@@ -54,6 +54,11 @@ public class EnemyController : MonoBehaviour
         playerCombat = FindAnyObjectByType<CombatController>();
 
         isWaiting = true;
+
+        if (enemyManager.startsAutomatically)
+        {
+            EnemyDirection();
+        }
     }
 
     //in here we check if the enemy isnt preparing an attack or retreating and then we randomize if he goes left or right
@@ -247,7 +252,7 @@ public class EnemyController : MonoBehaviour
             enemyManager.DeleteEnemy(this);
 
             //getting a random number between these values
-            int random = Random.Range(634, 1024);
+            int random = Random.Range(125, 326);
 
             //adding fulgurite to these stats
             GameManager.Instance.AddFulgurite(random);

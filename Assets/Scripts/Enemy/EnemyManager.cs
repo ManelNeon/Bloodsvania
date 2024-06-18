@@ -21,6 +21,9 @@ public class EnemyManager : MonoBehaviour
     //a variable where we store the attacking enemy
     EnemyController tempEnemy;
 
+    [Header("Starting AI")]
+    public bool startsAutomatically;
+
     bool hasPassed;
 
     // Start is called before the first frame update
@@ -30,6 +33,13 @@ public class EnemyManager : MonoBehaviour
         for (int i = 0; i < enemies.Length; i++)
         {
             enemiesList.Add(enemies[i]);
+        }
+
+        if (startsAutomatically)
+        {
+            FindObjectOfType<CombatController>().EnableFighting();
+
+            StartingAI();
         }
     }
 
@@ -141,7 +151,6 @@ public class EnemyManager : MonoBehaviour
                 eventObject[i].SetActive(!eventObject[i].activeInHierarchy);
             }
         }
-
         yield break;
     }
 
@@ -156,10 +165,10 @@ public class EnemyManager : MonoBehaviour
             for (int i = 0; i < enemiesList.Count; i++)
             {
                 enemiesList[i].EnemyDirection();
-
-                //start the AI
-                StartingAI();
             }
+
+            //start the AI
+            StartingAI();
         }
     }
 }

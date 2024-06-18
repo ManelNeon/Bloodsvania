@@ -60,10 +60,10 @@ public class CombatController : MonoBehaviour
         {
             if (!isFighting && !isOnRage)
             {
+                yield return new WaitForSeconds(.1F);
+
                 if (GameManager.Instance.currentRage != GameManager.Instance.bloodValue)
                 {
-                    yield return new WaitForSeconds(.1F);
-
                     GameManager.Instance.currentRage += .5f;
 
                     GameManager.Instance.ChangingRageUI();
