@@ -141,7 +141,7 @@ public class EnemyManager : MonoBehaviour
         {
             if (hasFade)
             {
-                FadeManager.Instance.StartFadeOutAndIn();
+                FadeManager.Instance.StartFadeOutAndIn(0);
 
                 yield return new WaitForSeconds(1.7f);
             }
@@ -156,7 +156,7 @@ public class EnemyManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && !hasPassed)
+        if (other.CompareTag("Player") && !hasPassed && !other.GetComponent<CombatController>().isFighting)
         {
             other.GetComponent<CombatController>().EnableFighting();
 

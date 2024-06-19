@@ -20,6 +20,11 @@ public class NPC : MonoBehaviour
 
     public GameObject[] cameras;
 
+    [Header("Event Variables")]
+    public bool hasEvent;
+
+    public GameObject[] eventObjects;
+
     void Update()
     {
         //if the player left clicks he gets the next line
@@ -81,6 +86,16 @@ public class NPC : MonoBehaviour
         }
         else
         {
+            if (hasEvent)
+            {
+                for (int i = 0; i < eventObjects.Length; i++)
+                {
+                    eventObjects[i].SetActive(!eventObjects[i].activeInHierarchy);
+                }
+
+                hasEvent = false;
+            }
+
             for (int i = 0; i < cameras.Length; i++)
             {
                 if (cameras[i].name != "FocusCamera")
@@ -94,6 +109,7 @@ public class NPC : MonoBehaviour
                 }
                 
             }
+
 
             GameManager.Instance.isControlable = true;
 

@@ -18,6 +18,8 @@ public class FadeManager : MonoBehaviour
 
     [SerializeField] float fadeDuraction;
 
+    float ogFadeDuraction;
+
     CanvasGroup blackScreen;
 
     // Start is called before the first frame update
@@ -33,6 +35,8 @@ public class FadeManager : MonoBehaviour
         blackScreen = GetComponent<CanvasGroup>();
 
         isBlack = true;
+
+        ogFadeDuraction = fadeDuraction;
 
         m_Timer = fadeDuraction;
 
@@ -80,8 +84,26 @@ public class FadeManager : MonoBehaviour
         }
     }
 
-    public void StartFadeOutAndIn()
+    public void StartFadeOutAndIn(float newFadeDuraction)
     {
+        if (newFadeDuraction != 0)
+        {
+            fadeDuraction = newFadeDuraction;
+        }
+        else
+        {
+            fadeDuraction = ogFadeDuraction;
+        }
+
+        if (!isBlack)
+        {
+            m_Timer = 0;
+        }
+        else
+        {
+            m_Timer = fadeDuraction;
+        }
+
         StartCoroutine(FadeOutAndInCoroutine());
 
         isFading = true;

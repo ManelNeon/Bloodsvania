@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Blocking.unity
     guid: 6a50d9c74114eac418ecc01182c374ca
+  - enabled: 1
+    path: Assets/Scenes/BossFight.unity
+    guid: fca376668f17197449c353347061cf6e
   m_configObjects: {}

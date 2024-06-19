@@ -280,7 +280,13 @@ public class EnemyController : MonoBehaviour
     {
         yield return new WaitForSeconds(5);
 
-        Destroy(gameObject);
+        if (enemyManager.RandomEnemy() == null)
+        {
+            enemyManager.gameObject.SetActive(false);
+            yield break;
+        }
+
+        gameObject.SetActive(false);
 
         yield break;
     }

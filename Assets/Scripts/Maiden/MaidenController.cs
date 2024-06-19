@@ -49,6 +49,16 @@ public class MaidenController : NPC //it is a children of the NPC script
         }
         else
         {
+            if (hasEvent)
+            {
+                for (int i = 0; i < eventObjects.Length; i++)
+                {
+                    eventObjects[i].SetActive(!eventObjects[i].activeInHierarchy);
+                }
+
+                hasEvent = false;
+            }
+
             npcTextBox.SetActive(false);
 
             ChangeStats();
@@ -139,7 +149,7 @@ public class MaidenController : NPC //it is a children of the NPC script
     {
         if (GameManager.Instance.fulguriteValue > GameManager.Instance.fulguriteToLevel)
         {
-            GameManager.Instance.AddDamage(5);
+            GameManager.Instance.AddDamage(25);
 
             GameManager.Instance.fulguriteValue -= GameManager.Instance.fulguriteToLevel;
 

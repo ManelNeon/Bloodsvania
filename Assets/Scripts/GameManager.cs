@@ -217,6 +217,11 @@ public class GameManager : MonoBehaviour
         barMaskSizeDelta.x = (currentHP / hpValue) * healthBarMaskWidth;
 
         damageBarMaskTransform.sizeDelta = barMaskSizeDelta;
+
+        if (FindObjectOfType<CombatController>().isFighting)
+        {
+            ChangingRageUI();
+        }
     }
 
     public void ChangingHPUI()

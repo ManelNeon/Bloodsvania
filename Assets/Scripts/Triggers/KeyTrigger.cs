@@ -16,9 +16,7 @@ public class KeyTrigger : MonoBehaviour
 
             other.GetComponent<PlayerController>().direction = Vector3.zero;
 
-            other.GetComponent<PlayerController>().enabled = false;
-
-            FadeManager.Instance.StartFadeOutAndIn();
+            FadeManager.Instance.StartFadeOutAndIn(0);
 
             StartCoroutine(Sequence(other.gameObject));
         }

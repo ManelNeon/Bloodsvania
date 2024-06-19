@@ -141,7 +141,7 @@ public class CombatController : MonoBehaviour
             //if the player right clicks, he can attack and there's an enemy attacking
             if (Input.GetMouseButton(1) && enemyAttacking && isFighting)
             {
-                transform.DOLookAt(enemyAttacking.transform.position, .2f);
+                transform.DOLookAt(new Vector3(enemyAttacking.transform.position.x, transform.position.y, enemyAttacking.transform.position.z), .2f);
                 transform.DOMove(TargetOffset(enemyAttacking.transform), .8f);
 
                 playerController.enabled = false;

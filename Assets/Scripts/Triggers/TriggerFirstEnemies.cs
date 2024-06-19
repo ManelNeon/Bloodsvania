@@ -30,7 +30,7 @@ public class TriggerFirstEnemies : MonoBehaviour
     {
         doorIn.SetActive(true);
 
-        FadeManager.Instance.StartFadeOutAndIn();
+        FadeManager.Instance.StartFadeOutAndIn(0);
 
         yield return new WaitForSeconds(1.5f);
 
