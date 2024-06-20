@@ -42,7 +42,7 @@ public class EnemyController : MonoBehaviour
 
     public bool isDead;
 
-    private void Awake()
+    void Awake()
     {
         enemyAnimator = GetComponent<Animator>();
 

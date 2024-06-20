@@ -15,6 +15,8 @@ public class CombatController : MonoBehaviour
 
     public EnemyController currentTarget;
 
+    public EnemyBoss bossTarget; 
+
     public EnemyController enemyAttacking;
 
     [Header("Enemy's Layer Mask")]
@@ -24,6 +26,8 @@ public class CombatController : MonoBehaviour
     [HideInInspector] public bool canAttack;
 
     [HideInInspector] public bool isCountering;
+
+    bool isAttacking;
 
     [HideInInspector] public bool isOnRage;
 
@@ -112,11 +116,26 @@ public class CombatController : MonoBehaviour
         if (GameManager.Instance.isControlable)
         {
             //if the player left clicks and if he has a current target
-            if (Input.GetMouseButtonDown(0) && canAttack && currentTarget != null && isFighting)
+            if (Input.GetMouseButtonDown(0) && canAttack && isFighting)
             {
-                //we rotate the player towards the enemy he's currently attacking and then we move towards him
-                transform.DOLookAt(currentTarget.transform.position, .2f);
-                transform.DOMove(TargetOffset(currentTarget.transform), .8f);
+                if (currentTarget != null)
+                {
+                    //we rotate the player towards the enemy he's currently attacking and then we move towards him
+                    transform.DOLookAt(currentTarget.transform.position, .2f);
+                    transform.DOMove(TargetOffset(currentTarget.transform), .8f);
+                }
+                else if (bossTarget != null)
+                {
+                    //we rotate the player towards the enemy he's currently attacking and then we move towards him
+                    transform.DOLookAt(bossTarget.transform.position, .2f);
+                    transform.DOMove(TargetOffset(bossTarget.transform), .8f);
+                }
+                else
+                {
+                    return;
+                }
+
+                isAttacking = true;
 
                 playerController.enabled = false;
 
@@ -156,7 +175,7 @@ public class CombatController : MonoBehaviour
                 canAttack = false;
             }
 
-            if (Input.GetKeyDown(KeyCode.Q))
+            if (Input.GetKeyDown(KeyCode.Q) && isFighting) 
             {
                 if (!isOnRage)
                 {
@@ -253,6 +272,8 @@ public class CombatController : MonoBehaviour
 
         canAttack = true;
 
+        isAttacking = false;
+
         playerController.enabled = true;
     }
 
@@ -289,14 +310,23 @@ public class CombatController : MonoBehaviour
 
         if (Physics.SphereCast(transform.position, 3f, Camera.main.transform.forward, out hit, 10, enemyLayerMask) && canAttack)
         {
-            if (hit.collider.GetComponent<EnemyController>().IsAttackable())
+            if (hit.collider.GetComponent<EnemyController>() != null && hit.collider.GetComponent<EnemyController>().IsAttackable())
             {
-                if (currentTarget != hit.collider.GetComponent<EnemyController>() && currentTarget != null)
+                currentTarget = hit.collider.transform.GetComponent<EnemyController>();
+            }
+            else if (hit.collider.GetComponent<EnemyBoss>().IsAttackable())
+            {
+                bossTarget = hit.collider.GetComponent<EnemyBoss>();
+            }
+            else if (!isAttacking)
+            {
+                if (currentTarget != null)
                 {
                     currentTarget.NoLongerSelected();
                 }
 
-                currentTarget = hit.collider.transform.GetComponent<EnemyController>();
+                currentTarget = null;
+                bossTarget = null;
             }
         }
     }

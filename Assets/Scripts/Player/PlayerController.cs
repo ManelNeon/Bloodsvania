@@ -24,6 +24,13 @@ public class PlayerController : MonoBehaviour
 
     [HideInInspector] public Vector3 direction;
 
+    [Header("Roll Variables")]
+    [SerializeField] float dashSpeed;
+
+    [SerializeField] float dashTime;
+
+    bool isDashing;
+
     [Header("Rotation and Movement Hidden Variables")]
     float turnSmoothVelocity;
         
@@ -78,19 +85,57 @@ public class PlayerController : MonoBehaviour
         {
             //SFXManager.Instance.PlayFootstep();
         }
+
+        if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing)
+        {
+            isDashing = true;
+
+            targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + mainCam.eulerAngles.y;
+            angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+            transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
+            moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+
+            playerAnimator.SetBool("isRolling", true);
+
+            playerAnimator.Play("Roll");
+
+            StartCoroutine(Dash());
+        }
+    }
+
+    IEnumerator Dash()
+    {
+        direction = Vector3.zero;
+
+        float startTime = Time.time;
+
+        while (Time.time < startTime + dashTime)
+        {
+            playerCC.Move(moveDir * dashSpeed * Time.deltaTime);
+
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(1f);
+
+        playerAnimator.SetBool("isRolling", false);
+
+        isDashing = false;
+
     }
 
     void ApplyGravity()
     {
+        if (isGrounded && velocity.y < 0)
+        {
+            velocity.y = -2f;
+        }
+
+        velocity.y += gravity * Time.deltaTime * gravityMultiplier;
+
         if (GameManager.Instance.isControlable)
         {
-            if (isGrounded && velocity.y < 0)
-            {
-                velocity.y = -2f;
-            }
-
-            velocity.y += gravity * Time.deltaTime * gravityMultiplier;
-
             if (Input.GetButtonDown("Jump") && isGrounded)
             {
                 velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
@@ -131,7 +176,7 @@ public class PlayerController : MonoBehaviour
     void Movement()
     {
         //the game manager has to let the player control
-        if (GameManager.Instance.isControlable)
+        if (GameManager.Instance.isControlable && !isDashing)
         {
             direction = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
 
