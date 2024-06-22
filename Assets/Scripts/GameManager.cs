@@ -131,7 +131,7 @@ public class GameManager : MonoBehaviour
     {
         FadeManager.Instance.StartFadeOut();
 
-        AudioManager.Instance.PlayMusic(AudioManager.Instance.mainMenuMusic);
+        AudioManager.Instance.PlayMusic(AudioManager.Instance.mainMenuMusic, true);
 
         yield return new WaitForSeconds(1.5f);
 
@@ -164,9 +164,6 @@ public class GameManager : MonoBehaviour
 
         currentRage = bloodValue;
 
-        //Find and Establishing Hud
-        FindHUD();
-
         healthBarMaskWidth = healthBarMaskTransform.sizeDelta.x;
 
         rageBarMaskWidth = rageBarMaskTransform.sizeDelta.x;
@@ -174,7 +171,7 @@ public class GameManager : MonoBehaviour
         FulguriteNeeded();
     }
 
-    void FindHUD()
+    public void FindHUD()
     {
         healthBarSprite = GameObject.Find("HealthBar").GetComponent<Image>();
 

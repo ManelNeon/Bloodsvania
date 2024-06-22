@@ -29,6 +29,8 @@ public class AudioManager : MonoBehaviour
 
     public AudioClip inGameMusic;
 
+    public AudioClip bossMusic;
+
     [Header("Fading Options")]
     [SerializeField] float fadeDuraction;
 
@@ -72,9 +74,24 @@ public class AudioManager : MonoBehaviour
 
 
 
-    public void PlayMusic(AudioClip musicClip)
+    public void PlayMusic(AudioClip musicClip, bool willFade)
     {
-        StartCoroutine(FadingMusic(musicClip));
+        if (musicClip == null)
+        {
+            musicAudioSource.clip = null;
+            return;
+        }
+
+        if (willFade)
+        {
+            StartCoroutine(FadingMusic(musicClip));
+        }
+        else
+        {
+            musicAudioSource.clip = musicClip;
+
+            musicAudioSource.Play();
+        }
     }
 
     IEnumerator FadingMusic(AudioClip musicClip)

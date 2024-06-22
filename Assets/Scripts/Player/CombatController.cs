@@ -27,11 +27,11 @@ public class CombatController : MonoBehaviour
 
     [HideInInspector] public bool isCountering;
 
-    bool isAttacking;
-
     [HideInInspector] public bool isOnRage;
 
     [HideInInspector] public bool isFighting;
+
+    [HideInInspector] public bool isFightingBoss;
 
     [Header("References")]
     [SerializeField] ParticleSystem healParticles;
@@ -116,7 +116,7 @@ public class CombatController : MonoBehaviour
         if (GameManager.Instance.isControlable)
         {
             //if the player left clicks and if he has a current target
-            if (Input.GetMouseButtonDown(0) && canAttack && isFighting)
+            if (Input.GetMouseButtonDown(0) && canAttack && isFighting && !isFightingBoss)
             {
                 if (currentTarget != null)
                 {
@@ -124,10 +124,25 @@ public class CombatController : MonoBehaviour
                     transform.DOLookAt(currentTarget.transform.position, .2f);
                     transform.DOMove(TargetOffset(currentTarget.transform), .8f);
                 }
-                else if (bossTarget != null)
+                else
+                {
+                    return;
+                }
+
+                GetComponent<CharacterController>().enabled = false;
+
+                playerAnimator.Play("SecondAttack");
+
+                //the player cant attack now
+                canAttack = false;
+            }
+
+            else if (Input.GetMouseButtonDown(0) && canAttack && isFighting && isFightingBoss)
+            {
+                if (bossTarget != null && Vector3.Distance(transform.position, bossTarget.transform.position) < 8)
                 {
                     //we rotate the player towards the enemy he's currently attacking and then we move towards him
-                    transform.DOLookAt(bossTarget.transform.position, .2f);
+                    transform.DOLookAt(new Vector3(bossTarget.transform.position.x, transform.position.y, bossTarget.transform.position.z), .2f);
                     transform.DOMove(TargetOffset(bossTarget.transform), .8f);
                 }
                 else
@@ -135,23 +150,11 @@ public class CombatController : MonoBehaviour
                     return;
                 }
 
-                isAttacking = true;
-
                 playerController.enabled = false;
-
-                //randomizing between the two animations
-                int number = Random.Range(1, 3);
 
                 GetComponent<CharacterController>().enabled = false;
 
-                if (number == 1)
-                {
-                    playerAnimator.Play("Attack");
-                }
-                else
-                {
-                    playerAnimator.Play("SecondAttack");
-                }
+                playerAnimator.Play("SecondAttack");
 
                 //the player cant attack now
                 canAttack = false;
@@ -187,7 +190,7 @@ public class CombatController : MonoBehaviour
 
                         playerController.speed *= 2;
 
-                        playerAnimator.speed *= 2;
+                        playerAnimator.SetFloat("Multiplier", 1.5f);
 
                         isOnRage = true;
                     }
@@ -200,7 +203,7 @@ public class CombatController : MonoBehaviour
 
                     playerController.speed /= 2;
 
-                    playerAnimator.speed /= 2;
+                    playerAnimator.SetFloat("Multiplier", 1);
 
                     isOnRage = false;
                 }
@@ -247,7 +250,7 @@ public class CombatController : MonoBehaviour
 
                     playerController.speed /= 2;
 
-                    playerAnimator.speed /= 2;
+                    playerAnimator.SetFloat("Multiplier", 1);
 
                     isOnRage = false;
                 }
@@ -272,8 +275,6 @@ public class CombatController : MonoBehaviour
 
         canAttack = true;
 
-        isAttacking = false;
-
         playerController.enabled = true;
     }
 
@@ -290,7 +291,14 @@ public class CombatController : MonoBehaviour
             return;
         }
 
-        currentTarget.TakeDamage(GameManager.Instance.dmgValue * .05f);
+        if (currentTarget != null)
+        {
+            currentTarget.TakeDamage(GameManager.Instance.dmgValue * .05f);
+        }
+        else if (bossTarget != null)
+        {
+            bossTarget.TakeDamage(GameManager.Instance.dmgValue * 0.5f);
+        }
     }
 
     //getting the offset between the player and the targets position
@@ -298,7 +306,7 @@ public class CombatController : MonoBehaviour
     {
         Vector3 position;
 
-        position = target.position;
+        position = new Vector3(target.position.x, transform.position.y, target.position.z);
 
         return Vector3.MoveTowards(position, transform.position, .95f);
     }
@@ -312,21 +320,21 @@ public class CombatController : MonoBehaviour
         {
             if (hit.collider.GetComponent<EnemyController>() != null && hit.collider.GetComponent<EnemyController>().IsAttackable())
             {
-                currentTarget = hit.collider.transform.GetComponent<EnemyController>();
-            }
-            else if (hit.collider.GetComponent<EnemyBoss>().IsAttackable())
-            {
-                bossTarget = hit.collider.GetComponent<EnemyBoss>();
-            }
-            else if (!isAttacking)
-            {
-                if (currentTarget != null)
+                if (currentTarget != null & hit.collider.GetComponent<EnemyController>() != currentTarget)
                 {
                     currentTarget.NoLongerSelected();
                 }
 
-                currentTarget = null;
-                bossTarget = null;
+                currentTarget = hit.collider.transform.GetComponent<EnemyController>();
+            }
+            else if (hit.collider.GetComponent<EnemyBoss>() != null && hit.collider.GetComponent<EnemyBoss>().IsAttackable())
+            {
+                if (bossTarget != null && hit.collider.GetComponent<EnemyBoss>() != bossTarget)
+                {
+                    bossTarget.selectedPointer.SetActive(false);
+                }
+
+                bossTarget = hit.collider.GetComponent<EnemyBoss>();
             }
         }
     }
@@ -336,7 +344,24 @@ public class CombatController : MonoBehaviour
         //we play the punch sfx
         AudioManager.Instance.PlaySFX(AudioManager.Instance.punchedSound);
 
+        GameManager.Instance.isControlable = false;
+
+        playerController.direction = Vector3.zero;
+
         float damageCalculated = damage / (GameManager.Instance.compositionValue * 0.03f);
+
+        if (isOnRage)
+        {
+            rageVignette.SetActive(false);
+
+            GameManager.Instance.dmgValue /= 2;
+
+            playerController.speed /= 2;
+
+            playerAnimator.SetFloat("Multiplier", 1);
+
+            isOnRage = false;
+        }
 
         GameManager.Instance.GainRage(Random.Range(10,20));
 
@@ -370,13 +395,11 @@ public class CombatController : MonoBehaviour
     {
         canAttack = false;
 
-        playerController.enabled = false;
-
         yield return new WaitForSeconds(1);
 
         canAttack = true;
 
-        playerController.enabled = true;
+        GameManager.Instance.isControlable = true;
     }
 
     IEnumerator Death()

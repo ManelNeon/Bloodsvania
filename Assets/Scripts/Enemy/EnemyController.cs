@@ -247,6 +247,9 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
+            //we play the death animation and then we set a timer to destroy the object
+            enemyAnimator.Play("Death");
+
             currentHealth -= damage;
 
             enemyManager.DeleteEnemy(this);
@@ -267,12 +270,14 @@ public class EnemyController : MonoBehaviour
                 playerCombat.currentTarget = null;
             }
 
-            //we play the death animation and then we set a timer to destroy the object
-            enemyAnimator.Play("Death");
+            GetComponent<CharacterController>().enabled = false;
 
             enemyManager.EventAllEnemiesDead(playerCombat);
 
-            StartCoroutine(DeathTimer());
+            if (enemyManager.RandomEnemy() == null)
+            {
+                StartCoroutine(DeathTimer());
+            }
         }
     }
 
@@ -280,15 +285,7 @@ public class EnemyController : MonoBehaviour
     {
         yield return new WaitForSeconds(5);
 
-        if (enemyManager.RandomEnemy() == null)
-        {
-            enemyManager.gameObject.SetActive(false);
-            yield break;
-        }
-
-        gameObject.SetActive(false);
-
-        yield break;
+        enemyManager.gameObject.SetActive(false);
     }
 
     //if no longet selected, we then set the arrow particle to false (function so that the player can access it)
@@ -300,6 +297,8 @@ public class EnemyController : MonoBehaviour
     //when the enemy gets punch we start the AI again to set a new attacker, and set a new direction
     IEnumerator GotPunch()
     {
+        isStunned = true;
+
         isPreparingAttack = false;
 
         isMoving = false;
@@ -307,6 +306,8 @@ public class EnemyController : MonoBehaviour
         enemyAnimator.SetTrigger("Hit");
 
         yield return new WaitForSeconds(1.2f);
+
+        isStunned = false;
 
         Retreating();
 
@@ -333,7 +334,7 @@ public class EnemyController : MonoBehaviour
 
         float random = Random.Range(20,30);
 
-        if (Vector3.Distance(transform.position, playerCombat.transform.position) < 2)
+        if (Vector3.Distance(transform.position, playerCombat.transform.position) < 1)
         {
             playerCombat.TakeDamage(random);
         }
@@ -350,6 +351,11 @@ public class EnemyController : MonoBehaviour
     //function that plays when preparing the attack
     public void PreparingAttack()
     {
+        if (isStunned)
+        {
+            return;
+        }
+
         isPreparingAttack = true;
 
         EnemyDirection();
@@ -372,7 +378,7 @@ public class EnemyController : MonoBehaviour
 
         isRetreating = false;
 
-        EnemyDirection();
+        EnemyDirection();   
 
         enemyManager.StartingAI();
 

@@ -25,6 +25,10 @@ public class NPC : MonoBehaviour
 
     public GameObject[] eventObjects;
 
+    public bool isFading;
+
+    public bool isMother;
+
     void Update()
     {
         //if the player left clicks he gets the next line
@@ -88,12 +92,24 @@ public class NPC : MonoBehaviour
         {
             if (hasEvent)
             {
-                for (int i = 0; i < eventObjects.Length; i++)
+                if (isFading)
                 {
-                    eventObjects[i].SetActive(!eventObjects[i].activeInHierarchy);
-                }
+                    FadeManager.Instance.StartFadeOutAndIn(0);
 
-                hasEvent = false;
+                    if (isMother)
+                    {
+                        GetComponentInParent<MotherEvent>().StartMotherEvent();
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < eventObjects.Length; i++)
+                    {
+                        eventObjects[i].SetActive(!eventObjects[i].activeInHierarchy);
+                    }
+
+                    hasEvent = false;
+                }
             }
 
             for (int i = 0; i < cameras.Length; i++)
@@ -109,7 +125,6 @@ public class NPC : MonoBehaviour
                 }
                 
             }
-
 
             GameManager.Instance.isControlable = true;
 

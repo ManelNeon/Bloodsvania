@@ -15,6 +15,14 @@ public class BossEnemyManager : MonoBehaviour
 
     [HideInInspector] public int hitsOnArm;
 
+    [SerializeField] EnemyBoss enemyHead;
+
+    [SerializeField] CombatController playerCombat;
+
+    [SerializeField] Transform playerPosition;
+
+    [SerializeField] Animator bossAnimator;
+
     [Header("Boss Bar")]
     [SerializeField] RectTransform healthBarMaskTransform;
 
@@ -27,41 +35,117 @@ public class BossEnemyManager : MonoBehaviour
 
     [SerializeField] float fadeDuraction;
 
-    bool isFading;
+    [HideInInspector] public bool isFading;
+
+    bool isFadingOut;
 
     float m_Timer;
 
+    [Header("Boss Attacks")]
+    [SerializeField] GameObject fireballPrefab;
+    
+    [SerializeField] Transform fireballSpawnPoint;
+
+    [SerializeField] GameObject firebreathPrefab;
+
+    [SerializeField] GameObject earthAttackPrefab;
+
+    public bool isCooldown;
+
+    float cooldownTime;
+
+    bool hasAttacked;
+
+    public bool isDead;
+
+    Vector3 originalSpawnPosition;
+
     void Awake()
     {
-        hitsOnArm = 3;
+        hitsOnArm = 4;
+
+        originalSpawnPosition = fireballSpawnPoint.position;
 
         healthBarMaskWidth = healthBarMaskTransform.sizeDelta.x;
 
         currentHP = maxHP;
 
+        isCooldown = true;
+
+        cooldownTime = 8;
+
         StartCoroutine(DamageCycle());
+
+        StartCoroutine(AttackCooldown());
+    }
+
+    public void ChangingHPUI()
+    {
+        Vector2 barMaskSizeDelta = healthBarMaskTransform.sizeDelta;
+
+        barMaskSizeDelta.x = (currentHP / maxHP) * healthBarMaskWidth;
+
+        healthBarMaskTransform.sizeDelta = barMaskSizeDelta;
     }
 
     void Update()
     {
+        Attacks();
+
         Fades();
 
         if (damageBarMaskTransform.sizeDelta.x != healthBarMaskTransform.sizeDelta.x)
         {
-            damageBarMaskTransform.sizeDelta = new Vector2(Mathf.Lerp(damageBarMaskTransform.sizeDelta.x, (currentHP / maxHP) * healthBarMaskWidth, .05f), damageBarMaskTransform.sizeDelta.y);
+            damageBarMaskTransform.sizeDelta = new Vector2(Mathf.Lerp(damageBarMaskTransform.sizeDelta.x, (currentHP / maxHP) * healthBarMaskWidth, .01f), damageBarMaskTransform.sizeDelta.y);
         }
+    }
 
-        if (Input.GetKeyDown(KeyCode.V))
+    void Attacks()
+    {
+        if (!isCooldown && !hasAttacked && !canDamage && !isDead)
         {
-            canDamage = true;
+            Vector3 newPlayerPosition = new Vector3(0, 0, playerPosition.position.z);
 
-            FindObjectOfType<CombatController>().isFighting = true;
+            Vector3 newBossPosition = new Vector3(0, 0, this.transform.position.z);
+
+            fireballSpawnPoint.position = originalSpawnPosition;
+
+            if (Vector3.Distance(newBossPosition, newPlayerPosition) > 4)
+            {
+                hasAttacked = true;
+
+                bossAnimator.SetTrigger("BreathAttack");
+
+                Instantiate(firebreathPrefab, fireballSpawnPoint);
+            }
+            else
+            {
+                hasAttacked = true;
+
+                fireballSpawnPoint.position = fireballSpawnPoint.position - new Vector3(0, 2.30f, -.31f);
+
+                Instantiate(earthAttackPrefab, fireballSpawnPoint);
+            }
         }
+    }
+
+    public void CooldownBreath()
+    {
+        cooldownTime = 2;
+
+        isCooldown = true;
+    }
+
+    public void CooldownEarth()
+    {
+        cooldownTime = 2;
+
+        isCooldown = true;
     }
 
     void Fades()
     {
-        if (isFading && bossHealthbar.alpha == 0)
+        if (isFading)
         {
             m_Timer += Time.deltaTime;
 
@@ -75,7 +159,7 @@ public class BossEnemyManager : MonoBehaviour
             }
         }
 
-        if (isFading && bossHealthbar.alpha == 1)
+        if (isFadingOut)
         {
             m_Timer -= Time.deltaTime;
 
@@ -83,7 +167,7 @@ public class BossEnemyManager : MonoBehaviour
 
             if (bossHealthbar.alpha == 0)
             {
-                isFading = false;
+                isFadingOut = false;
             }
         }
     }
@@ -94,13 +178,83 @@ public class BossEnemyManager : MonoBehaviour
         {
             if (canDamage)
             {
-                yield return new WaitForSeconds(5);
+                bossAnimator.transform.position = new Vector3(bossAnimator.transform.position.x, bossAnimator.transform.position.y - 2, bossAnimator.transform.position.z);
 
-                Debug.Log("Cant Attack");
+                yield return new WaitForSeconds(4);
+
+                bossAnimator.transform.position = new Vector3(bossAnimator.transform.position.x, this.transform.position.y, bossAnimator.transform.position.z);
 
                 canDamage = false;
 
-                hitsOnArm = 3;
+                enemyHead.selectedPointer.SetActive(false);
+
+                playerCombat.bossTarget = null;
+
+                hitsOnArm = 4;
+            }
+
+            yield return null;
+        }
+    }
+
+    public void TakeDamage(float damage)
+    {
+        if (!isDead)
+        {
+            if (currentHP - damage > 0)
+            {
+                bossAnimator.SetTrigger("Hit");
+
+                currentHP -= damage;
+
+                ChangingHPUI();
+            }
+            else
+            {
+                currentHP = 0;
+
+                isDead = true;
+
+                canDamage = false;
+
+                enemyHead.selectedPointer.SetActive(false);
+
+                playerCombat.bossTarget = null;
+
+                bossAnimator.transform.position = new Vector3(bossAnimator.transform.position.x, this.transform.position.y, bossAnimator.transform.position.z);
+
+                bossAnimator.SetTrigger("Die");
+
+                ChangingHPUI();
+
+                StartCoroutine(DeathCoroutine());
+            }
+        }
+    }
+
+
+    IEnumerator DeathCoroutine()
+    {
+        isFadingOut = true;
+
+        yield return new WaitForSeconds(4);
+
+        GameManager.Instance.MainMenuSequenceFunction();
+
+        yield break;
+    }
+
+    IEnumerator AttackCooldown()
+    {
+        while (true)
+        {
+            if (isCooldown)
+            {
+                yield return new WaitForSeconds(cooldownTime);
+
+                isCooldown = false;
+
+                hasAttacked = false;
             }
 
             yield return null;

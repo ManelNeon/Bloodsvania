@@ -40,6 +40,8 @@ public class FadeManager : MonoBehaviour
 
         m_Timer = fadeDuraction;
 
+        //GameManager.Instance.FindHUD();
+
         if (!wontResetStats)
         {
             GameManager.Instance.ResetStats();

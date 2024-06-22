@@ -26,6 +26,8 @@ public class EnemyManager : MonoBehaviour
 
     bool hasPassed;
 
+    bool isRunningCoroutine;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -51,10 +53,17 @@ public class EnemyManager : MonoBehaviour
 
     IEnumerator StartAI()
     {
+        isRunningCoroutine = true;
+
         //waiting two seconds to give the player breating room
         yield return new WaitForSeconds(2f);
 
-        AttackingAI();
+        if (!isRunningCoroutine)
+        {
+            AttackingAI();
+        }
+
+        isRunningCoroutine = false;
     }
 
     void AttackingAI()

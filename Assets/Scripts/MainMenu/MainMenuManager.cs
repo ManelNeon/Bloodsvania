@@ -191,7 +191,7 @@ public class MainMenuManager : MonoBehaviour
     }
 
     //when clicking on the play button we play this
-    IEnumerator Playing(bool isDemo)
+    IEnumerator Playing(int code)
     {
         m_Timer = fadeDuraction;
 
@@ -199,13 +199,17 @@ public class MainMenuManager : MonoBehaviour
 
         yield return new WaitForSeconds(fadeDuraction);
 
-        if (isDemo)
+        if (code == 0)
         {
             SceneManager.LoadScene("Blocking");
         }
-        else
+        else if (code == 1) 
         {
             SceneManager.LoadScene("SampleScene");
+        }
+        else if (code == 2)
+        {
+            SceneManager.LoadScene("BossFight");
         }
 
         yield break;
@@ -217,8 +221,8 @@ public class MainMenuManager : MonoBehaviour
         if (!isFading && !isFadingBack && mainMenu.alpha == 1)
         {
             AudioManager.Instance.PlaySFX(AudioManager.Instance.buttonSound);
-            AudioManager.Instance.PlayMusic(AudioManager.Instance.inGameMusic);
-            StartCoroutine(Playing(true));
+            AudioManager.Instance.PlayMusic(AudioManager.Instance.inGameMusic, true);
+            StartCoroutine(Playing(0));
         }
     }
 
@@ -228,8 +232,18 @@ public class MainMenuManager : MonoBehaviour
         if (!isFading && !isFadingBack && mainMenu.alpha == 1)
         {
             AudioManager.Instance.PlaySFX(AudioManager.Instance.buttonSound);
-            AudioManager.Instance.PlayMusic(AudioManager.Instance.inGameMusic);
-            StartCoroutine(Playing(false));
+            AudioManager.Instance.PlayMusic(AudioManager.Instance.inGameMusic, true);
+            StartCoroutine(Playing(1));
+        }
+    }
+
+    public void ButtonPlayBossFight()
+    {
+        if (!isFading && !isFadingBack && mainMenu.alpha == 1)
+        {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.buttonSound);
+            AudioManager.Instance.PlayMusic(null, false);
+            StartCoroutine(Playing(2));
         }
     }
 

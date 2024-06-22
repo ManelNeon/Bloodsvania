@@ -52,8 +52,6 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] LayerMask groundMask;
 
-    [SerializeField] float jumpHeight = 3f;
-
     bool isGrounded;
 
     Vector3 velocity;
@@ -86,7 +84,7 @@ public class PlayerController : MonoBehaviour
             //SFXManager.Instance.PlayFootstep();
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing && direction.magnitude != 0 && isGrounded)
         {
             isDashing = true;
 
@@ -117,12 +115,11 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.5f);
 
         playerAnimator.SetBool("isRolling", false);
 
         isDashing = false;
-
     }
 
     void ApplyGravity()
@@ -134,16 +131,7 @@ public class PlayerController : MonoBehaviour
 
         velocity.y += gravity * Time.deltaTime * gravityMultiplier;
 
-        if (GameManager.Instance.isControlable)
-        {
-            if (Input.GetButtonDown("Jump") && isGrounded)
-            {
-                velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-            }
-
-            playerCC.Move(velocity * Time.deltaTime);
-        }
-        
+        playerCC.Move(velocity * Time.deltaTime);
     }
 
     //putting the movement on the late update
