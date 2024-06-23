@@ -46,6 +46,8 @@ public class PlayerController : MonoBehaviour
     [Header("Jump Variables")]
     [SerializeField] float gravityMultiplier = 3.0f;
 
+    [SerializeField] float jumpHeight = 3f;
+
     [SerializeField] Transform groundCheck;
 
     [SerializeField] float groundDistance = 0.4f;
@@ -84,7 +86,7 @@ public class PlayerController : MonoBehaviour
             //SFXManager.Instance.PlayFootstep();
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing && direction.magnitude != 0 && isGrounded)
+        if (Input.GetKeyDown(KeyManager.Instance.dashKey) && !isDashing && direction.magnitude != 0 && isGrounded)
         {
             isDashing = true;
 
@@ -131,7 +133,15 @@ public class PlayerController : MonoBehaviour
 
         velocity.y += gravity * Time.deltaTime * gravityMultiplier;
 
-        playerCC.Move(velocity * Time.deltaTime);
+        if (Input.GetKeyDown(KeyManager.Instance.jumpKey) && isGrounded && GameManager.Instance.isControlable && !isDashing)
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+        }
+
+        if (playerCC.enabled)
+        {
+            playerCC.Move(velocity * Time.deltaTime);
+        }
     }
 
     //putting the movement on the late update
@@ -146,7 +156,7 @@ public class PlayerController : MonoBehaviour
     void NPCRaycast()
     {
         //the player can only talk if he is not moving
-        if (Input.GetKeyDown(KeyCode.F) && direction.magnitude == 0 && !GetComponent<CombatController>().isFighting)
+        if (Input.GetKeyDown(KeyManager.Instance.interactKey) && direction.magnitude == 0 && !GetComponent<CombatController>().isFighting)
         {
             if (Physics.Raycast(transform.position + new Vector3(0, 1, 0), Camera.main.transform.forward, out hit, 2, npcLayerMask))
             {
@@ -164,7 +174,7 @@ public class PlayerController : MonoBehaviour
     void Movement()
     {
         //the game manager has to let the player control
-        if (GameManager.Instance.isControlable && !isDashing)
+        if (GameManager.Instance.isControlable && !isDashing && playerCC.enabled)
         {
             direction = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
 
@@ -175,6 +185,7 @@ public class PlayerController : MonoBehaviour
                 transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
                 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+
                 playerCC.Move(moveDir.normalized * speed * Time.deltaTime);
             }
         }  

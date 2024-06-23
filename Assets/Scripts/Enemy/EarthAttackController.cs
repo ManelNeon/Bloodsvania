@@ -8,6 +8,8 @@ public class EarthAttackController : MonoBehaviour
 
     [SerializeField] GameObject damageParticles;
 
+    [SerializeField] ParticleSystem[] warningParticles;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -34,10 +36,25 @@ public class EarthAttackController : MonoBehaviour
 
         main.loop = false;
 
-        yield return new WaitForSeconds(2);
+        for (int i = 0; i < warningParticles.Length; i++) 
+        {
+            main = warningParticles[i].GetComponent<ParticleSystem>().main;
+
+            main.loop = false;
+        }
+
+        yield return new WaitForSeconds(1.5f);
 
         Destroy(gameObject);
 
         yield break;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            other.GetComponent<CombatController>().TakeDamage(30);
+        }
     }
 }

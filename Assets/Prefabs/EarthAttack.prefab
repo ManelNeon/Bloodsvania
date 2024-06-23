@@ -43810,7 +43810,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2143189871847657543}
   serializedVersion: 8
-  lengthInSec: 2
+  lengthInSec: 1.5
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
@@ -58466,6 +58466,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   triggerCollider: {fileID: 963122773991329188}
   damageParticles: {fileID: 2143189871847657543}
+  warningParticles:
+  - {fileID: 1783321528902173067}
+  - {fileID: 3322851472999338890}
+  - {fileID: 5948087076244169327}
+  - {fileID: 4638177516448382855}
+  - {fileID: 1599047916667470207}
+  - {fileID: 5074535885949540456}
+  - {fileID: 5894987482637734008}
+  - {fileID: 4824414476373823135}
 --- !u!1 &5519589891202976601
 GameObject:
   m_ObjectHideFlags: 0

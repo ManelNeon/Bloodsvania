@@ -6,7 +6,7 @@ public class FadeManager : MonoBehaviour
 {
     public static FadeManager Instance;
 
-    [SerializeField] bool wontResetStats;
+    [SerializeField] bool resetStats;
 
     //if it's fading, we do the fade
     bool isFading;
@@ -40,11 +40,17 @@ public class FadeManager : MonoBehaviour
 
         m_Timer = fadeDuraction;
 
+        //activate before build
         //GameManager.Instance.FindHUD();
 
-        if (!wontResetStats)
+        if (resetStats)
         {
-            GameManager.Instance.ResetStats();
+            //activate before build
+            //GameManager.Instance.ResetStats();
+        }
+        else
+        {
+            GameManager.Instance.ChangeUI();
         }
 
         isFading = true;

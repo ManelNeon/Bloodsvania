@@ -362,9 +362,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isControlable: 0
-  hpValue: 0
-  bloodValue: 0
-  dmgValue: 0
+  hpValue: 300
+  bloodValue: 300
+  dmgValue: 300
   compositionValue: 0
   reflexValue: 0
   fulguriteValue: 0
@@ -1593,6 +1593,58 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!1 &791805124
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 791805126}
+  - component: {fileID: 791805125}
+  m_Layer: 0
+  m_Name: KeyManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &791805125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 791805124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bdb893420d13de419c3d119dfffc62f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpKey: 32
+  dashKey: 304
+  attackKey: 323
+  counterKey: 324
+  rageModeKey: 113
+  healKey: 101
+  interactKey: 102
+  pauseKey: 27
+--- !u!4 &791805126
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 791805124}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.7602266, y: 0.9799981, z: 14.686592}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &818981653
 GameObject:
   m_ObjectHideFlags: 0
@@ -4610,6 +4662,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 1829607152}
   - {fileID: 212183314}
+  - {fileID: 791805126}
   - {fileID: 1663143836}
   - {fileID: 858568347}
   - {fileID: 1637809335}

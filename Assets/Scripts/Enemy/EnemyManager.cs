@@ -26,8 +26,6 @@ public class EnemyManager : MonoBehaviour
 
     bool hasPassed;
 
-    bool isRunningCoroutine;
-
     // Start is called before the first frame update
     void Awake()
     {
@@ -41,6 +39,8 @@ public class EnemyManager : MonoBehaviour
         {
             FindObjectOfType<CombatController>().EnableFighting();
 
+            hasPassed = true;
+
             StartingAI();
         }
     }
@@ -53,17 +53,10 @@ public class EnemyManager : MonoBehaviour
 
     IEnumerator StartAI()
     {
-        isRunningCoroutine = true;
-
         //waiting two seconds to give the player breating room
         yield return new WaitForSeconds(2f);
 
-        if (!isRunningCoroutine)
-        {
-            AttackingAI();
-        }
-
-        isRunningCoroutine = false;
+        AttackingAI();
     }
 
     void AttackingAI()

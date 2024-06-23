@@ -43,6 +43,7 @@ public class CombatController : MonoBehaviour
 
     [SerializeField] GameObject normalCamera;
 
+    float movespeed;
 
     // Start is called before the first frame update
     void Start()
@@ -50,6 +51,8 @@ public class CombatController : MonoBehaviour
         playerController = GetComponent<PlayerController>();
 
         playerAnimator = GetComponentInChildren<Animator>();
+
+        movespeed = playerController.speed;
 
         canAttack = true;
 
@@ -108,6 +111,16 @@ public class CombatController : MonoBehaviour
         normalCamera.SetActive(true);
 
         combatCamera.SetActive(false);
+
+        rageVignette.SetActive(false);
+
+        GameManager.Instance.dmgValue /= 2;
+
+        playerController.speed = movespeed / 2;
+
+        playerAnimator.SetFloat("Multiplier", 1);
+
+        isOnRage = false;
     }
 
     // Update is called once per frame
@@ -116,7 +129,7 @@ public class CombatController : MonoBehaviour
         if (GameManager.Instance.isControlable)
         {
             //if the player left clicks and if he has a current target
-            if (Input.GetMouseButtonDown(0) && canAttack && isFighting && !isFightingBoss)
+            if (Input.GetKeyDown(KeyManager.Instance.attackKey) && canAttack && isFighting && !isFightingBoss)
             {
                 if (currentTarget != null)
                 {
@@ -137,7 +150,7 @@ public class CombatController : MonoBehaviour
                 canAttack = false;
             }
 
-            else if (Input.GetMouseButtonDown(0) && canAttack && isFighting && isFightingBoss)
+            else if (Input.GetKeyDown(KeyManager.Instance.attackKey) && canAttack && isFighting && isFightingBoss)
             {
                 if (bossTarget != null && Vector3.Distance(transform.position, bossTarget.transform.position) < 8)
                 {
@@ -161,7 +174,7 @@ public class CombatController : MonoBehaviour
             }
 
             //if the player right clicks, he can attack and there's an enemy attacking
-            if (Input.GetMouseButton(1) && enemyAttacking && isFighting)
+            if (Input.GetKeyDown(KeyManager.Instance.counterKey) && enemyAttacking && isFighting)
             {
                 transform.DOLookAt(new Vector3(enemyAttacking.transform.position.x, transform.position.y, enemyAttacking.transform.position.z), .2f);
                 transform.DOMove(TargetOffset(enemyAttacking.transform), .8f);
@@ -178,7 +191,7 @@ public class CombatController : MonoBehaviour
                 canAttack = false;
             }
 
-            if (Input.GetKeyDown(KeyCode.Q) && isFighting) 
+            if (Input.GetKeyDown(KeyManager.Instance.rageModeKey) && isFighting) 
             {
                 if (!isOnRage)
                 {
@@ -188,7 +201,7 @@ public class CombatController : MonoBehaviour
 
                         GameManager.Instance.dmgValue *= 2;
 
-                        playerController.speed *= 2;
+                        playerController.speed = movespeed * 2;
 
                         playerAnimator.SetFloat("Multiplier", 1.5f);
 
@@ -201,7 +214,7 @@ public class CombatController : MonoBehaviour
 
                     GameManager.Instance.dmgValue /= 2;
 
-                    playerController.speed /= 2;
+                    playerController.speed = movespeed / 2;
 
                     playerAnimator.SetFloat("Multiplier", 1);
 
@@ -209,7 +222,7 @@ public class CombatController : MonoBehaviour
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.E) && GameManager.Instance.currentRage >= 1)
+            if (Input.GetKeyDown(KeyManager.Instance.healKey) && GameManager.Instance.currentRage >= 1)
             {
                 //Heal
                 if (GameManager.Instance.currentHP != GameManager.Instance.hpValue)
@@ -248,7 +261,7 @@ public class CombatController : MonoBehaviour
 
                     GameManager.Instance.dmgValue /= 2;
 
-                    playerController.speed /= 2;
+                    playerController.speed = movespeed / 2;
 
                     playerAnimator.SetFloat("Multiplier", 1);
 

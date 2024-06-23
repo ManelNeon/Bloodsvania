@@ -39,6 +39,8 @@ public class MaidenController : NPC //it is a children of the NPC script
 
     [SerializeField] TextMeshProUGUI fulguriteNeededText;
 
+    [SerializeField] TextMeshProUGUI levelText;
+
     //we override the NextLine function, the difference is that when the dialogue ends, we activate the maiden screen and do the ChangeStats() and AddingListeners()
     public override void NextLine()
     {
@@ -82,6 +84,8 @@ public class MaidenController : NPC //it is a children of the NPC script
     //we change the stats on the maiden screen to the one that player has
     void ChangeStats()
     {
+        levelText.text = "Level: " + GameManager.Instance.level;
+
         hpValue.text = "HP: " + GameManager.Instance.hpValue;
 
         bloodValue.text = "Blood: " + GameManager.Instance.bloodValue;

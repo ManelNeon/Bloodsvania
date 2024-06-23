@@ -62,6 +62,10 @@ public class GameManager : MonoBehaviour
 
     float rageBarMaskWidth;
 
+    float healthDividerWidth;
+
+    float rageDividerWidth;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -82,27 +86,21 @@ public class GameManager : MonoBehaviour
 
         currentRage = bloodValue;
 
+        isControlable = true;
+
+        //deactivate before build
         healthBarMaskWidth = healthBarMaskTransform.sizeDelta.x;
 
         rageBarMaskWidth = rageBarMaskTransform.sizeDelta.x;
-
-        isControlable = true;
     }
 
     // Update is called once per frame
     void Update()
     {
         //Debugging only
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyManager.Instance.pauseKey))
         {
             MainMenuSequenceFunction();
-        }
-        
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            FindAnyObjectByType<CombatController>().TakeDamage(25);
-
-            AddFulgurite(100000);
         }
 
         if (damageBarMaskTransform != null && damageBarMaskTransform.sizeDelta.x != healthBarMaskTransform.sizeDelta.x)
@@ -168,6 +166,10 @@ public class GameManager : MonoBehaviour
 
         rageBarMaskWidth = rageBarMaskTransform.sizeDelta.x;
 
+        healthDividerWidth = healthBarDividerTransform.sizeDelta.x;
+
+        rageDividerWidth = rageBarDividerTransform.sizeDelta.x;
+
         FulguriteNeeded();
     }
 
@@ -190,6 +192,25 @@ public class GameManager : MonoBehaviour
         rageBarDividerTransform = GameObject.Find("DividerRage").GetComponent<RectTransform>();
 
         fulguriteSlot = GameObject.Find("FulguriteValue").GetComponent<TextMeshProUGUI>();
+    }
+
+    public void ChangeUI()
+    {
+        healthBarMaskTransform.sizeDelta = new Vector2(healthBarMaskWidth, healthBarMaskTransform.sizeDelta.y);
+
+        healthBarSprite.rectTransform.sizeDelta = new Vector2(healthBarMaskWidth, healthBarMaskTransform.sizeDelta.y);
+
+        healthBarDividerTransform.sizeDelta = new Vector2(healthDividerWidth, healthBarDividerTransform.sizeDelta.y);
+
+        damageBarMaskTransform.sizeDelta = new Vector2(healthBarMaskWidth, healthBarMaskTransform.sizeDelta.y);
+
+        damageBarTransform.sizeDelta = new Vector2(healthBarMaskWidth, healthBarMaskTransform.sizeDelta.y);
+
+        rageBarMaskTransform.sizeDelta = new Vector2(rageBarMaskWidth, healthBarMaskTransform.sizeDelta.y);
+
+        rageBarSprite.rectTransform.sizeDelta = new Vector2(rageBarMaskWidth, healthBarMaskTransform.sizeDelta.y);
+
+        rageBarDividerTransform.sizeDelta = new Vector2(rageDividerWidth, rageBarDividerTransform.sizeDelta.y);
     }
 
     public void HealFunction()
@@ -258,6 +279,8 @@ public class GameManager : MonoBehaviour
 
         healthBarMaskWidth = healthBarMaskTransform.sizeDelta.x;
 
+        healthDividerWidth = healthBarDividerTransform.sizeDelta.x;
+
         level++;
 
         FulguriteNeeded();
@@ -277,6 +300,8 @@ public class GameManager : MonoBehaviour
         rageBarDividerTransform.sizeDelta = new Vector2(rageBarDividerTransform.sizeDelta.x + 56f, rageBarDividerTransform.sizeDelta.y);
 
         rageBarMaskWidth = rageBarMaskTransform.sizeDelta.x;
+
+        rageDividerWidth = rageBarDividerTransform.sizeDelta.x;
 
         level++;
 
