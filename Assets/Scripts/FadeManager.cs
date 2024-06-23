@@ -8,6 +8,10 @@ public class FadeManager : MonoBehaviour
 
     [SerializeField] bool resetStats;
 
+    [SerializeField] bool isFirstTime; //uwu..... losing my sanity, no sleep
+
+    [SerializeField] GameObject firstTimerWarning; //clear sexual ambiguity here
+ 
     //if it's fading, we do the fade
     bool isFading;
 
@@ -72,6 +76,13 @@ public class FadeManager : MonoBehaviour
                 isBlack = false;
 
                 m_Timer = 0;
+
+                if (isFirstTime)
+                {
+                    firstTimerWarning.SetActive(true);
+
+                    isFirstTime = true;
+                }
             }
         }
 

@@ -45,6 +45,8 @@ public class CombatController : MonoBehaviour
 
     float movespeed;
 
+    public float damage;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -53,6 +55,9 @@ public class CombatController : MonoBehaviour
         playerAnimator = GetComponentInChildren<Animator>();
 
         movespeed = playerController.speed;
+        
+        //activate BEFORE building
+        //damage = GameManager.Instance.dmgValue;
 
         canAttack = true;
 
@@ -114,9 +119,9 @@ public class CombatController : MonoBehaviour
 
         rageVignette.SetActive(false);
 
-        GameManager.Instance.dmgValue /= 2;
+        GameManager.Instance.dmgValue = damage;
 
-        playerController.speed = movespeed / 2;
+        playerController.speed = movespeed;
 
         playerAnimator.SetFloat("Multiplier", 1);
 
@@ -191,7 +196,7 @@ public class CombatController : MonoBehaviour
                 canAttack = false;
             }
 
-            if (Input.GetKeyDown(KeyManager.Instance.rageModeKey) && isFighting) 
+            if (Input.GetKeyDown(KeyManager.Instance.rageModeKey) && isFighting && GameManager.Instance.canUseAbilities) 
             {
                 if (!isOnRage)
                 {
@@ -199,7 +204,7 @@ public class CombatController : MonoBehaviour
                     {
                         rageVignette.SetActive(true);
 
-                        GameManager.Instance.dmgValue *= 2;
+                        GameManager.Instance.dmgValue = damage * 2;
 
                         playerController.speed = movespeed * 2;
 
@@ -212,9 +217,9 @@ public class CombatController : MonoBehaviour
                 {
                     rageVignette.SetActive(false);
 
-                    GameManager.Instance.dmgValue /= 2;
+                    GameManager.Instance.dmgValue = damage;
 
-                    playerController.speed = movespeed / 2;
+                    playerController.speed = movespeed;
 
                     playerAnimator.SetFloat("Multiplier", 1);
 
@@ -222,7 +227,7 @@ public class CombatController : MonoBehaviour
                 }
             }
 
-            if (Input.GetKeyDown(KeyManager.Instance.healKey) && GameManager.Instance.currentRage >= 1)
+            if (Input.GetKeyDown(KeyManager.Instance.healKey) && GameManager.Instance.currentRage >= 1 && GameManager.Instance.canUseAbilities)
             {
                 //Heal
                 if (GameManager.Instance.currentHP != GameManager.Instance.hpValue)
@@ -259,9 +264,9 @@ public class CombatController : MonoBehaviour
                 {
                     rageVignette.SetActive(false);
 
-                    GameManager.Instance.dmgValue /= 2;
+                    GameManager.Instance.dmgValue = damage;
 
-                    playerController.speed = movespeed / 2;
+                    playerController.speed = movespeed;
 
                     playerAnimator.SetFloat("Multiplier", 1);
 

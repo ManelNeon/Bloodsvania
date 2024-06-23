@@ -19,6 +19,10 @@ public class BossEnemyManager : MonoBehaviour
 
     [SerializeField] CombatController playerCombat;
 
+    [SerializeField] GameObject[] armsGlowyParticles;
+
+    [SerializeField] GameObject headGlowyParticle;
+
     [SerializeField] Transform playerPosition;
 
     [SerializeField] Animator bossAnimator;
@@ -97,6 +101,11 @@ public class BossEnemyManager : MonoBehaviour
         if (damageBarMaskTransform.sizeDelta.x != healthBarMaskTransform.sizeDelta.x)
         {
             damageBarMaskTransform.sizeDelta = new Vector2(Mathf.Lerp(damageBarMaskTransform.sizeDelta.x, (currentHP / maxHP) * healthBarMaskWidth, .01f), damageBarMaskTransform.sizeDelta.y);
+        }
+
+        if (canDamage)
+        {
+            headGlowyParticle.SetActive(true);
         }
     }
 
@@ -178,6 +187,8 @@ public class BossEnemyManager : MonoBehaviour
         {
             if (canDamage)
             {
+                headGlowyParticle.SetActive(true);
+
                 bossAnimator.transform.position = new Vector3(bossAnimator.transform.position.x, bossAnimator.transform.position.y - 2, bossAnimator.transform.position.z);
 
                 yield return new WaitForSeconds(4);
@@ -185,6 +196,13 @@ public class BossEnemyManager : MonoBehaviour
                 bossAnimator.transform.position = new Vector3(bossAnimator.transform.position.x, this.transform.position.y, bossAnimator.transform.position.z);
 
                 canDamage = false;
+
+                headGlowyParticle.SetActive(false);
+
+                for (int i = 0; i < armsGlowyParticles.Length; i++)
+                {
+                    armsGlowyParticles[i].SetActive(true);
+                }
 
                 enemyHead.selectedPointer.SetActive(false);
 

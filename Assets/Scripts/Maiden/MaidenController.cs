@@ -41,6 +41,13 @@ public class MaidenController : NPC //it is a children of the NPC script
 
     [SerializeField] TextMeshProUGUI levelText;
 
+    public override void StartDialogue()
+    {
+        base.StartDialogue();
+
+        GetComponent<Animator>().SetTrigger("Talk");
+    }
+
     //we override the NextLine function, the difference is that when the dialogue ends, we activate the maiden screen and do the ChangeStats() and AddingListeners()
     public override void NextLine()
     {
@@ -51,6 +58,8 @@ public class MaidenController : NPC //it is a children of the NPC script
         }
         else
         {
+            GetComponent<Animator>().SetTrigger("EndTalk");
+
             if (hasEvent)
             {
                 for (int i = 0; i < eventObjects.Length; i++)
@@ -130,6 +139,8 @@ public class MaidenController : NPC //it is a children of the NPC script
 
             GameManager.Instance.FulguriteNeeded();
 
+            GetComponent<Animator>().SetTrigger("LevelUp");
+
             ChangeStats();
         }
     }
@@ -145,6 +156,8 @@ public class MaidenController : NPC //it is a children of the NPC script
 
             GameManager.Instance.FulguriteNeeded();
 
+            GetComponent<Animator>().SetTrigger("LevelUp");
+
             ChangeStats();
         }
     }
@@ -158,6 +171,8 @@ public class MaidenController : NPC //it is a children of the NPC script
             GameManager.Instance.fulguriteValue -= GameManager.Instance.fulguriteToLevel;
 
             GameManager.Instance.FulguriteNeeded();
+
+            GetComponent<Animator>().SetTrigger("LevelUp");
 
             ChangeStats();
         }
@@ -174,6 +189,8 @@ public class MaidenController : NPC //it is a children of the NPC script
 
             GameManager.Instance.FulguriteNeeded();
 
+            GetComponent<Animator>().SetTrigger("LevelUp");
+
             ChangeStats();
         }
     }
@@ -188,6 +205,8 @@ public class MaidenController : NPC //it is a children of the NPC script
 
             GameManager.Instance.FulguriteNeeded();
 
+            GetComponent<Animator>().SetTrigger("LevelUp");
+
             ChangeStats();
         }
     }
@@ -199,7 +218,8 @@ public class MaidenController : NPC //it is a children of the NPC script
         {
             if (cameras[i].name != "FocusCamera")
             {
-                cameras[i].GetComponent<CinemachineFreeLook>().enabled = true;
+                cameras[i].GetComponent<CinemachineFreeLook>().m_YAxis.m_MaxSpeed = 2;
+                cameras[i].GetComponent<CinemachineFreeLook>().m_XAxis.m_MaxSpeed = 300;
                 cameras[i].SetActive(true);
             }
             else

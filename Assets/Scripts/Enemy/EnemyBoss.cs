@@ -7,6 +7,8 @@ public class EnemyBoss : MonoBehaviour
 {
     BossEnemyManager bossEnemyManager;
 
+    [SerializeField] GameObject glowyParticle;
+
     public GameObject selectedPointer;
 
     [Header("States")]
@@ -19,9 +21,22 @@ public class EnemyBoss : MonoBehaviour
 
     private void Awake()
     {
+        if (isArm)
+        {
+            glowyParticle.SetActive(true);
+        }
+
         bossEnemyManager = GetComponentInParent<BossEnemyManager>();
 
         playerCombat = FindObjectOfType<CombatController>();
+    }
+
+    private void Update()
+    {
+        if (bossEnemyManager.canDamage && isArm)
+        {
+            glowyParticle.SetActive(false);
+        }
     }
 
     public bool IsAttackable()
@@ -47,6 +62,8 @@ public class EnemyBoss : MonoBehaviour
             if (bossEnemyManager.hitsOnArm - 1 == 0)
             {
                 bossEnemyManager.hitsOnArm = 0;
+
+                glowyParticle.SetActive(false);
 
                 selectedPointer.SetActive(false);
 
@@ -75,7 +92,11 @@ public class EnemyBoss : MonoBehaviour
     {
         isStunned = true;
 
+        glowyParticle.SetActive(false);
+
         yield return new WaitForSeconds(2.5f);
+
+        glowyParticle.SetActive(true);
 
         isStunned = false;
 

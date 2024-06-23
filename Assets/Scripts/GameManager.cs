@@ -12,6 +12,9 @@ public class GameManager : MonoBehaviour
     //this bool controls either if the player can or cannot control
     public bool isControlable;
 
+    [Header("Tutorial Bools")]
+    public bool canUseAbilities;
+
     [Header("Player Stats")]
     public float hpValue;
 
@@ -311,6 +314,8 @@ public class GameManager : MonoBehaviour
     public void AddDamage(int damageToAdd)
     {
         dmgValue += damageToAdd;
+
+        FindObjectOfType<CombatController>().damage = dmgValue;
 
         level++;
 

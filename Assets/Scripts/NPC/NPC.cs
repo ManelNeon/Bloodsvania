@@ -45,13 +45,14 @@ public class NPC : MonoBehaviour
     }
 
     //function that starts the dialogue, is called when raycasted
-    public void StartDialogue()
+    public virtual void StartDialogue()
     {
         for (int i = 0; i < cameras.Length; i++)
         {
             if (cameras[i].name != "FocusCamera")
             {
-                cameras[i].GetComponent<CinemachineFreeLook>().enabled = false;
+                cameras[i].GetComponent<CinemachineFreeLook>().m_YAxis.m_MaxSpeed = 0;
+                cameras[i].GetComponent<CinemachineFreeLook>().m_XAxis.m_MaxSpeed = 0;
                 cameras[i].SetActive(false);
             }
             else
@@ -116,7 +117,8 @@ public class NPC : MonoBehaviour
             {
                 if (cameras[i].name != "FocusCamera")
                 {
-                    cameras[i].GetComponent<CinemachineFreeLook>().enabled = true;
+                    cameras[i].GetComponent<CinemachineFreeLook>().m_YAxis.m_MaxSpeed = 2;
+                    cameras[i].GetComponent<CinemachineFreeLook>().m_XAxis.m_MaxSpeed = 300;
                     cameras[i].SetActive(true);
                 }
                 else

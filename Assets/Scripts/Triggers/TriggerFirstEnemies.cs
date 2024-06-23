@@ -8,6 +8,8 @@ public class TriggerFirstEnemies : MonoBehaviour
 
     [SerializeField] GameObject doorIn;
 
+    [SerializeField] GameObject firstTimeFightingBabyAreYouWarning; //help me
+
     [SerializeField] GameObject[] lights;
 
     bool hasPlayed;
@@ -46,6 +48,8 @@ public class TriggerFirstEnemies : MonoBehaviour
         enemyGroup1.SetActive(true);
 
         yield return new WaitForSeconds(1.7f);
+
+        firstTimeFightingBabyAreYouWarning.SetActive(true);
 
         playerPosition.GetComponent<CharacterController>().enabled = true;
 

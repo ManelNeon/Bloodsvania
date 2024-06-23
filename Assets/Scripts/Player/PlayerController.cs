@@ -86,7 +86,7 @@ public class PlayerController : MonoBehaviour
             //SFXManager.Instance.PlayFootstep();
         }
 
-        if (Input.GetKeyDown(KeyManager.Instance.dashKey) && !isDashing && direction.magnitude != 0 && isGrounded)
+        if (Input.GetKeyDown(KeyManager.Instance.dashKey) && !isDashing && direction.magnitude != 0 && isGrounded && GameManager.Instance.canUseAbilities)
         {
             isDashing = true;
 

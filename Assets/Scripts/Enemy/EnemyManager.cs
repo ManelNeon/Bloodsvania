@@ -12,6 +12,10 @@ public class EnemyManager : MonoBehaviour
 
     [SerializeField] bool hasFade;
 
+    [SerializeField] bool isFirstTimeEndingAFightIsItNow; //I have now turned to anger
+
+    [SerializeField] GameObject learnToPlayStupidKidUseRAGE; //my sleep depravation is not helping
+
     [Header("Enemy Listing")]
     [SerializeField] EnemyController[] enemies;     //the array with the enemies
 
@@ -146,6 +150,17 @@ public class EnemyManager : MonoBehaviour
                 FadeManager.Instance.StartFadeOutAndIn(0);
 
                 yield return new WaitForSeconds(1.7f);
+
+                if (isFirstTimeEndingAFightIsItNow)
+                {
+                    learnToPlayStupidKidUseRAGE.SetActive(true);
+
+                    Cursor.lockState = CursorLockMode.None;
+
+                    Cursor.visible = true;
+
+                    Time.timeScale = 0;
+                }
             }
 
             for (int i = 0; i < eventObject.Length; i++)
