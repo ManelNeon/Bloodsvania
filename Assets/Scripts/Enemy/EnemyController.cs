@@ -42,6 +42,8 @@ public class EnemyController : MonoBehaviour
 
     public bool isDead;
 
+    bool isAttacking;
+
     void Awake()
     {
         enemyAnimator = GetComponent<Animator>();
@@ -87,7 +89,7 @@ public class EnemyController : MonoBehaviour
         {
             moveDirection = -Vector3.forward;
         }
-        
+
         //we set the ismoving to true, because the enemy is moving
         isMoving = true;
     }
@@ -111,7 +113,12 @@ public class EnemyController : MonoBehaviour
 
             //Only moves if the direction is set
             MoveEnemy(moveDirection);
-        }   
+        }
+
+        this.transform.eulerAngles = new Vector3(-90f, this.transform.eulerAngles.y, this.transform.eulerAngles.z);
+
+        this.transform.position = new Vector3(this.transform.position.x, 0.06f, this.transform.position.z);
+
     }
 
     void MoveEnemy(Vector3 direction)
@@ -136,8 +143,13 @@ public class EnemyController : MonoBehaviour
             moveSpeed = 2;
         }
 
+        if (isAttacking)
+        {
+            moveSpeed = 8;
+        }
+
         //Set Animator values
-        enemyAnimator.SetFloat("InputMagnitude", (enemyCharacterController.velocity.normalized.magnitude * direction.z) / (5 / moveSpeed), .2f, Time.deltaTime);
+        enemyAnimator.SetFloat("InputMagnitude", direction.z * moveSpeed, .2f, Time.deltaTime);
 
         enemyAnimator.SetBool("Strafe", (direction == Vector3.right || direction == Vector3.left));
 
@@ -187,23 +199,16 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
-        if (Vector3.Distance(transform.position, playerCombat.transform.position) < 2) //we check if the enemy is close to the player, if he is we then
+        if (Vector3.Distance(transform.position, playerCombat.transform.position) < 8) //we check if the enemy is close to the player, if he is we then
         {
             //activate the counter
             Counter(true);
-
-            //deactivate the ismoving
-            isMoving = false;
 
             //if the player isnt countering, we attack
             if (!playerCombat.isCountering)
             {
                 Attack();
             }
-        }
-        else
-        {
-            isMoving = true;
         }
     }
 
@@ -225,9 +230,16 @@ public class EnemyController : MonoBehaviour
     //the attack function, where we move the enemy towards the player and we set the airpunch trigger where we start the animation
     private void Attack()
     {
-        transform.DOMove(transform.position + (transform.forward / 1), .5f);
+        //transform.DOLocalMove(transform.position + (transform.forward / 1), .5f);
 
-        enemyAnimator.SetTrigger("AirPunch");
+        //transform.DOMove(transform.position + (transform.forward / 1), .5f);
+
+        if (!isAttacking)
+        {
+            enemyAnimator.SetTrigger("AirPunch");
+
+            isAttacking = true;
+        }
     }
 
     //in this function the player takes damage
@@ -299,6 +311,8 @@ public class EnemyController : MonoBehaviour
     {
         isStunned = true;
 
+        isAttacking = false;
+
         isPreparingAttack = false;
 
         isMoving = false;
@@ -330,11 +344,15 @@ public class EnemyController : MonoBehaviour
     //the event that plays when the enemy makes contact with the player when attacking
     public void AttackEvent()
     {
+        isMoving = false;
+
+        isAttacking = false;
+
         Counter(false);
 
         float random = Random.Range(20,30);
 
-        if (Vector3.Distance(transform.position, playerCombat.transform.position) < 1)
+        if (Vector3.Distance(transform.position, playerCombat.transform.position) < 3)
         {
             playerCombat.TakeDamage(random);
         }
@@ -345,6 +363,8 @@ public class EnemyController : MonoBehaviour
     //event that plays when the enemy finishes the attacking animation
     public void AttackEndEvent()
     {
+        Debug.Log("XX");
+
         Retreating();
     }
 

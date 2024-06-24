@@ -20,7 +20,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: e4f59111b92be50468e8fd8517f1d843, type: 2}
+  m_Motion: {fileID: 7400000, guid: 5a7d3b9f63635ef43ab9d5b57e150d6d, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -35,8 +35,8 @@ BlendTree:
   m_Name: Blend Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 7f5a891afe204d84981806ef73f18acd, type: 2}
-    m_Threshold: -0.25
+    m_Motion: {fileID: 7400000, guid: ce71b45a40688ce4994470a3ece7254f, type: 2}
+    m_Threshold: -0.01
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
@@ -51,8 +51,8 @@ BlendTree:
     m_DirectBlendParameter: InputMagnitude
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 849f4020d59a4c041a1d3fb7de723464, type: 2}
-    m_Threshold: 0.25
+    m_Motion: {fileID: 7400000, guid: 5820b324742fde748b8beabebd75cb97, type: 2}
+    m_Threshold: 0.01
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
@@ -60,8 +60,8 @@ BlendTree:
     m_Mirror: 0
   m_BlendParameter: InputMagnitude
   m_BlendParameterY: Blend
-  m_MinThreshold: -0.25
-  m_MaxThreshold: 0.25
+  m_MinThreshold: -0.01
+  m_MaxThreshold: 0.01
   m_UseAutomaticThresholds: 0
   m_NormalizedBlendValues: 0
   m_BlendType: 0
@@ -113,7 +113,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: a72d77599e78ab04c9e2e7509c023937, type: 2}
+  m_Motion: {fileID: 7400000, guid: 713b628443fac064db6cb9d23172039e, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -198,7 +198,7 @@ BlendTree:
     m_DirectBlendParameter: InputMagnitude
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 0db66a6b2baf16946af3102a9143bc25, type: 2}
+    m_Motion: {fileID: 7400000, guid: dc346d2f802657d4b801433fdd445343, type: 2}
     m_Threshold: 1
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -277,7 +277,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: df83813511ae044489b016a41aa5f66f, type: 2}
+  m_Motion: {fileID: 7400000, guid: 9a9e2c98ab0527c4cb55fc8ced85e35b, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -433,7 +433,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: WalkBlend
-  m_Speed: 1
+  m_Speed: 1.5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 358564140928662612}
