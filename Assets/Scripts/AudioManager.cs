@@ -76,18 +76,18 @@ public class AudioManager : MonoBehaviour
 
     public void PlayMusic(AudioClip musicClip, bool willFade)
     {
-        if (musicClip == null)
-        {
-            musicAudioSource.clip = null;
-            return;
-        }
-
         if (willFade)
         {
             StartCoroutine(FadingMusic(musicClip));
         }
         else
         {
+            if (musicClip == null)
+            {
+                musicAudioSource.clip = null;
+                return;
+            }
+
             musicAudioSource.clip = musicClip;
 
             musicAudioSource.Play();
@@ -105,6 +105,11 @@ public class AudioManager : MonoBehaviour
         musicAudioSource.volume = 1;
 
         musicAudioSource.clip = musicClip;
+
+        if (musicClip == null)
+        {
+            yield break;
+        }
 
         musicAudioSource.Play();
 

@@ -44,6 +44,8 @@ public class InteractableFulgurite : NPC
             isPlaying = false;
 
             GameObject.Find("Player").GetComponent<PlayerController>().enabled = true;
+
+            gameObject.SetActive(false);
         }
     }
 }

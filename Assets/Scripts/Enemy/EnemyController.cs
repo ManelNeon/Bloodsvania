@@ -16,16 +16,18 @@ public class EnemyController : MonoBehaviour
     [Header("Particles Objects")]
     [SerializeField] GameObject selectedArrowParticle;
 
+    [SerializeField] GameObject fKeyParticle;
+
     [SerializeField] GameObject counterParticle;
 
     [Header("References to other scritps")]
-    EnemyManager enemyManager;
+    [HideInInspector] public EnemyManager enemyManager;
 
     CharacterController enemyCharacterController;
 
     CombatController playerCombat;
 
-    Animator enemyAnimator;
+    [HideInInspector] public Animator enemyAnimator;
 
     [Header("States")]
     public bool isMoving;
@@ -34,7 +36,7 @@ public class EnemyController : MonoBehaviour
 
     public bool isRetreating;
 
-    public bool isLockedTarget;
+    bool isBeingFinished;
 
     public bool isStunned;
 
@@ -44,8 +46,21 @@ public class EnemyController : MonoBehaviour
 
     bool isAttacking;
 
+    float heightValue;
+
+    public void FinishHim()
+    {
+        isBeingFinished = true;
+
+        TakeDamage(9999999999999);
+
+        enemyAnimator.Play("Finisher");
+    }
+
     void Awake()
     {
+        heightValue = transform.position.y;
+
         enemyAnimator = GetComponent<Animator>();
 
         enemyCharacterController = GetComponent<CharacterController>();
@@ -105,7 +120,7 @@ public class EnemyController : MonoBehaviour
                 selectedArrowParticle.SetActive(false);
             }
 
-            if (!isWaiting)
+            if (!isWaiting && !isBeingFinished)
             {
                 //Constantly look at player
                 transform.LookAt(new Vector3(playerCombat.transform.position.x, transform.position.y, playerCombat.transform.position.z));
@@ -117,13 +132,13 @@ public class EnemyController : MonoBehaviour
 
         this.transform.eulerAngles = new Vector3(-90f, this.transform.eulerAngles.y, this.transform.eulerAngles.z);
 
-        this.transform.position = new Vector3(this.transform.position.x, 0.06f, this.transform.position.z);
+        this.transform.position = new Vector3(this.transform.position.x, heightValue, this.transform.position.z);
 
     }
 
     void MoveEnemy(Vector3 direction)
     {
-        if (isWaiting)
+        if (isWaiting || isBeingFinished)
         {
             enemyAnimator.SetFloat("InputMagnitude", 0);
 
@@ -230,11 +245,7 @@ public class EnemyController : MonoBehaviour
     //the attack function, where we move the enemy towards the player and we set the airpunch trigger where we start the animation
     private void Attack()
     {
-        //transform.DOLocalMove(transform.position + (transform.forward / 1), .5f);
-
-        //transform.DOMove(transform.position + (transform.forward / 1), .5f);
-
-        if (!isAttacking)
+        if (!isAttacking && !isBeingFinished && !playerCombat.isFinishing)
         {
             enemyAnimator.SetTrigger("AirPunch");
 
@@ -259,8 +270,11 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
-            //we play the death animation and then we set a timer to destroy the object
-            enemyAnimator.Play("Death");
+            if (!isBeingFinished)
+            {
+                //we play the death animation and then we set a timer to destroy the object
+                enemyAnimator.Play("Death");
+            }
 
             currentHealth -= damage;
 
@@ -303,6 +317,8 @@ public class EnemyController : MonoBehaviour
     //if no longet selected, we then set the arrow particle to false (function so that the player can access it)
     public void NoLongerSelected()
     {
+        fKeyParticle.SetActive(false);
+
         selectedArrowParticle.SetActive(false);
     }
 
@@ -333,7 +349,16 @@ public class EnemyController : MonoBehaviour
     {
         if (currentHealth > 0 && !isWaiting)
         {
-            selectedArrowParticle.SetActive(true);
+            if (playerCombat.isOnRage)
+            {
+                selectedArrowParticle.SetActive(false);
+
+                fKeyParticle.SetActive(true);
+            }
+            else
+            {
+                selectedArrowParticle.SetActive(true);
+            }
 
             return true;
         }
@@ -352,7 +377,7 @@ public class EnemyController : MonoBehaviour
 
         float random = Random.Range(20,30);
 
-        if (Vector3.Distance(transform.position, playerCombat.transform.position) < 3)
+        if (Vector3.Distance(transform.position, playerCombat.transform.position) < 4 && !playerCombat.isFinishing && !playerCombat.isCountering)
         {
             playerCombat.TakeDamage(random);
         }
@@ -363,8 +388,6 @@ public class EnemyController : MonoBehaviour
     //event that plays when the enemy finishes the attacking animation
     public void AttackEndEvent()
     {
-        Debug.Log("XX");
-
         Retreating();
     }
 
@@ -394,7 +417,7 @@ public class EnemyController : MonoBehaviour
     //coroutine to stop the AI from retreating and then starting the AI again
     IEnumerator StopRetreating()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(3f);
 
         isRetreating = false;
 

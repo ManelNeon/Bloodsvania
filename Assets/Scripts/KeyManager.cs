@@ -18,6 +18,8 @@ public class KeyManager : MonoBehaviour
 
     public KeyCode rageModeKey;
 
+    public KeyCode finisherKey;
+
     public KeyCode healKey;
 
     public KeyCode interactKey;

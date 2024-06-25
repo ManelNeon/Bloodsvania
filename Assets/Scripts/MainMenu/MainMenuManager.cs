@@ -11,6 +11,8 @@ public class MainMenuManager : MonoBehaviour
     [Header("Canvas Groups")] //canvas groups to fade the specific parts
     [SerializeField] CanvasGroup mainMenu;
 
+    [SerializeField] CanvasGroup saveFileSelectMenu;
+
     [SerializeField] CanvasGroup options;
 
     [SerializeField] CanvasGroup background;
@@ -19,6 +21,10 @@ public class MainMenuManager : MonoBehaviour
 
     [Header("Animators")]
     [SerializeField] Animator logoAnimator;
+
+    [SerializeField] Animator creditsAnimator;
+
+    Vector3 creditsPosition;
 
     [Header("Sliders")]
     [SerializeField] Slider masterSlider;
@@ -37,6 +43,8 @@ public class MainMenuManager : MonoBehaviour
     bool isFadingBack; //bool to see if it's fading fading out
 
     bool isOptions; //bool to see if it's affecting the options
+
+    bool isSaveFile;
 
     bool isExiting; //bool to see if we're exiting the main menu to the game
 
@@ -80,17 +88,6 @@ public class MainMenuManager : MonoBehaviour
         yield break;
     }
 
-    IEnumerator Wait()
-    {
-        yield return new WaitForSeconds(.2f);
-
-        isFading = true;
-
-        isOptions = !isOptions;
-
-        yield break;
-    }
-
     private void Update()
     {
         Fades();
@@ -99,6 +96,7 @@ public class MainMenuManager : MonoBehaviour
     //All the fades
     void Fades()
     {
+        //this makes the logo disappear
         if (isChangingColor)
         {
             m_Timer -= Time.deltaTime;
@@ -111,7 +109,8 @@ public class MainMenuManager : MonoBehaviour
             }
         }
 
-        if (isFading && !isOptions)
+        //this makes the main menu appear
+        if (isFading && !isOptions && !isSaveFile)
         {
             m_Timer += Time.deltaTime;
 
@@ -125,7 +124,8 @@ public class MainMenuManager : MonoBehaviour
             }
         }
 
-        if (isFadingBack && !isOptions)
+        //this makes the main menu disappear
+        if (isFadingBack && !isOptions && !isSaveFile)
         {
             m_Timer -= Time.deltaTime;
 
@@ -135,12 +135,11 @@ public class MainMenuManager : MonoBehaviour
             {
                 isFadingBack = false;
 
-                StartCoroutine(Wait());
-
                 m_Timer = 0;
             }
         }
 
+        //this makes the options appear
         if (isFading && isOptions)
         {
             m_Timer += Time.deltaTime;
@@ -157,6 +156,7 @@ public class MainMenuManager : MonoBehaviour
             }
         }
 
+        //this makes the options appear
         if (isFadingBack && isOptions)
         {
             m_Timer -= Time.deltaTime;
@@ -169,19 +169,35 @@ public class MainMenuManager : MonoBehaviour
 
                 options.blocksRaycasts = false;
 
-                StartCoroutine(Wait());
-
                 m_Timer = 0;
             }
         }
 
+        //this makes the savefile menu appear
+        if (isFading && isSaveFile)
+        {
+            m_Timer += Time.deltaTime;
+
+            saveFileSelectMenu.alpha = m_Timer / fadeDuraction;
+
+            if (saveFileSelectMenu.alpha == 1)
+            {
+                isFading = false;
+
+                saveFileSelectMenu.blocksRaycasts = true;
+
+                m_Timer = fadeDuraction;
+            }
+        }
+
+        //this makes the savefile menu disappear
         if (isExiting)
         {
             m_Timer -= Time.deltaTime;
 
-            mainMenu.alpha = m_Timer / fadeDuraction;
-
-            if (mainMenu.alpha == 0)
+            saveFileSelectMenu.alpha = m_Timer / fadeDuraction;
+            
+            if (saveFileSelectMenu.alpha == 0)
             {
                 isExiting = false;
 
@@ -191,26 +207,15 @@ public class MainMenuManager : MonoBehaviour
     }
 
     //when clicking on the play button we play this
-    IEnumerator Playing(int code)
+    IEnumerator Playing()
     {
         m_Timer = fadeDuraction;
 
         isExiting = true;
 
-        yield return new WaitForSeconds(fadeDuraction);
+        yield return new WaitForSeconds(fadeDuraction + .5f);
 
-        if (code == 0)
-        {
-            SceneManager.LoadScene("Blocking");
-        }
-        else if (code == 1) 
-        {
-            SceneManager.LoadScene("SampleScene");
-        }
-        else if (code == 2)
-        {
-            SceneManager.LoadScene("BossFight");
-        }
+        SceneManager.LoadScene("Blocking");
 
         yield break;
     }
@@ -221,29 +226,17 @@ public class MainMenuManager : MonoBehaviour
         if (!isFading && !isFadingBack && mainMenu.alpha == 1)
         {
             AudioManager.Instance.PlaySFX(AudioManager.Instance.buttonSound);
-            AudioManager.Instance.PlayMusic(AudioManager.Instance.inGameMusic, true);
-            StartCoroutine(Playing(0));
+            StartCoroutine(WaitSaveSelect());
         }
     }
 
-    //function when clicking the combat demo button
-    public void ButtonPlayTechDemo()
+    public void ButtonPlayGame()
     {
-        if (!isFading && !isFadingBack && mainMenu.alpha == 1)
+        if (!isFading && !isFadingBack && saveFileSelectMenu.alpha == 1)
         {
             AudioManager.Instance.PlaySFX(AudioManager.Instance.buttonSound);
             AudioManager.Instance.PlayMusic(AudioManager.Instance.inGameMusic, true);
-            StartCoroutine(Playing(1));
-        }
-    }
-
-    public void ButtonPlayBossFight()
-    {
-        if (!isFading && !isFadingBack && mainMenu.alpha == 1)
-        {
-            AudioManager.Instance.PlaySFX(AudioManager.Instance.buttonSound);
-            AudioManager.Instance.PlayMusic(null, false);
-            StartCoroutine(Playing(2));
+            StartCoroutine(Playing());
         }
     }
 
@@ -253,6 +246,8 @@ public class MainMenuManager : MonoBehaviour
         if (!isFading && !isFadingBack && mainMenu.alpha == 1)
         {
             AudioManager.Instance.PlaySFX(AudioManager.Instance.buttonSound);
+
+            StartCoroutine(WaitOptions());
 
             float temporary = 0;
 
@@ -279,19 +274,6 @@ public class MainMenuManager : MonoBehaviour
             temporary = Mathf.Pow(10, temporary);
 
             sfxSlider.value = temporary;
-
-            isFadingBack = true;
-        }
-    }
-
-    //functionw hen playing the exit game button
-    public void ButtonExitGame()
-    {
-        if (!isFading && !isFadingBack && mainMenu.alpha == 1)
-        {
-            //UnityEditor.EditorApplication.isPlaying = false;
-
-            Application.Quit();
         }
     }
 
@@ -302,7 +284,62 @@ public class MainMenuManager : MonoBehaviour
         {
             AudioManager.Instance.PlaySFX(AudioManager.Instance.buttonSound);
 
-            isFadingBack = true;
+            StartCoroutine(WaitOptions());
+        }
+    }
+
+    IEnumerator WaitOptions()
+    {
+        isFadingBack = true;
+
+        yield return new WaitForSeconds(fadeDuraction + .2f);
+
+        isOptions = !isOptions;
+
+        isFading = true;
+
+        yield break;
+    }
+
+    IEnumerator WaitSaveSelect()
+    {
+        isFadingBack = true;
+
+        yield return new WaitForSeconds(fadeDuraction + .2f);
+
+        isSaveFile = !isSaveFile;
+
+        isFading = true;
+
+        yield break;
+    }
+
+    public void ButtonCredits()
+    {
+        isFadingBack = true;
+
+        StartCoroutine(WaitCredits());
+    }
+
+    IEnumerator WaitCredits()
+    {
+        yield return new WaitForSeconds(fadeDuraction + .4f);
+
+        creditsAnimator.Play("Credits");
+
+        yield return new WaitForSeconds(20);
+
+        isFading = true;
+    }
+
+    //functionw hen playing the exit game button
+    public void ButtonExitGame()
+    {
+        if (!isFading && !isFadingBack && mainMenu.alpha == 1)
+        {
+            //UnityEditor.EditorApplication.isPlaying = false;
+
+            Application.Quit();
         }
     }
 

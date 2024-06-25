@@ -133,11 +133,9 @@ public class MaidenController : NPC //it is a children of the NPC script
     {
         if (GameManager.Instance.fulguriteValue > GameManager.Instance.fulguriteToLevel)
         {
-            GameManager.Instance.AddHealth(25);
-
             GameManager.Instance.fulguriteValue -= GameManager.Instance.fulguriteToLevel;
 
-            GameManager.Instance.FulguriteNeeded();
+            GameManager.Instance.AddHealth(25);
 
             GetComponent<Animator>().SetTrigger("LevelUp");
 
@@ -150,11 +148,9 @@ public class MaidenController : NPC //it is a children of the NPC script
     {
         if (GameManager.Instance.fulguriteValue > GameManager.Instance.fulguriteToLevel)
         {
-            GameManager.Instance.AddBlood(10);
-
             GameManager.Instance.fulguriteValue -= GameManager.Instance.fulguriteToLevel;
 
-            GameManager.Instance.FulguriteNeeded();
+            GameManager.Instance.AddBlood(10);
 
             GetComponent<Animator>().SetTrigger("LevelUp");
 
@@ -166,11 +162,9 @@ public class MaidenController : NPC //it is a children of the NPC script
     {
         if (GameManager.Instance.fulguriteValue > GameManager.Instance.fulguriteToLevel)
         {
-            GameManager.Instance.AddDamage(25);
-
             GameManager.Instance.fulguriteValue -= GameManager.Instance.fulguriteToLevel;
 
-            GameManager.Instance.FulguriteNeeded();
+            GameManager.Instance.AddDamage(25);
 
             GetComponent<Animator>().SetTrigger("LevelUp");
 
@@ -183,11 +177,9 @@ public class MaidenController : NPC //it is a children of the NPC script
     {
         if (GameManager.Instance.fulguriteValue > GameManager.Instance.fulguriteToLevel)
         {
-            GameManager.Instance.AddComposition(1);
-
             GameManager.Instance.fulguriteValue -= GameManager.Instance.fulguriteToLevel;
 
-            GameManager.Instance.FulguriteNeeded();
+            GameManager.Instance.AddComposition(1);
 
             GetComponent<Animator>().SetTrigger("LevelUp");
 
@@ -199,11 +191,9 @@ public class MaidenController : NPC //it is a children of the NPC script
     {
         if (GameManager.Instance.fulguriteValue > GameManager.Instance.fulguriteToLevel)
         {
-            GameManager.Instance.AddReflex(5);
-
             GameManager.Instance.fulguriteValue -= GameManager.Instance.fulguriteToLevel;
 
-            GameManager.Instance.FulguriteNeeded();
+            GameManager.Instance.AddReflex(5);
 
             GetComponent<Animator>().SetTrigger("LevelUp");
 

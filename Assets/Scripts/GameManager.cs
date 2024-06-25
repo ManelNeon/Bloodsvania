@@ -92,9 +92,9 @@ public class GameManager : MonoBehaviour
         isControlable = true;
 
         //deactivate before build
-        healthBarMaskWidth = healthBarMaskTransform.sizeDelta.x;
+        //healthBarMaskWidth = healthBarMaskTransform.sizeDelta.x;
 
-        rageBarMaskWidth = rageBarMaskTransform.sizeDelta.x;
+        //rageBarMaskWidth = rageBarMaskTransform.sizeDelta.x;
     }
 
     // Update is called once per frame
@@ -165,6 +165,8 @@ public class GameManager : MonoBehaviour
 
         currentRage = bloodValue;
 
+        fulguriteSlot.text = fulguriteValue.ToString();
+
         healthBarMaskWidth = healthBarMaskTransform.sizeDelta.x;
 
         rageBarMaskWidth = rageBarMaskTransform.sizeDelta.x;
@@ -199,6 +201,8 @@ public class GameManager : MonoBehaviour
 
     public void ChangeUI()
     {
+        fulguriteSlot.text = fulguriteValue.ToString();
+
         healthBarMaskTransform.sizeDelta = new Vector2(healthBarMaskWidth, healthBarMaskTransform.sizeDelta.y);
 
         healthBarSprite.rectTransform.sizeDelta = new Vector2(healthBarMaskWidth, healthBarMaskTransform.sizeDelta.y);

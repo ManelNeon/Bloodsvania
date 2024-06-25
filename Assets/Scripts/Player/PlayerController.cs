@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] float dashTime;
 
-    bool isDashing;
+    [HideInInspector] public bool isDashing;
 
     [Header("Rotation and Movement Hidden Variables")]
     float turnSmoothVelocity;
@@ -96,8 +96,6 @@ public class PlayerController : MonoBehaviour
 
             moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
 
-            playerAnimator.SetBool("isRolling", true);
-
             playerAnimator.Play("Roll");
 
             StartCoroutine(Dash());
@@ -119,8 +117,6 @@ public class PlayerController : MonoBehaviour
 
         yield return new WaitForSeconds(.5f);
 
-        playerAnimator.SetBool("isRolling", false);
-
         isDashing = false;
     }
 
@@ -135,6 +131,8 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyManager.Instance.jumpKey) && isGrounded && GameManager.Instance.isControlable && !isDashing)
         {
+            playerAnimator.Play("Salto");
+
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
 

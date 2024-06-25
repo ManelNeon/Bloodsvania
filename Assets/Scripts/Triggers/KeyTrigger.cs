@@ -1,24 +1,76 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KeyTrigger : MonoBehaviour
+public class KeyTrigger : NPC
 {
     [SerializeField] Transform teleportPosition;
 
     [SerializeField] GameObject[] lights;
 
-    private void OnTriggerEnter(Collider other)
+    public override void NextLine()
     {
-        if (other.CompareTag("Player"))
+        if (index < dialogues.Length - 1)
         {
+            index++;
+            displayText.text = dialogues[index];
+        }
+        else
+        {
+            if (hasEvent)
+            {
+                if (isFading)
+                {
+                    FadeManager.Instance.StartFadeOutAndIn(0);
+
+                    if (isMother)
+                    {
+                        GetComponentInParent<MotherEvent>().StartMotherEvent();
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < eventObjects.Length; i++)
+                    {
+                        eventObjects[i].SetActive(!eventObjects[i].activeInHierarchy);
+                    }
+
+                    hasEvent = false;
+                }
+            }
+
+            for (int i = 0; i < cameras.Length; i++)
+            {
+                if (cameras[i].name != "FocusCamera")
+                {
+                    cameras[i].GetComponent<CinemachineFreeLook>().m_YAxis.m_MaxSpeed = 2;
+                    cameras[i].GetComponent<CinemachineFreeLook>().m_XAxis.m_MaxSpeed = 300;
+                    cameras[i].SetActive(true);
+                }
+                else
+                {
+                    cameras[i].SetActive(false);
+                }
+
+            }
+
             GameManager.Instance.isControlable = false;
+
+            GameObject other = GameObject.Find("Player");
 
             other.GetComponent<PlayerController>().direction = Vector3.zero;
 
             FadeManager.Instance.StartFadeOutAndIn(0);
 
-            StartCoroutine(Sequence(other.gameObject));
+            StartCoroutine(Sequence(other));
+
+            npcTextBox.SetActive(false);
+
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+
+            isPlaying = false;
         }
     }
 

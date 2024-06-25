@@ -45,12 +45,12 @@ public class FadeManager : MonoBehaviour
         m_Timer = fadeDuraction;
 
         //activate before build
-        //GameManager.Instance.FindHUD();
+        GameManager.Instance.FindHUD();
 
         if (resetStats)
         {
             //activate before build
-            //GameManager.Instance.ResetStats();
+            GameManager.Instance.ResetStats();
         }
         else
         {

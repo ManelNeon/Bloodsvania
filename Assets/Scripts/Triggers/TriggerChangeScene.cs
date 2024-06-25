@@ -19,9 +19,13 @@ public class TriggerChangeScene : MonoBehaviour
 
     IEnumerator ChangeSceneTrigger()
     {
+        AudioManager.Instance.PlayMusic(null, true);
+
         FadeManager.Instance.StartFadeOut();
 
         yield return new WaitForSeconds(1.5f);
+
+        GameManager.Instance.isControlable = true;
 
         SceneManager.LoadScene("BossFight");
 

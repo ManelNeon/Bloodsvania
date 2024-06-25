@@ -25,7 +25,7 @@ public class BossEnemyManager : MonoBehaviour
 
     [SerializeField] Transform playerPosition;
 
-    [SerializeField] Animator bossAnimator;
+    [SerializeField] GameObject bossModel;
 
     [Header("Boss Bar")]
     [SerializeField] RectTransform healthBarMaskTransform;
@@ -123,7 +123,7 @@ public class BossEnemyManager : MonoBehaviour
             {
                 hasAttacked = true;
 
-                bossAnimator.SetTrigger("BreathAttack");
+                //bossAnimator.SetTrigger("BreathAttack");
 
                 Instantiate(firebreathPrefab, fireballSpawnPoint);
             }
@@ -189,11 +189,11 @@ public class BossEnemyManager : MonoBehaviour
             {
                 headGlowyParticle.SetActive(true);
 
-                bossAnimator.transform.position = new Vector3(bossAnimator.transform.position.x, bossAnimator.transform.position.y - 2, bossAnimator.transform.position.z);
+                bossModel.transform.position = new Vector3(bossModel.transform.position.x, bossModel.transform.position.y - 2.6f, bossModel.transform.position.z);
 
                 yield return new WaitForSeconds(4);
 
-                bossAnimator.transform.position = new Vector3(bossAnimator.transform.position.x, this.transform.position.y, bossAnimator.transform.position.z);
+                bossModel.transform.position = new Vector3(bossModel.transform.position.x, this.transform.position.y, bossModel.transform.position.z);
 
                 canDamage = false;
 
@@ -221,7 +221,7 @@ public class BossEnemyManager : MonoBehaviour
         {
             if (currentHP - damage > 0)
             {
-                bossAnimator.SetTrigger("Hit");
+                //bossAnimator.SetTrigger("Hit");
 
                 currentHP -= damage;
 
@@ -239,9 +239,9 @@ public class BossEnemyManager : MonoBehaviour
 
                 playerCombat.bossTarget = null;
 
-                bossAnimator.transform.position = new Vector3(bossAnimator.transform.position.x, this.transform.position.y, bossAnimator.transform.position.z);
+                bossModel.transform.position = new Vector3(bossModel.transform.position.x, this.transform.position.y, bossModel.transform.position.z);
 
-                bossAnimator.SetTrigger("Die");
+                //bossAnimator.SetTrigger("Die");
 
                 ChangingHPUI();
 

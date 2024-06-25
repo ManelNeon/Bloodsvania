@@ -33,6 +33,8 @@ public class CombatController : MonoBehaviour
 
     [HideInInspector] public bool isFightingBoss;
 
+    [HideInInspector] public bool isFinishing;
+
     [Header("References")]
     [SerializeField] ParticleSystem healParticles;
 
@@ -57,7 +59,7 @@ public class CombatController : MonoBehaviour
         movespeed = playerController.speed;
         
         //activate BEFORE building
-        //damage = GameManager.Instance.dmgValue;
+        damage = GameManager.Instance.dmgValue;
 
         canAttack = true;
 
@@ -128,11 +130,57 @@ public class CombatController : MonoBehaviour
         isOnRage = false;
     }
 
+    IEnumerator FinisherCoroutine()
+    {
+        yield return new WaitForSeconds(3.8f);
+
+        playerController.enabled = true;
+
+        isFinishing = false;
+
+        yield break;
+    }
+
     // Update is called once per frame
     void Update()
     {
         if (GameManager.Instance.isControlable)
         {
+            if (Input.GetKey(KeyManager.Instance.finisherKey) && isOnRage)
+            {
+                if (currentTarget == null || Vector3.Distance(currentTarget.transform.position, this.transform.position) > 5)
+                {
+                    return;
+                }
+
+                isOnRage = false;
+
+                isFinishing = true;
+
+                transform.DOLookAt(currentTarget.transform.position, .2f);
+                transform.DOMove(TargetOffset(currentTarget.transform), .2f);
+
+                playerController.enabled = false;
+
+                currentTarget.FinishHim();
+
+                playerAnimator.Play("Finisher");
+
+                rageVignette.SetActive(false);
+
+                GameManager.Instance.dmgValue = damage;
+
+                playerController.speed = movespeed;
+
+                GameManager.Instance.currentRage = 0;
+
+                playerAnimator.SetFloat("Multiplier", 1);
+
+                isOnRage = false;
+
+                StartCoroutine(FinisherCoroutine());
+            }
+
             //if the player left clicks and if he has a current target
             if (Input.GetKeyDown(KeyManager.Instance.attackKey) && canAttack && isFighting && !isFightingBoss)
             {
@@ -149,7 +197,7 @@ public class CombatController : MonoBehaviour
 
                 GetComponent<CharacterController>().enabled = false;
 
-                playerAnimator.Play("SecondAttack");
+                playerAnimator.Play("Attack");
 
                 //the player cant attack now
                 canAttack = false;
@@ -172,7 +220,7 @@ public class CombatController : MonoBehaviour
 
                 GetComponent<CharacterController>().enabled = false;
 
-                playerAnimator.Play("SecondAttack");
+                playerAnimator.Play("Attack");
 
                 //the player cant attack now
                 canAttack = false;
@@ -301,7 +349,7 @@ public class CombatController : MonoBehaviour
     {
         AudioManager.Instance.PlaySFX(AudioManager.Instance.punchSound);
 
-        GameManager.Instance.GainRage(Random.Range(10, 20));
+        GameManager.Instance.GainRage(Random.Range(5, 10));
 
         if (isCountering)
         {
@@ -359,6 +407,11 @@ public class CombatController : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        if (playerController.isDashing)
+        {
+            return;
+        }
+
         //we play the punch sfx
         AudioManager.Instance.PlaySFX(AudioManager.Instance.punchedSound);
 
@@ -381,7 +434,7 @@ public class CombatController : MonoBehaviour
             isOnRage = false;
         }
 
-        GameManager.Instance.GainRage(Random.Range(10,20));
+        GameManager.Instance.GainRage(Random.Range(5,10));
 
         if (GameManager.Instance.currentHP - damageCalculated > 0)
         {
