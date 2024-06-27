@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.Audio;
+using System;
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -24,7 +25,16 @@ public class MainMenuManager : MonoBehaviour
 
     [SerializeField] Animator creditsAnimator;
 
-    Vector3 creditsPosition;
+    [Header("Options Menus")]
+    [SerializeField] GameObject gameplaySettings;
+
+    [SerializeField] GameObject keyBindsMenu;
+
+    [SerializeField] GameObject videoSettings;
+
+    [SerializeField] GameObject soundSettings;
+
+    [SerializeField] GameObject accessibilitySettings;
 
     [Header("Sliders")]
     [SerializeField] Slider masterSlider;
@@ -34,6 +44,25 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] Slider sfxSlider;
 
     [SerializeField] AudioMixer audioMixer;
+
+    [Header("Key Mapping Buttons")]
+    [SerializeField] TextMeshProUGUI jumpKey;
+
+    [SerializeField] TextMeshProUGUI dashKey;
+
+    [SerializeField] TextMeshProUGUI interactKey;
+
+    [SerializeField] TextMeshProUGUI attackKey;
+
+    [SerializeField] TextMeshProUGUI counterKey;
+
+    [SerializeField] TextMeshProUGUI rageKey;
+
+    [SerializeField] TextMeshProUGUI healKey;
+
+    [SerializeField] TextMeshProUGUI finisherKey;
+
+    bool isChangingKey;
 
     [Header("Fading Bools")]
     bool isFading; //bool to see if it's fading in
@@ -91,6 +120,103 @@ public class MainMenuManager : MonoBehaviour
     private void Update()
     {
         Fades();
+
+        if (isChangingKey)
+        {
+            foreach (KeyCode keyCode in Enum.GetValues(typeof(KeyCode)))
+            {
+                if (Input.GetKey(keyCode))
+                {
+                    if (jumpKey.text == "Awaiting Input")
+                    {
+                        jumpKey.text = keyCode.ToString();
+
+                        KeyManager.Instance.jumpKey = keyCode;
+
+                        isChangingKey = false;
+
+                        return;
+                    }
+
+                    if (dashKey.text == "Awaiting Input")
+                    {
+                        dashKey.text = keyCode.ToString();
+
+                        KeyManager.Instance.dashKey = keyCode;
+
+                        isChangingKey = false;
+
+                        return;
+                    }
+
+                    if (interactKey.text == "Awaiting Input")
+                    {
+                        interactKey.text = keyCode.ToString();
+
+                        KeyManager.Instance.interactKey = keyCode;
+
+                        isChangingKey = false;
+
+                        return;
+                    }
+
+                    if (attackKey.text == "Awaiting Input")
+                    {
+                        attackKey.text = keyCode.ToString();
+
+                        KeyManager.Instance.attackKey = keyCode;
+
+                        isChangingKey = false;
+
+                        return;
+                    }
+
+                    if (counterKey.text == "Awaiting Input")
+                    {
+                        counterKey.text = keyCode.ToString();
+
+                        KeyManager.Instance.counterKey = keyCode;
+
+                        isChangingKey = false;
+
+                        return;
+                    }
+
+                    if (rageKey.text == "Awaiting Input")
+                    {
+                        rageKey.text = keyCode.ToString();
+
+                        KeyManager.Instance.rageModeKey = keyCode;
+
+                        isChangingKey = false;
+
+                        return;
+                    }
+
+                    if (healKey.text == "Awaiting Input")
+                    {
+                        healKey.text = keyCode.ToString();
+
+                        KeyManager.Instance.healKey = keyCode;
+
+                        isChangingKey = false;
+
+                        return;
+                    }
+
+                    if (finisherKey.text == "Awaiting Input")
+                    {
+                        finisherKey.text = keyCode.ToString();
+
+                        KeyManager.Instance.finisherKey = keyCode;
+
+                        isChangingKey = false;
+
+                        return;
+                    }
+                }
+            }
+        }
     }
 
     //All the fades
@@ -245,9 +371,97 @@ public class MainMenuManager : MonoBehaviour
     {
         if (!isFading && !isFadingBack && mainMenu.alpha == 1)
         {
+            keyBindsMenu.SetActive(false);
+
+            videoSettings.SetActive(false);
+
+            soundSettings.SetActive(false);
+
+            accessibilitySettings.SetActive(false);
+
+            gameplaySettings.SetActive(true);
+
             AudioManager.Instance.PlaySFX(AudioManager.Instance.buttonSound);
 
             StartCoroutine(WaitOptions());
+        }
+    }
+
+    public void ButtonGameplaySettings()
+    {
+        if (!isFading && !isFadingBack && options.alpha == 1 && !gameplaySettings.activeInHierarchy && !isChangingKey)
+        {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.buttonSound);
+
+            keyBindsMenu.SetActive(false);
+
+            videoSettings.SetActive(false);
+
+            soundSettings.SetActive(false);
+
+            accessibilitySettings.SetActive(false);
+
+            gameplaySettings.SetActive(true);
+        }
+    }
+
+    public void ButtonKeyBinds()
+    {
+        if (!isFading && !isFadingBack && options.alpha == 1)
+        {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.buttonSound);
+
+            jumpKey.text = KeyManager.Instance.jumpKey.ToString();
+
+            dashKey.text = KeyManager.Instance.dashKey.ToString();
+
+            interactKey.text = KeyManager.Instance.interactKey.ToString();
+
+            attackKey.text = KeyManager.Instance.attackKey.ToString();
+
+            counterKey.text = KeyManager.Instance.counterKey.ToString();
+
+            rageKey.text = KeyManager.Instance.rageModeKey.ToString();
+
+            healKey.text = KeyManager.Instance.healKey.ToString();
+
+            finisherKey.text = KeyManager.Instance.finisherKey.ToString();
+
+            videoSettings.SetActive(false);
+
+            soundSettings.SetActive(false);
+
+            accessibilitySettings.SetActive(false);
+
+            gameplaySettings.SetActive(false);
+
+            keyBindsMenu.SetActive(true);
+        }
+    }
+
+    public void ButtonVideoSettings()
+    {
+        if (!isFading && !isFadingBack && options.alpha == 1 && !videoSettings.activeInHierarchy && !isChangingKey)
+        {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.buttonSound);
+
+            soundSettings.SetActive(false);
+
+            accessibilitySettings.SetActive(false);
+
+            gameplaySettings.SetActive(false);
+
+            keyBindsMenu.SetActive(false);
+
+            videoSettings.SetActive(true);
+        }
+    }
+
+    public void ButtonSoundSettings()
+    {
+        if (!isFading && !isFadingBack && options.alpha == 1 && !soundSettings.activeInHierarchy && !isChangingKey)
+        {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.buttonSound);
 
             float temporary = 0;
 
@@ -274,13 +488,41 @@ public class MainMenuManager : MonoBehaviour
             temporary = Mathf.Pow(10, temporary);
 
             sfxSlider.value = temporary;
+
+            accessibilitySettings.SetActive(false);
+
+            gameplaySettings.SetActive(false);
+
+            keyBindsMenu.SetActive(false);
+
+            videoSettings.SetActive(false);
+
+            soundSettings.SetActive(true);
+        }
+    }
+
+    public void ButtonAccessibilitySettings()
+    {
+        if (!isFading && !isFadingBack && options.alpha == 1 && !accessibilitySettings.activeInHierarchy && !isChangingKey)
+        {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.buttonSound);
+
+            gameplaySettings.SetActive(false);
+
+            keyBindsMenu.SetActive(false);
+
+            videoSettings.SetActive(false);
+
+            soundSettings.SetActive(false);
+
+            accessibilitySettings.SetActive(true);
         }
     }
 
     //function when playing the back button on the options page
     public void ButtonBackOptions()
     {
-        if (!isFading && !isFadingBack && options.alpha == 1)
+        if (!isFading && !isFadingBack && options.alpha == 1 && !isChangingKey)
         {
             AudioManager.Instance.PlaySFX(AudioManager.Instance.buttonSound);
 
@@ -368,5 +610,61 @@ public class MainMenuManager : MonoBehaviour
         {
             audioMixer.SetFloat("SFX", Mathf.Log10(sfxSlider.value) * 20);
         }
+    }
+
+    public void KeyChangingJump()
+    {
+        isChangingKey = true;
+
+        jumpKey.text = "Awaiting Input";
+    }
+
+    public void KeyChangingDash()
+    {
+        isChangingKey = true;
+
+        dashKey.text = "Awaiting Input";
+    }
+
+    public void KeyChangingInteract()
+    {
+        isChangingKey = true;
+
+        interactKey.text = "Awaiting Input";
+    }
+
+    public void KeyChangingAttack()
+    {
+        isChangingKey = true;
+
+        attackKey.text = "Awaiting Input";
+    }
+
+    public void KeyChangingCounter()
+    {
+        isChangingKey = true;
+
+        counterKey.text = "Awaiting Input";
+    }
+
+    public void KeyChangingRage()
+    {
+        isChangingKey = true;
+
+        rageKey.text = "Awaiting Input";
+    }
+
+    public void KeyChangingHeal()
+    {
+        isChangingKey = true;
+
+        healKey.text = "Awaiting Input";
+    }
+
+    public void KeyChangingFinisher()
+    {
+        isChangingKey = true;
+
+        finisherKey.text = "Awaiting Input";
     }
 }

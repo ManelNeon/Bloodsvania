@@ -31,6 +31,8 @@ public class AudioManager : MonoBehaviour
 
     public AudioClip bossMusic;
 
+    public AudioClip cutsceneMusic;
+
     [Header("Fading Options")]
     [SerializeField] float fadeDuraction;
 

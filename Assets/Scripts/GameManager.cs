@@ -100,12 +100,6 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debugging only
-        if (Input.GetKeyDown(KeyManager.Instance.pauseKey))
-        {
-            MainMenuSequenceFunction();
-        }
-
         if (damageBarMaskTransform != null && damageBarMaskTransform.sizeDelta.x != healthBarMaskTransform.sizeDelta.x)
         {
             damageBarMaskTransform.sizeDelta = new Vector2(Mathf.Lerp(damageBarMaskTransform.sizeDelta.x, (currentHP / hpValue) * healthBarMaskWidth, lerpSpeed), damageBarMaskTransform.sizeDelta.y );
@@ -124,6 +118,8 @@ public class GameManager : MonoBehaviour
     //function to fade back to the Main Menu
     public void MainMenuSequenceFunction()
     {
+        Time.timeScale = 1;
+
         StartCoroutine(MainMenuSequence());
     }
 

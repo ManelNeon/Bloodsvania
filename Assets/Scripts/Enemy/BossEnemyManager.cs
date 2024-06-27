@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Video;
 using static UnityEngine.Rendering.DebugUI;
 
 public class BossEnemyManager : MonoBehaviour
@@ -63,6 +64,8 @@ public class BossEnemyManager : MonoBehaviour
     public bool isDead;
 
     Vector3 originalSpawnPosition;
+
+    [SerializeField] GameObject videoPlayer;
 
     void Awake()
     {
@@ -255,7 +258,19 @@ public class BossEnemyManager : MonoBehaviour
     {
         isFadingOut = true;
 
-        yield return new WaitForSeconds(4);
+        bossModel.gameObject.SetActive(false);
+
+        AudioManager.Instance.PlayMusic(null, true);
+
+        FadeManager.Instance.StartFadeOut();
+
+        yield return new WaitForSeconds(2.5f);
+
+        AudioManager.Instance.PlayMusic(AudioManager.Instance.cutsceneMusic, false);
+
+        videoPlayer.SetActive(true);
+
+        yield return new WaitForSeconds(8);
 
         GameManager.Instance.MainMenuSequenceFunction();
 
